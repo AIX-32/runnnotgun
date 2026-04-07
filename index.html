@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Run N Not Gun</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            background: #000;
+        }
+
+        #game {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            pointer-events: none;
+        }
+
+        #crt {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 5;
+            background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0px, rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
+            mix-blend-mode: multiply;
+        }
+
+        #overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        #homescreen {
+            text-align: center;
+        }
+
+        #homescreen h1 {
+            font-family: 'Courier New', monospace;
+            font-size: 48px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: #fff;
+            margin-bottom: 10px;
+            opacity: 0.9;
+            ;
+        }
+
+        #homescreen .subtitle {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 50px;
+            letter-spacing: 0.2em;
+        }
+
+        #homescreen .controls {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 40px;
+            letter-spacing: 0.05em;
+            line-height: 1.8;
+        }
+
+        #homescreen button {
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: #fff;
+            background: none;
+            border: 2px solid #fff;
+            padding: 18px 60px;
+            cursor: pointer;
+            opacity: 0.9;
+            transition: all 0.3s;
+            display: block;
+            margin: 0 auto 20px;
+        }
+
+        #homescreen button:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+        }
+
+        #homescreen select {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #fff;
+            padding: 12px 20px;
+            cursor: pointer;
+            width: 250px;
+        }
+
+        #homescreen select option {
+            background: #000;
+            color: #fff;
+        }
+
+        #homescreen .version {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: #444;
+        }
+
+        #dot {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.75);
+            pointer-events: none;
+            z-index: 7;
+        }
+
+        #vignette {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 6;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0) 100%);
+            transition: background 0.3s;
+        }
+
+        #static {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 8;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        #hud {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-family: 'Courier New', monospace;
+            color: #fff;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            opacity: 0.6;
+            z-index: 15;
+        }
+
+        #timer {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            color: #fff;
+            letter-spacing: 0.1em;
+            opacity: 0.8;
+            z-index: 15;
+        }
+
+        #inventory {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 15;
+        }
+
+        .inv-slot {
+            width: 48px;
+            height: 48px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        .inv-slot.filled {
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .inv-slot img {
+            width: 36px;
+            height: 36px;
+        }
+
+        .inv-slot .key {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            font-size: 10px;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+        }
+
+        #countdown {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 18;
+            pointer-events: none;
+        }
+
+        #countdown.active {
+            display: flex;
+        }
+
+        #countdown span {
+            font-family: 'Courier New', monospace;
+            font-size: 120px;
+            color: #fff;
+            letter-spacing: 0.1em;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        #death {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+        }
+
+        #death.active {
+            display: flex;
+        }
+
+        #death h1 {
+            font-family: 'Courier New', monospace;
+            font-size: 32px;
+            letter-spacing: 0.3em;
+            color: #fff;
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+
+        #death button {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #fff;
+            background: none;
+            border: 2px solid #fff;
+            padding: 12px 24px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+
+        #death button:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        #death #finalTime {
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 20px;
+            letter-spacing: 0.1em;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        #death #leaderboard {
+            position: absolute;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #888;
+            letter-spacing: 0.05em;
+            text-align: right;
+            border: 1px solid #444;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        #death #leaderboard div {
+            margin: 8px 0;
+        }
+
+        #death #leaderboard .title {
+            font-size: 16px;
+            color: #aaa;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+        }
+
+        #death #leaderboard .score {
+            color: #fff;
+        }
+
+        #death #leaderboard .first {
+            color: #ffd700;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="game"></canvas>
+    <div id="crt"></div>
+    <div id="vignette"></div>
+    <div id="dot"></div>
+    <canvas id="static"></canvas>
+    <div id="overlay">
+        <div id="homescreen">
+            <h1>Run N Not Gun</h1>
+            <p class="subtitle">Escape the horror</p>
+            <p class="controls">WASD / Arrows - Move | SPACE - Jump | C - Slide | SHIFT/L - Sprint | F - Use Item</p>
+            <button id="playBtn">Start Game</button>
+            <select id="figureSelect">
+                <option value="default">FLIGHT</option>
+                <option value="kanye">KANYE</option>
+                <option value="scaryguy">SCARY GUY</option>
+            </select>
+            <div class="version">v1.0</div>
+        </div>
+    </div>
+    <div id="hud">RUN...</div>
+    <div id="timer">0:00</div>
+    <div id="inventory">
+        <div class="inv-slot" id="slot1"></div>
+        <div class="inv-slot" id="slot2"></div>
+    </div>
+    <div id="countdown"><span>3</span></div>
+    <div id="flash"></div>
+    <div id="death">
+        <h1>It caught you</h1>
+        <button id="retryBtn">Try Again</button>
+        <div id="finalTime"></div>
+        <div id="leaderboard"></div>
+    </div>
+
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.min.js"
+      }
+    }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+
+        const PS1_W = 320;
+        const PS1_H = 240;
+        const canvas = document.getElementById('game');
+        canvas.width = PS1_W;
+        canvas.height = PS1_H;
+
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.Fog(0x8899aa, 60, 600);
+
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
+        renderer.setPixelRatio(1);
+        renderer.setSize(PS1_W, PS1_H, false);
+        renderer.shadowMap.enabled = false;
+        renderer.setClearColor(0x000000, 0);
+
+        const camera = new THREE.PerspectiveCamera(75, PS1_W / PS1_H, 0.1, 800);
+        camera.position.set(0, 1.7, 0);
+
+        const sunLight = new THREE.DirectionalLight(0xffe8c0, 1.2);
+        sunLight.position.set(50, 100, 50);
+        scene.add(sunLight);
+        scene.add(new THREE.AmbientLight(0x667788, 0.6));
+
+        const SKY_R = 600;
+        const skyGeo = new THREE.SphereGeometry(SKY_R, 16, 10);
+        const topColor = new THREE.Color(0x4a78b8);
+        const horizColor = new THREE.Color(0xc8d8e8);
+        const pos = skyGeo.attributes.position;
+        const colors = [];
+        for (let i = 0; i < pos.count; i++) {
+            const y = pos.getY(i);
+            const t = Math.max(0, Math.min(1, (y + SKY_R) / (SKY_R * 1.5)));
+            const c = topColor.clone().lerp(horizColor, 1 - t);
+            colors.push(c.r, c.g, c.b);
+        }
+        skyGeo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+        const skyMat = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide });
+        const skyMesh = new THREE.Mesh(skyGeo, skyMat);
+        scene.add(skyMesh);
+
+        function makeNoiseTexture(w, h, baseR, baseG, baseB, spread, pixSize) {
+            const off = document.createElement('canvas');
+            off.width = w; off.height = h;
+            const ctx = off.getContext('2d');
+            const bw = Math.ceil(w / pixSize);
+            const bh = Math.ceil(h / pixSize);
+            for (let bx = 0; bx < bw; bx++) {
+                for (let by = 0; by < bh; by++) {
+                    const n = (Math.random() - 0.5) * spread;
+                    const r = Math.min(255, Math.max(0, baseR + n));
+                    const g = Math.min(255, Math.max(0, baseG + n * 1.2));
+                    const b = Math.min(255, Math.max(0, baseB + n * 0.6));
+                    ctx.fillStyle = `rgb(${r | 0},${g | 0},${b | 0})`;
+                    ctx.fillRect(bx * pixSize, by * pixSize, pixSize, pixSize);
+                }
+            }
+            const tex = new THREE.CanvasTexture(off);
+            tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+            tex.minFilter = tex.magFilter = THREE.NearestFilter;
+            return tex;
+        }
+
+        const MAP_SIZE = 800;
+        const TERRAIN_SEGMENTS = 128;
+
+        function noise2D(x, z) {
+            const n = Math.sin(x * 0.05) * Math.cos(z * 0.05) * 2 +
+                Math.sin(x * 0.02 + 1.3) * Math.cos(z * 0.03) * 4 +
+                Math.sin(x * 0.08) * Math.cos(z * 0.07) * 1;
+            return n;
+        }
+
+        const groundGeo = new THREE.PlaneGeometry(MAP_SIZE, MAP_SIZE, TERRAIN_SEGMENTS, TERRAIN_SEGMENTS);
+        const posAttr = groundGeo.attributes.position;
+        for (let i = 0; i < posAttr.count; i++) {
+            const x = posAttr.getX(i);
+            const y = posAttr.getY(i);
+            const h = noise2D(x, -y);
+            posAttr.setZ(i, h);
+        }
+        groundGeo.computeVertexNormals();
+
+        const grassTex = makeNoiseTexture(64, 64, 100, 140, 60, 50, 16);
+        grassTex.repeat.set(80, 80);
+        const groundMat = new THREE.MeshLambertMaterial({ map: grassTex });
+        const ground = new THREE.Mesh(groundGeo, groundMat);
+        ground.rotation.x = -Math.PI / 2;
+        scene.add(ground);
+
+        function getTerrainHeight(x, z) {
+            return noise2D(x, -z);
+        }
+
+        const loader = new THREE.TextureLoader();
+        let treeMat, rockMat;
+        const billboards = [];
+        const trees = [];
+        const rocks = [];
+
+        loader.load('tree.png', tex => {
+            tex.minFilter = tex.magFilter = THREE.NearestFilter;
+            const aspect = tex.image.width / tex.image.height;
+            const TREE_H = 14;
+            const treeGeo = new THREE.PlaneGeometry(TREE_H * aspect, TREE_H);
+            treeMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+
+            for (let i = 0; i < 120; i++) {
+                const x = (Math.random() - 0.5) * MAP_SIZE * 0.9;
+                const z = (Math.random() - 0.5) * MAP_SIZE * 0.9;
+                if (Math.abs(x) < 25 && Math.abs(z) < 45) continue;
+                const scale = 0.9 + Math.random() * 0.6;
+                const tree = new THREE.Mesh(treeGeo, treeMat);
+                const terrainH = getTerrainHeight(x, z);
+                tree.position.set(x, terrainH + TREE_H / 2 * scale, z);
+                tree.scale.setScalar(scale);
+                tree.userData.baseY = terrainH + TREE_H / 2 * scale;
+                tree.userData.isTree = true;
+                scene.add(tree);
+                billboards.push(tree);
+                trees.push(tree);
+            }
+        });
+
+        loader.load('rock.png', tex => {
+            tex.minFilter = tex.magFilter = THREE.NearestFilter;
+            const aspect = tex.image.width / tex.image.height;
+            const ROCK_H = 2;
+            const rockGeo = new THREE.PlaneGeometry(ROCK_H * aspect, ROCK_H);
+            rockMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+
+            for (let i = 0; i < 60; i++) {
+                const x = (Math.random() - 0.5) * MAP_SIZE * 0.85;
+                const z = (Math.random() - 0.5) * MAP_SIZE * 0.85;
+                if (Math.abs(x) < 20 && Math.abs(z) < 40) continue;
+                const scale = 1.0 + Math.random() * 1.0;
+                const rock = new THREE.Mesh(rockGeo, rockMat);
+                const rockTerrainH = getTerrainHeight(x, z);
+                rock.position.set(x, rockTerrainH + ROCK_H / 2 * scale, z);
+                rock.scale.setScalar(scale);
+                rock.userData.baseY = rockTerrainH + ROCK_H / 2 * scale;
+                rock.userData.isTree = false;
+                scene.add(rock);
+                billboards.push(rock);
+                rocks.push(rock);
+            }
+        });
+
+        let figureMaterial;
+        let itemMeshes = [];
+
+        function spawnItem(type, x, z) {
+            const texName = type === 'bear' ? 'bear.png' : 'gem.png';
+            const itemTerrainH = getTerrainHeight(x, z);
+            loader.load(texName, tex => {
+                tex.minFilter = tex.magFilter = THREE.NearestFilter;
+                const ITEM_H = 1.5;
+                const aspect = tex.image.width / tex.image.height;
+                const itemGeo = new THREE.PlaneGeometry(ITEM_H * aspect, ITEM_H);
+                const itemMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+                const item = new THREE.Mesh(itemGeo, itemMat);
+                item.position.set(x, itemTerrainH + ITEM_H / 2, z);
+                item.userData.itemType = type;
+                item.userData.collected = false;
+                scene.add(item);
+                itemMeshes.push(item);
+                billboards.push(item);
+            });
+        }
+
+        for (let i = 0; i < 15; i++) {
+            const x = (Math.random() - 0.5) * MAP_SIZE * 0.8;
+            const z = (Math.random() - 0.5) * MAP_SIZE * 0.8;
+            if (Math.abs(x) < 25 && Math.abs(z) < 50) continue;
+            spawnItem(i % 2 === 0 ? 'bear' : 'gem', x, z);
+        }
+
+        const figureTex = {};
+
+        loader.load('figure.png', tex => {
+            tex.minFilter = tex.magFilter = THREE.NearestFilter;
+            figureTex.default = tex;
+        });
+
+        loader.load('kanye.png', tex => {
+            tex.minFilter = tex.magFilter = THREE.NearestFilter;
+            figureTex.kanye = tex;
+        });
+
+        loader.load('scaryguy.png', tex => {
+            tex.minFilter = tex.magFilter = THREE.NearestFilter;
+            figureTex.scaryguy = tex;
+        });
+
+        const FIG_H = 5;
+        let figureGeo, figureMesh;
+
+        const figureAspects = {
+            default: 0.5,
+            kanye: 0.7,
+            scaryguy: 0.5
+        };
+
+        function createFigureMesh() {
+            figureGeo = new THREE.PlaneGeometry(FIG_H * 0.5, FIG_H);
+            figureMaterial = new THREE.MeshLambertMaterial({
+                map: figureTex.default,
+                transparent: true,
+                alphaTest: 0.1,
+                side: THREE.DoubleSide
+            });
+            figureMesh = new THREE.Mesh(figureGeo, figureMaterial);
+            figureMesh.position.set(0, getTerrainHeight(0, -60) + FIG_H / 2, -60);
+            figureMesh.visible = false;
+            figureMesh.userData.isFigure = true;
+            scene.add(figureMesh);
+            billboards.push(figureMesh);
+        }
+
+        createFigureMesh();
+
+        const raycaster = new THREE.Raycaster();
+        const screenCenter = new THREE.Vector2(0, 0);
+        let yaw = 0, pitch = 0;
+        let moveF = false, moveB = false, moveL = false, moveR = false;
+        let moveLeft = false, moveRight = false;
+        let sprint = false;
+        let locked = false;
+        let isJumping = false;
+        let jumpVel = 0;
+        let isSliding = false;
+        let slideTimer = 0;
+        let wasInAir = false;
+
+        const overlay = document.getElementById('overlay');
+        const playBtn = document.getElementById('playBtn');
+        const hud = document.getElementById('hud');
+        const countdownEl = document.getElementById('countdown');
+        const countdownText = countdownEl.querySelector('span');
+        const deathEl = document.getElementById('death');
+        const retryBtn = document.getElementById('retryBtn');
+        const staticEl = document.getElementById('static');
+        const flashEl = document.getElementById('flash');
+
+        function flash() {
+            flashEl.style.opacity = 0.6;
+            setTimeout(() => { flashEl.style.opacity = 0; }, 80);
+        }
+
+        function setStaticOpacity(opacity) {
+            staticEl.style.opacity = opacity;
+        }
+
+        function updateInventoryUI() {
+            const slot1 = document.getElementById('slot1');
+            const slot2 = document.getElementById('slot2');
+            slot1.innerHTML = '';
+            slot2.innerHTML = '';
+
+            if (inventory[0]) {
+                slot1.classList.add('filled');
+                const img = document.createElement('img');
+                img.src = inventory[0].type === 'bear' ? 'bear.png' : 'gem.png';
+                slot1.appendChild(img);
+                if (inventory[0].count > 1) {
+                    const countEl = document.createElement('span');
+                    countEl.className = 'key';
+                    countEl.textContent = 'x' + inventory[0].count;
+                    slot1.appendChild(countEl);
+                }
+            } else {
+                slot1.classList.remove('filled');
+            }
+            if (inventory[1]) {
+                slot2.classList.add('filled');
+                const img = document.createElement('img');
+                img.src = inventory[1].type === 'bear' ? 'bear.png' : 'gem.png';
+                slot2.appendChild(img);
+                if (inventory[1].count > 1) {
+                    const countEl = document.createElement('span');
+                    countEl.className = 'key';
+                    countEl.textContent = 'x' + inventory[1].count;
+                    slot2.appendChild(countEl);
+                }
+            } else {
+                slot2.classList.remove('filled');
+            }
+        }
+
+        playBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            overlay.style.display = 'none';
+            countdown = 3;
+            countdownEl.classList.add('active');
+            countdownText.textContent = '3';
+            gameStarted = false;
+            camera.position.set(0, getTerrainHeight(0, 0) + BASE_Y, 0);
+            moveF = moveB = moveL = moveR = false;
+            moveLeft = moveRight = false;
+            sprint = false;
+            isJumping = false;
+            jumpVel = 0;
+            isSliding = false;
+            if (figureMesh && figureTex[figureSelect.value]) {
+                const aspect = figureAspects[figureSelect.value] || 0.5;
+                figureMesh.geometry.dispose();
+                figureMesh.geometry = new THREE.PlaneGeometry(FIG_H * aspect, FIG_H);
+                figureMesh.material.map = figureTex[figureSelect.value];
+                figureMesh.material.needsUpdate = true;
+                figureMesh.visible = false;
+                figureMesh.position.set(0, getTerrainHeight(0, camera.position.z - 60) + 2.5, camera.position.z - 60);
+            }
+        });
+
+        function startGame() {
+            gameStarted = true;
+            gameTime = 0;
+            figureActive = true;
+            figureSpeedVar = 0;
+            if (figureMesh && figureTex[figureSelect.value]) {
+                const aspect = figureAspects[figureSelect.value] || 0.5;
+                figureMesh.geometry.dispose();
+                figureMesh.geometry = new THREE.PlaneGeometry(FIG_H * aspect, FIG_H);
+                figureMesh.material.map = figureTex[figureSelect.value];
+                figureMesh.material.needsUpdate = true;
+                figureMesh.visible = true;
+                figureMesh.position.set(0, getTerrainHeight(0, camera.position.z - 60) + 2.5, camera.position.z - 60);
+            }
+            hud.textContent = 'RUN...';
+            renderer.domElement.requestPointerLock();
+        }
+
+        retryBtn.addEventListener('click', () => {
+            dead = false;
+            gameTime = 0;
+            figureActive = false;
+            figureTriggered = false;
+            figureGazeTime = 0;
+            figureSpeedVar = 0;
+            figureStuckTimer = 0;
+            gameStarted = false;
+            inventory = [null, null];
+            speedBoostTimer = 0;
+            bearTrapPlaced = false;
+            bearTrapPos = null;
+            updateInventoryUI();
+
+            for (const item of itemMeshes) {
+                item.userData.collected = false;
+                item.visible = true;
+            }
+
+            if (figureMesh && figureTex[figureSelect.value]) {
+                const aspect = figureAspects[figureSelect.value] || 0.5;
+                figureMesh.geometry.dispose();
+                figureMesh.geometry = new THREE.PlaneGeometry(FIG_H * aspect, FIG_H);
+                figureMesh.material.map = figureTex[figureSelect.value];
+                figureMesh.material.needsUpdate = true;
+                figureMesh.visible = false;
+                figureMesh.position.set(0, getTerrainHeight(0, -60) + 2.5, -60);
+            }
+
+            camera.position.set(0, getTerrainHeight(0, 0) + BASE_Y, 0);
+            moveF = moveB = moveL = moveR = false;
+            moveLeft = moveRight = false;
+            sprint = false;
+            isJumping = false;
+            jumpVel = 0;
+            isSliding = false;
+            currentStaticOpacity = 0;
+            setStaticOpacity(0);
+
+            deathEl.classList.remove('active');
+            countdown = 3;
+            countdownEl.classList.add('active');
+            countdownText.textContent = '3';
+            hud.textContent = 'RUN...';
+            document.getElementById('timer').textContent = '0:00';
+
+            renderer.domElement.requestPointerLock();
+        });
+
+        renderer.domElement.addEventListener('click', () => {
+            if (!locked) renderer.domElement.requestPointerLock();
+        });
+
+        document.addEventListener('pointerlockchange', () => {
+            locked = document.pointerLockElement === renderer.domElement;
+            if (locked) {
+                overlay.style.display = 'none';
+            } else if (!dead && gameStarted && countdown <= 0) {
+                overlay.style.display = 'flex';
+            }
+        });
+
+        document.addEventListener('mousemove', e => {
+            if (dead) return;
+            if (locked) {
+                yaw -= e.movementX * 0.0025;
+                pitch -= e.movementY * 0.0025;
+                pitch = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, pitch));
+            }
+        });
+
+        document.addEventListener('keydown', e => {
+            const code = e.code;
+            if (code === 'KeyW' || code === 'ArrowUp') { moveF = true; }
+            if (code === 'KeyS' || code === 'ArrowDown') { moveB = true; }
+            if (code === 'KeyA') { moveL = true; }
+            if (code === 'KeyD') { moveR = true; }
+            if (code === 'ArrowLeft') { moveLeft = true; }
+            if (code === 'ArrowRight') { moveRight = true; }
+            if (code === 'ShiftLeft' || code === 'ShiftRight' || code === 'KeyL') sprint = true;
+            if (code === 'Space' && !isJumping && !isSliding && locked) {
+                const isMoving = moveF || moveB || moveL || moveR || sprint;
+                if (isMoving) {
+                    isJumping = true;
+                    wasInAir = true;
+                    jumpVel = 35;
+                } else {
+                    isJumping = true;
+                    wasInAir = true;
+                    jumpVel = 25;
+                }
+            }
+            if (code === 'KeyC' && !isSliding && !isJumping && locked) {
+                isSliding = true;
+                slideTimer = 0.6;
+                wasInAir = false;
+            }
+            if (code === 'KeyF' && locked) {
+                let usedSlot = -1;
+                if (inventory[0]) {
+                    usedSlot = 0;
+                } else if (inventory[1]) {
+                    usedSlot = 1;
+                }
+
+                if (usedSlot !== -1) {
+                    activeItem = inventory[usedSlot];
+                    inventory[usedSlot] = null;
+                    updateInventoryUI();
+
+                    if (activeItem === 'bear') {
+                        bearTrapPlaced = true;
+                        bearTrapPos = new THREE.Vector3(camera.position.x, getTerrainHeight(camera.position.x, camera.position.z - 3), camera.position.z - 3);
+                        spawnItem('bear', bearTrapPos.x, bearTrapPos.z);
+                    } else if (activeItem === 'gem') {
+                        speedBoostTimer += 10;
+                    }
+                    activeItem = null;
+                }
+            }
+            if (['Space', 'KeyC'].includes(code)) {
+                e.preventDefault();
+            }
+        });
+
+        document.addEventListener('keyup', e => {
+            const code = e.code;
+            if (code === 'KeyW' || code === 'ArrowUp') moveF = false;
+            if (code === 'KeyS' || code === 'ArrowDown') moveB = false;
+            if (code === 'KeyA') moveL = false;
+            if (code === 'KeyD') moveR = false;
+            if (code === 'ArrowLeft') moveLeft = false;
+            if (code === 'ArrowRight') moveRight = false;
+            if (code === 'ShiftLeft' || code === 'ShiftRight' || code === 'KeyL') sprint = false;
+        });
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playFootstep() {
+            const bufLen = audioCtx.sampleRate * 0.05;
+            const buf = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
+            const data = buf.getChannelData(0);
+            for (let i = 0; i < bufLen; i++) {
+                data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufLen, 6);
+            }
+            const src = audioCtx.createBufferSource();
+            src.buffer = buf;
+            const lp = audioCtx.createBiquadFilter();
+            lp.type = 'lowpass';
+            lp.frequency.value = 220;
+            src.playbackRate.value = 0.9 + Math.random() * 0.25;
+            const gain = audioCtx.createGain();
+            gain.gain.value = 0.35;
+            src.connect(lp);
+            lp.connect(gain);
+            gain.connect(audioCtx.destination);
+            src.start();
+        }
+
+        const BASE_Y = 1.7;
+        const SPEED = 22;
+
+        const figureSelect = document.getElementById('figureSelect');
+
+        const clock = new THREE.Clock();
+        const dir = new THREE.Vector3();
+        let dead = false;
+        let gameTime = 0;
+
+        function loadLeaderboard() {
+            const stored = localStorage.getItem('rngLeaderboard');
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        function saveScore(time) {
+            const scores = loadLeaderboard();
+            scores.push({ time, date: Date.now() });
+            scores.sort((a, b) => b.time - a.time);
+            const top5 = scores.slice(0, 5);
+            localStorage.setItem('rngLeaderboard', JSON.stringify(top5));
+            return top5;
+        }
+
+        let figureActive = false;
+        let figureTriggered = false;
+        let figureGazeTime = 0;
+        let figureSpeedVar = 0;
+        let countdown = 0;
+        let gameStarted = false;
+
+        let inventory = [null, null];
+        let activeItem = null;
+        let speedBoostTimer = 0;
+        let figureStuckTimer = 0;
+        let bearTrapPlaced = false;
+        let bearTrapPos = null;
+
+        let placedItems = [];
+
+        const FIGURE_START_Z = -60;
+        const FIGURE_BASE_SPEED = 24;
+        const FIGURE_CHASE_SPEED = 55;
+        const FIGURE_ACTIVATION_DIST = 55;
+        let currentStaticOpacity = 0;
+
+        function resetGame() {
+            dead = false;
+            figureActive = false;
+            figureTriggered = false;
+            figureGazeTime = 0;
+            figureSpeedVar = 0;
+            figureStuckTimer = 0;
+            gameStarted = false;
+            inventory = [null, null];
+            speedBoostTimer = 0;
+            bearTrapPlaced = false;
+            bearTrapPos = null;
+            updateInventoryUI();
+
+            for (const item of itemMeshes) {
+                item.userData.collected = false;
+                item.visible = true;
+            }
+
+            if (figureMesh && figureTex[figureSelect.value]) {
+                const aspect = figureAspects[figureSelect.value] || 0.5;
+                figureMesh.geometry.dispose();
+                figureMesh.geometry = new THREE.PlaneGeometry(FIG_H * aspect, FIG_H);
+                figureMesh.material.map = figureTex[figureSelect.value];
+                figureMesh.material.needsUpdate = true;
+                figureMesh.visible = true;
+                figureMesh.position.set(0, getTerrainHeight(0, camera.position.z - 60) + 2.5, camera.position.z - 60);
+            }
+            camera.position.set(0, getTerrainHeight(0, camera.position.z) + BASE_Y, camera.position.z);
+            moveF = moveB = moveL = moveR = false;
+            moveLeft = moveRight = false;
+            sprint = false;
+            isJumping = false;
+            jumpVel = 0;
+            isSliding = false;
+            currentStaticOpacity = 0;
+            setStaticOpacity(0);
+            deathEl.classList.remove('active');
+
+            countdown = 3;
+            countdownEl.classList.add('active');
+            countdownText.textContent = '3';
+            hud.textContent = 'RUN...';
+            renderer.domElement.requestPointerLock();
+        }
+
+        let lastStep = 0;
+        let bobTime = 0;
+        let baseCameraY = BASE_Y;
+
+        function loop() {
+            requestAnimationFrame(loop);
+            const dt = Math.min(clock.getDelta(), 0.05);
+
+            if (countdown > 0) {
+                countdown -= dt;
+                if (countdown > 2) countdownText.textContent = '3';
+                else if (countdown > 1) countdownText.textContent = '2';
+                else if (countdown > 0) countdownText.textContent = '1';
+                if (countdown <= 0) {
+                    countdownEl.classList.remove('active');
+                    startGame();
+                }
+            }
+
+            for (const bb of billboards) {
+                const dx = camera.position.x - bb.position.x;
+                const dz = camera.position.z - bb.position.z;
+                const angle = Math.atan2(dx, dz);
+                bb.rotation.set(0, angle, 0);
+            }
+
+            for (const item of itemMeshes) {
+                if (!item.userData.collected && item.position.distanceTo(camera.position) < 3) {
+                    const emptySlot = inventory.findIndex(s => s === null);
+                    if (emptySlot !== -1) {
+                        item.userData.collected = true;
+                        item.visible = false;
+                        inventory[emptySlot] = item.userData.itemType;
+                        updateInventoryUI();
+                    }
+                }
+            }
+
+            if (gameStarted && locked && !dead) {
+                gameTime += dt;
+                const mins = Math.floor(gameTime / 60);
+                const secs = Math.floor(gameTime % 60);
+                document.getElementById('timer').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+
+                if (slideTimer > 0) {
+                    slideTimer -= dt;
+                    if (slideTimer <= 0) isSliding = false;
+                }
+
+                if (isJumping) {
+                    jumpVel -= 45 * dt;
+                    camera.position.y += jumpVel * dt;
+                    const groundY = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y;
+                    if (camera.position.y <= groundY) {
+                        camera.position.y = groundY;
+                        isJumping = false;
+                        jumpVel = 0;
+                    }
+                }
+
+                let speedMult = 1;
+                if (sprint) speedMult = 3.5;
+                let targetSpeed = SPEED * speedMult;
+                if (isSliding) {
+                    targetSpeed += wasInAir ? 25 : 10;
+                    wasInAir = false;
+                }
+                if (speedBoostTimer > 0) {
+                    targetSpeed *= 2;
+                    speedBoostTimer -= dt;
+                }
+
+                if (!('_curSpeed' in window)) window._curSpeed = SPEED;
+                window._curSpeed += (targetSpeed - window._curSpeed) * 0.15;
+                const currentSpeed = window._curSpeed;
+
+                const targetCamY = isSliding ? getTerrainHeight(camera.position.x, camera.position.z) + 0.6 : baseCameraY;
+                camera.position.y += (targetCamY - camera.position.y) * 0.2;
+
+                if (moveLeft) yaw += 2.5 * dt;
+                if (moveRight) yaw -= 2.5 * dt;
+
+                dir.set(0, 0, 0);
+                if (moveF) dir.z -= 1;
+                if (moveB) dir.z += 1;
+                if (moveL) dir.x -= 1;
+                if (moveR) dir.x += 1;
+                if (dir.length() > 0) dir.normalize();
+
+                const isMovingOnGround = (moveF || moveB || moveL || moveR) && !isJumping && !isSliding;
+                if (isMovingOnGround) {
+                    bobTime += dt * (sprint ? 18 : 12);
+                    const bobAmount = sprint ? 0.08 : 0.05;
+                    baseCameraY = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y + Math.sin(bobTime) * bobAmount;
+                } else {
+                    baseCameraY += (getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y - baseCameraY) * 0.1;
+                }
+
+                const cos = Math.cos(yaw), sin = Math.sin(yaw);
+                const dx = cos * dir.x + sin * dir.z;
+                const dz = -sin * dir.x + cos * dir.z;
+
+                const nx = camera.position.x + dx * currentSpeed * dt;
+                const nz = camera.position.z + dz * currentSpeed * dt;
+
+                let newX = nx, newZ = nz;
+                const playerRadius = 0.5;
+
+                for (const tree of trees) {
+                    const dx = newX - tree.position.x;
+                    const dz = newZ - tree.position.z;
+                    const dist = Math.sqrt(dx * dx + dz * dz);
+                    const treeRadius = 1.0;
+                    if (dist < playerRadius + treeRadius) {
+                        const angle = Math.atan2(dz, dx);
+                        newX = tree.position.x + Math.cos(angle) * (playerRadius + treeRadius);
+                        newZ = tree.position.z + Math.sin(angle) * (playerRadius + treeRadius);
+                    }
+                }
+
+                for (const rock of rocks) {
+                    const dx = newX - rock.position.x;
+                    const dz = newZ - rock.position.z;
+                    const dist = Math.sqrt(dx * dx + dz * dz);
+                    const rockRadius = 0.8;
+                    if (dist < playerRadius + rockRadius) {
+                        const angle = Math.atan2(dz, dx);
+                        newX = rock.position.x + Math.cos(angle) * (playerRadius + rockRadius);
+                        newZ = rock.position.z + Math.sin(angle) * (playerRadius + rockRadius);
+                    }
+                }
+
+                const boundary = MAP_SIZE / 2 - 2;
+                camera.position.x = Math.max(-boundary, Math.min(boundary, newX));
+                camera.position.z = Math.max(-boundary, Math.min(boundary, newZ));
+
+                const euler = new THREE.Euler(pitch, yaw, 0, 'YXZ');
+                camera.quaternion.setFromEuler(euler);
+
+                if (figureMesh && figureMesh.visible) {
+                    const figPos = figureMesh.position;
+                    const toPlayer = new THREE.Vector3(camera.position.x - figPos.x, 0, camera.position.z - figPos.z);
+                    const dist = toPlayer.length();
+
+                    if (!figureActive) {
+                        raycaster.setFromCamera(screenCenter, camera);
+                        const hits = raycaster.intersectObject(figureMesh);
+                        if (hits.length > 0) {
+                            figureGazeTime += dt;
+                            if (figureGazeTime >= 2.0) {
+                                figureActive = true;
+                            }
+                        } else {
+                            figureGazeTime = Math.max(0, figureGazeTime - dt * 0.25);
+                        }
+                    }
+
+                    if (figureActive && !figureTriggered) {
+                        if (figureStuckTimer > 0) {
+                            figureStuckTimer -= dt;
+                        } else if (dist > 2.0) {
+                            toPlayer.normalize();
+                            figureSpeedVar += (Math.random() - 0.7) * 0.5;
+                            figureSpeedVar = Math.max(-8, Math.min(3, figureSpeedVar));
+                            const currentFigureSpeed = FIGURE_CHASE_SPEED + figureSpeedVar;
+                            figPos.x += toPlayer.x * currentFigureSpeed * dt;
+                            figPos.z += toPlayer.z * currentFigureSpeed * dt;
+                            figPos.y = getTerrainHeight(figPos.x, figPos.z) + 2.5;
+
+                            if (bearTrapPos && figPos.distanceTo(bearTrapPos) < 3) {
+                                figureStuckTimer = 10;
+                                bearTrapPos = null;
+                                bearTrapPlaced = false;
+                            }
+                        } else {
+                            figureTriggered = true;
+                            dead = true;
+                            document.exitPointerLock();
+                            deathEl.classList.add('active');
+                            currentStaticOpacity = 0.8;
+                            setStaticOpacity(0.8);
+
+                            const finalTimeEl = document.getElementById('finalTime');
+                            const minutes = Math.floor(gameTime / 60);
+                            const seconds = Math.floor(gameTime % 60);
+                            finalTimeEl.textContent = `You survived ${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+                            const topScores = saveScore(gameTime);
+                            const leaderboardEl = document.getElementById('leaderboard');
+                            leaderboardEl.innerHTML = '<div class="title">TOP TIMES</div>' + topScores.map((s, i) => {
+                                const m = Math.floor(s.time / 60);
+                                const sec = Math.floor(s.time % 60);
+                                const cls = i === 0 ? 'first' : 'score';
+                                return `<div class="${cls}">${i + 1}. ${m}:${sec.toString().padStart(2, '0')}</div>`;
+                            }).join('');
+                        }
+                    }
+
+                    const chaseDist = camera.position.distanceTo(figureMesh.position);
+                    let targetStatic = 0;
+                    if (chaseDist < 70) {
+                        targetStatic = Math.max(0, Math.min(1, 1 - chaseDist / 70)) * 0.45;
+                        const distStr = Math.floor(chaseDist);
+                        hud.textContent = `RUN... ${distStr}m`;
+                    } else {
+                        hud.textContent = 'RUN...';
+                    }
+
+                    currentStaticOpacity += (targetStatic - currentStaticOpacity) * 0.1;
+                    setStaticOpacity(currentStaticOpacity);
+                }
+
+                const isMoving = moveF || moveB || moveL || moveR;
+                if (isMoving && dt > 0) {
+                    const stepInterval = sprint ? 0.22 : 0.35;
+                    if (clock.elapsedTime - lastStep > stepInterval) {
+                        lastStep = clock.elapsedTime;
+                        if (audioCtx.state === 'suspended') audioCtx.resume();
+                        playFootstep();
+                    }
+                }
+            }
+
+            renderer.render(scene, camera);
+        }
+        loop();
+    </script>
+</body>
+
+</html>
