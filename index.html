@@ -46,51 +46,60 @@
         }
 
         #homescreen {
-            text-align: center;
+            display: flex;
+            gap: 60px;
+            align-items: flex-start;
+            text-align: left;
+            padding-right: 40px;
+        }
+
+        #homescreen .main-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         #homescreen h1 {
             font-family: 'Courier New', monospace;
-            font-size: 48px;
-            letter-spacing: 0.3em;
+            font-size: 42px;
+            letter-spacing: 0.25em;
             text-transform: uppercase;
             color: #fff;
-            margin-bottom: 10px;
-            opacity: 0.9;
-            ;
+            margin: 0;
+            opacity: 0.95;
         }
 
         #homescreen .subtitle {
             font-family: 'Courier New', monospace;
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 50px;
-            letter-spacing: 0.2em;
+            font-size: 13px;
+            color: #888;
+            letter-spacing: 0.15em;
+            margin: 0;
         }
 
-        #homescreen .controls {
+        #homescreen .section-label {
             font-family: 'Courier New', monospace;
-            font-size: 12px;
+            font-size: 10px;
             color: #555;
-            margin-bottom: 40px;
-            letter-spacing: 0.05em;
-            line-height: 1.8;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
         }
 
         #homescreen button {
             font-family: 'Courier New', monospace;
-            font-size: 20px;
-            letter-spacing: 0.4em;
+            font-size: 18px;
+            letter-spacing: 0.35em;
             text-transform: uppercase;
             color: #fff;
             background: none;
             border: 2px solid #fff;
-            padding: 18px 60px;
+            padding: 16px 50px;
             cursor: pointer;
             opacity: 0.9;
             transition: all 0.3s;
-            display: block;
-            margin: 0 auto 20px;
+            display: inline-block;
+            width: fit-content;
         }
 
         #homescreen button:hover {
@@ -101,15 +110,15 @@
 
         #homescreen select {
             font-family: 'Courier New', monospace;
-            font-size: 14px;
-            letter-spacing: 0.2em;
+            font-size: 13px;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
             color: #fff;
             background: rgba(0, 0, 0, 0.6);
-            border: 2px solid #fff;
+            border: 2px solid rgba(255, 255, 255, 0.5);
             padding: 12px 20px;
             cursor: pointer;
-            width: 250px;
+            width: 220px;
         }
 
         #homescreen select option {
@@ -117,13 +126,129 @@
             color: #fff;
         }
 
+        #homescreen .info-panel {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+            padding: 24px;
+            width: 280px;
+        }
+
+        #homescreen .info-panel h3 {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #aaa;
+            margin: 0 0 16px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        #homescreen .info-panel .control-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+        }
+
+        #homescreen .info-panel .control-key {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 3px 8px;
+            border-radius: 3px;
+        }
+
+        #homescreen .info-panel .control-action {
+            color: #888;
+        }
+
+        #homescreen .info-panel .divider {
+            height: 1px;
+            background: #333;
+            margin: 16px 0;
+        }
+
+        #homescreen .info-panel .item-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        #homescreen .info-panel .item-icon {
+            width: 28px;
+            height: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #homescreen .info-panel .item-icon img {
+            width: 20px;
+            height: 20px;
+            image-rendering: pixelated;
+        }
+
+        #homescreen .info-panel .item-desc {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: #777;
+            line-height: 1.4;
+        }
+
+        #homescreen .info-panel .item-name {
+            color: #aaa;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
         #homescreen .version {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
             font-family: 'Courier New', monospace;
             font-size: 10px;
             color: #444;
+            margin-top: auto;
+        }
+
+        #homescreen .leaderboard-panel {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+            padding: 24px;
+            width: 220px;
+        }
+
+        #homescreen .leaderboard-panel h3 {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #aaa;
+            margin: 0 0 16px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        #homescreen .leaderboard-panel .score-row {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        #homescreen .leaderboard-panel .score-row.first {
+            color: #ffd700;
+        }
+
+        .game-ui {
+            transition: opacity 0.3s;
+        }
+
+        .game-ui.hidden {
+            display: none;
         }
 
         #dot {
@@ -247,11 +372,12 @@
         #death {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.95);
             display: none;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
             justify-content: center;
+            gap: 80px;
             z-index: 20;
         }
 
@@ -259,76 +385,134 @@
             display: flex;
         }
 
+        #death .death-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 24px;
+        }
+
         #death h1 {
             font-family: 'Courier New', monospace;
-            font-size: 32px;
-            letter-spacing: 0.3em;
+            font-size: 36px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
             color: #fff;
-            margin-bottom: 10px;
-            opacity: 0.8;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        #death #finalTime {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            color: #888;
+            margin: 0;
+            letter-spacing: 0.1em;
+        }
+
+        #death .death-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 10px;
         }
 
         #death button {
             font-family: 'Courier New', monospace;
-            font-size: 14px;
+            font-size: 13px;
             letter-spacing: 0.2em;
             text-transform: uppercase;
             color: #fff;
             background: none;
-            border: 2px solid #fff;
-            padding: 12px 24px;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            padding: 14px 28px;
             cursor: pointer;
-            opacity: 0.7;
+            opacity: 0.8;
             transition: all 0.3s;
         }
 
         #death button:hover {
             opacity: 1;
             background: rgba(255, 255, 255, 0.1);
-        }
-
-        #death #finalTime {
-            font-family: 'Courier New', monospace;
-            font-size: 20px;
-            color: #fff;
-            margin-bottom: 20px;
-            letter-spacing: 0.1em;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            border-color: #fff;
         }
 
         #death #leaderboard {
-            position: absolute;
-            right: 40px;
-            top: 50%;
-            transform: translateY(-50%);
             font-family: 'Courier New', monospace;
-            font-size: 14px;
-            color: #888;
+            font-size: 13px;
+            color: #666;
             letter-spacing: 0.05em;
-            text-align: right;
-            border: 1px solid #444;
-            padding: 20px;
+            border: 1px solid #333;
+            padding: 24px;
             background: rgba(0, 0, 0, 0.5);
+            min-width: 200px;
         }
 
         #death #leaderboard div {
-            margin: 8px 0;
+            margin: 10px 0;
         }
 
         #death #leaderboard .title {
-            font-size: 16px;
-            color: #aaa;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #444;
+            font-size: 12px;
+            color: #888;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
             padding-bottom: 10px;
+            border-bottom: 1px solid #333;
         }
 
         #death #leaderboard .score {
-            color: #fff;
+            color: #aaa;
         }
 
         #death #leaderboard .first {
             color: #ffd700;
+        }
+
+        #keyIndicators {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            z-index: 15;
+        }
+
+        .key-row {
+            display: flex;
+            gap: 6px;
+        }
+
+        .key-btn {
+            width: 36px;
+            height: 36px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.7);
+            transition: all 0.1s;
+            text-transform: uppercase;
+        }
+
+        .key-btn.active {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.9);
+            color: #fff;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+            transform: scale(0.95);
+        }
+
+        .key-btn.wide {
+            width: 72px;
         }
     </style>
 </head>
@@ -339,32 +523,107 @@
     <div id="vignette"></div>
     <div id="dot"></div>
     <canvas id="static"></canvas>
-    <div id="overlay">
+    <div id="overlay" class="">
         <div id="homescreen">
-            <h1>Run N Not Gun</h1>
-            <p class="subtitle">Escape the horror</p>
-            <p class="controls">WASD / Arrows - Move | SPACE - Jump | C - Slide | SHIFT/L - Sprint | F - Use Item</p>
-            <button id="playBtn">Start Game</button>
-            <select id="figureSelect">
-                <option value="default">FLIGHT</option>
-                <option value="kanye">KANYE</option>
-                <option value="scaryguy">SCARY GUY</option>
-            </select>
-            <div class="version">v1.0</div>
+            <div class="main-section">
+                <h1>RUN-N-NOT GUN</h1>
+                <p class="subtitle">Escape the horror</p>
+                
+                <div class="section-label">Character</div>
+                <select id="figureSelect">
+                    <option value="default">FLIGHT</option>
+                    <option value="kanye">KANYE</option>
+                    <option value="scaryguy">SCARY GUY</option>
+                </select>
+                
+                <button id="playBtn">Start Game</button>
+                <div class="version">v1.0</div>
+            </div>
+            
+            <div class="info-panel">
+                <h3>Controls & Items</h3>
+                
+                <div class="control-row">
+                    <span class="control-key">W A S D</span>
+                    <span class="control-action">Move</span>
+                </div>
+                <div class="control-row">
+                    <span class="control-key">SPACE</span>
+                    <span class="control-action">Jump</span>
+                </div>
+                <div class="control-row">
+                    <span class="control-key">C + SPACE</span>
+                    <span class="control-action">Dash</span>
+                </div>
+                <div class="control-row">
+                    <span class="control-key">SHIFT</span>
+                    <span class="control-action">Sprint</span>
+                </div>
+                <div class="control-row">
+                    <span class="control-key">F</span>
+                    <span class="control-action">Use Item</span>
+                </div>
+                <div class="control-row">
+                    <span class="control-key">MOUSE</span>
+                    <span class="control-action">Look</span>
+                </div>
+                
+                <div class="divider"></div>
+                
+                <div class="item-row">
+                    <div class="item-icon"><img src="bear.png"></div>
+                    <div>
+                        <div class="item-name">Bear Trap</div>
+                        <div class="item-desc">Stops the figure temporarily</div>
+                    </div>
+                </div>
+                <div class="item-row">
+                    <div class="item-icon"><img src="gem.png"></div>
+                    <div>
+                        <div class="item-name">Speed Gem</div>
+                        <div class="item-desc">Temporary speed boost</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="leaderboard-panel" id="homeLeaderboard">
+                <h3>Top Runs</h3>
+            </div>
         </div>
     </div>
-    <div id="hud">RUN...</div>
-    <div id="timer">0:00</div>
-    <div id="inventory">
+    <div id="hud" class="game-ui hidden">RUN...</div>
+    <div id="timer" class="game-ui hidden">0:00</div>
+    <div id="inventory" class="game-ui hidden">
         <div class="inv-slot" id="slot1"></div>
         <div class="inv-slot" id="slot2"></div>
     </div>
     <div id="countdown"><span>3</span></div>
     <div id="flash"></div>
+    <div id="keyIndicators" class="game-ui hidden">
+        <div class="key-row">
+            <div class="key-btn" id="key-w">W</div>
+        </div>
+        <div class="key-row">
+            <div class="key-btn" id="key-a">A</div>
+            <div class="key-btn" id="key-s">S</div>
+            <div class="key-btn" id="key-d">D</div>
+        </div>
+        <div class="key-row" style="margin-top: 4px;">
+            <div class="key-btn wide" id="key-space">SPACE</div>
+            <div class="key-btn" id="key-c">C</div>
+            <div class="key-btn" id="key-shift">⇧</div>
+            <div class="key-btn" id="key-f">F</div>
+        </div>
+    </div>
     <div id="death">
-        <h1>It caught you</h1>
-        <button id="retryBtn">Try Again</button>
-        <div id="finalTime"></div>
+        <div class="death-content">
+            <h1>It caught you</h1>
+            <div id="finalTime">You survived 0:00</div>
+            <div class="death-buttons">
+                <button id="retryBtn">Try Again</button>
+                <button id="homeBtn">Home</button>
+            </div>
+        </div>
         <div id="leaderboard"></div>
     </div>
 
@@ -607,6 +866,10 @@
         let locked = false;
         let isJumping = false;
         let jumpVel = 0;
+        let jumpVelX = 0;
+        let jumpVelZ = 0;
+        let dashCooldown = 0;
+        let lastSlideTime = 0;
         let isSliding = false;
         let slideTimer = 0;
         let wasInAir = false;
@@ -639,28 +902,16 @@
             if (inventory[0]) {
                 slot1.classList.add('filled');
                 const img = document.createElement('img');
-                img.src = inventory[0].type === 'bear' ? 'bear.png' : 'gem.png';
+                img.src = inventory[0] === 'bear' ? 'bear.png' : 'gem.png';
                 slot1.appendChild(img);
-                if (inventory[0].count > 1) {
-                    const countEl = document.createElement('span');
-                    countEl.className = 'key';
-                    countEl.textContent = 'x' + inventory[0].count;
-                    slot1.appendChild(countEl);
-                }
             } else {
                 slot1.classList.remove('filled');
             }
             if (inventory[1]) {
                 slot2.classList.add('filled');
                 const img = document.createElement('img');
-                img.src = inventory[1].type === 'bear' ? 'bear.png' : 'gem.png';
+                img.src = inventory[1] === 'bear' ? 'bear.png' : 'gem.png';
                 slot2.appendChild(img);
-                if (inventory[1].count > 1) {
-                    const countEl = document.createElement('span');
-                    countEl.className = 'key';
-                    countEl.textContent = 'x' + inventory[1].count;
-                    slot2.appendChild(countEl);
-                }
             } else {
                 slot2.classList.remove('filled');
             }
@@ -668,7 +919,9 @@
 
         playBtn.addEventListener('click', (e) => {
             e.stopPropagation();
+            overlay.setAttribute('data-visible', 'false');
             overlay.style.display = 'none';
+            document.querySelectorAll('.game-ui').forEach(el => el.classList.add('hidden'));
             countdown = 3;
             countdownEl.classList.add('active');
             countdownText.textContent = '3';
@@ -679,6 +932,8 @@
             sprint = false;
             isJumping = false;
             jumpVel = 0;
+            jumpVelX = 0;
+            jumpVelZ = 0;
             isSliding = false;
             if (figureMesh && figureTex[figureSelect.value]) {
                 const aspect = figureAspects[figureSelect.value] || 0.5;
@@ -696,6 +951,7 @@
             gameTime = 0;
             figureActive = true;
             figureSpeedVar = 0;
+            document.querySelectorAll('.game-ui').forEach(el => el.classList.remove('hidden'));
             if (figureMesh && figureTex[figureSelect.value]) {
                 const aspect = figureAspects[figureSelect.value] || 0.5;
                 figureMesh.geometry.dispose();
@@ -745,6 +1001,8 @@
             sprint = false;
             isJumping = false;
             jumpVel = 0;
+            jumpVelX = 0;
+            jumpVelZ = 0;
             isSliding = false;
             currentStaticOpacity = 0;
             setStaticOpacity(0);
@@ -759,6 +1017,57 @@
             renderer.domElement.requestPointerLock();
         });
 
+        const homeBtn = document.getElementById('homeBtn');
+        homeBtn.addEventListener('click', () => {
+            dead = false;
+            gameTime = 0;
+            figureActive = false;
+            figureTriggered = false;
+            figureGazeTime = 0;
+            figureSpeedVar = 0;
+            figureStuckTimer = 0;
+            gameStarted = false;
+            inventory = [null, null];
+            speedBoostTimer = 0;
+            bearTrapPlaced = false;
+            bearTrapPos = null;
+            updateInventoryUI();
+
+            for (const item of itemMeshes) {
+                item.userData.collected = false;
+                item.visible = true;
+            }
+
+            if (figureMesh && figureTex[figureSelect.value]) {
+                const aspect = figureAspects[figureSelect.value] || 0.5;
+                figureMesh.geometry.dispose();
+                figureMesh.geometry = new THREE.PlaneGeometry(FIG_H * aspect, FIG_H);
+                figureMesh.material.map = figureTex[figureSelect.value];
+                figureMesh.material.needsUpdate = true;
+                figureMesh.visible = false;
+                figureMesh.position.set(0, getTerrainHeight(0, -60) + 2.5, -60);
+            }
+
+            camera.position.set(0, getTerrainHeight(0, 0) + BASE_Y, 0);
+            moveF = moveB = moveL = moveR = false;
+            moveLeft = moveRight = false;
+            sprint = false;
+            isJumping = false;
+            jumpVel = 0;
+            jumpVelX = 0;
+            jumpVelZ = 0;
+            isSliding = false;
+            currentStaticOpacity = 0;
+            setStaticOpacity(0);
+
+            deathEl.classList.remove('active');
+            overlay.setAttribute('data-visible', 'true');
+            overlay.style.display = 'flex';
+            updateHomeLeaderboard();
+            document.querySelectorAll('.game-ui').forEach(el => el.classList.remove('hidden'));
+            document.getElementById('timer').textContent = '0:00';
+        });
+
         renderer.domElement.addEventListener('click', () => {
             if (!locked) renderer.domElement.requestPointerLock();
         });
@@ -766,9 +1075,13 @@
         document.addEventListener('pointerlockchange', () => {
             locked = document.pointerLockElement === renderer.domElement;
             if (locked) {
+                overlay.classList.add('hidden');
                 overlay.style.display = 'none';
             } else if (!dead && gameStarted && countdown <= 0) {
+                overlay.setAttribute('data-visible', 'true');
                 overlay.style.display = 'flex';
+                updateHomeLeaderboard();
+                document.querySelectorAll('.game-ui').forEach(el => el.classList.remove('hidden'));
             }
         });
 
@@ -781,33 +1094,75 @@
             }
         });
 
+        const keys = {
+            w: document.getElementById('key-w'),
+            a: document.getElementById('key-a'),
+            s: document.getElementById('key-s'),
+            d: document.getElementById('key-d'),
+            space: document.getElementById('key-space'),
+            c: document.getElementById('key-c'),
+            shift: document.getElementById('key-shift'),
+            f: document.getElementById('key-f')
+        };
+
+        function setKeyActive(key, active) {
+            if (keys[key]) {
+                if (active) keys[key].classList.add('active');
+                else keys[key].classList.remove('active');
+            }
+        }
+
         document.addEventListener('keydown', e => {
             const code = e.code;
-            if (code === 'KeyW' || code === 'ArrowUp') { moveF = true; }
-            if (code === 'KeyS' || code === 'ArrowDown') { moveB = true; }
-            if (code === 'KeyA') { moveL = true; }
-            if (code === 'KeyD') { moveR = true; }
+            if (code === 'KeyW' || code === 'ArrowUp') { moveF = true; setKeyActive('w', true); }
+            if (code === 'KeyS' || code === 'ArrowDown') { moveB = true; setKeyActive('s', true); }
+            if (code === 'KeyA') { moveL = true; setKeyActive('a', true); }
+            if (code === 'KeyD') { moveR = true; setKeyActive('d', true); }
             if (code === 'ArrowLeft') { moveLeft = true; }
             if (code === 'ArrowRight') { moveRight = true; }
-            if (code === 'ShiftLeft' || code === 'ShiftRight' || code === 'KeyL') sprint = true;
+            if (code === 'ShiftLeft' || code === 'ShiftRight' || code === 'KeyL') { sprint = true; setKeyActive('shift', true); }
             if (code === 'Space' && !isJumping && !isSliding && locked) {
+                setKeyActive('space', true);
                 const isMoving = moveF || moveB || moveL || moveR || sprint;
                 if (isMoving) {
                     isJumping = true;
                     wasInAir = true;
-                    jumpVel = 35;
+                    jumpVel = 48;
+                    const cos = Math.cos(yaw), sin = Math.sin(yaw);
+                    let boostDirX = 0, boostDirZ = 0;
+                    if (moveF) { boostDirX -= sin; boostDirZ -= cos; }
+                    if (moveB) { boostDirX += sin; boostDirZ += cos; }
+                    if (moveL) { boostDirX -= cos; boostDirZ += sin; }
+                    if (moveR) { boostDirX += cos; boostDirZ -= sin; }
+                    const len = Math.sqrt(boostDirX * boostDirX + boostDirZ * boostDirZ);
+                    if (len > 0) {
+                        const boostSpeed = 25;
+                        jumpVelX = (boostDirX / len) * boostSpeed;
+                        jumpVelZ = (boostDirZ / len) * boostSpeed;
+                    }
                 } else {
                     isJumping = true;
                     wasInAir = true;
-                    jumpVel = 25;
+                    jumpVel = 38;
                 }
             }
             if (code === 'KeyC' && !isSliding && !isJumping && locked) {
-                isSliding = true;
-                slideTimer = 0.6;
+                const now = Date.now();
+                setKeyActive('c', true);
+                if (dashCooldown <= 0 && now - lastSlideTime < 150) {
+                    const dashDist = 15;
+                    camera.position.x += Math.sin(yaw) * dashDist;
+                    camera.position.z += Math.cos(yaw) * dashDist;
+                    dashCooldown = 0.8;
+                } else {
+                    isSliding = true;
+                    slideTimer = 0.6;
+                }
                 wasInAir = false;
+                lastSlideTime = now;
             }
             if (code === 'KeyF' && locked) {
+                setKeyActive('f', true);
                 let usedSlot = -1;
                 if (inventory[0]) {
                     usedSlot = 0;
@@ -821,9 +1176,18 @@
                     updateInventoryUI();
 
                     if (activeItem === 'bear') {
-                        bearTrapPlaced = true;
-                        bearTrapPos = new THREE.Vector3(camera.position.x, getTerrainHeight(camera.position.x, camera.position.z - 3), camera.position.z - 3);
-                        spawnItem('bear', bearTrapPos.x, bearTrapPos.z);
+                        if (!bearTrapPlaced) {
+                            bearTrapPlaced = true;
+                            bearTrapPos = new THREE.Vector3(
+                                camera.position.x + Math.sin(yaw) * 3,
+                                getTerrainHeight(camera.position.x, camera.position.z),
+                                camera.position.z + Math.cos(yaw) * 3
+                            );
+                            spawnItem('bear', bearTrapPos.x, bearTrapPos.z);
+                        } else {
+                            inventory[usedSlot] = 'bear';
+                            updateInventoryUI();
+                        }
                     } else if (activeItem === 'gem') {
                         speedBoostTimer += 10;
                     }
@@ -837,13 +1201,16 @@
 
         document.addEventListener('keyup', e => {
             const code = e.code;
-            if (code === 'KeyW' || code === 'ArrowUp') moveF = false;
-            if (code === 'KeyS' || code === 'ArrowDown') moveB = false;
-            if (code === 'KeyA') moveL = false;
-            if (code === 'KeyD') moveR = false;
+            if (code === 'KeyW' || code === 'ArrowUp') { moveF = false; setKeyActive('w', false); }
+            if (code === 'KeyS' || code === 'ArrowDown') { moveB = false; setKeyActive('s', false); }
+            if (code === 'KeyA') { moveL = false; setKeyActive('a', false); }
+            if (code === 'KeyD') { moveR = false; setKeyActive('d', false); }
             if (code === 'ArrowLeft') moveLeft = false;
             if (code === 'ArrowRight') moveRight = false;
-            if (code === 'ShiftLeft' || code === 'ShiftRight' || code === 'KeyL') sprint = false;
+            if (code === 'ShiftLeft' || code === 'ShiftRight' || code === 'KeyL') { sprint = false; setKeyActive('shift', false); }
+            if (code === 'Space') setKeyActive('space', false);
+            if (code === 'KeyC') setKeyActive('c', false);
+            if (code === 'KeyF') setKeyActive('f', false);
         });
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -892,6 +1259,23 @@
             localStorage.setItem('rngLeaderboard', JSON.stringify(top5));
             return top5;
         }
+
+        function updateHomeLeaderboard() {
+            const scores = loadLeaderboard();
+            const container = document.getElementById('homeLeaderboard');
+            if (scores.length === 0) {
+                container.innerHTML = '<h3>Top Runs</h3><div class="score-row">No runs yet</div>';
+            } else {
+                container.innerHTML = '<h3>Top Runs</h3>' + scores.map((s, i) => {
+                    const m = Math.floor(s.time / 60);
+                    const sec = Math.floor(s.time % 60);
+                    const cls = i === 0 ? 'first' : '';
+                    return `<div class="score-row ${cls}"><span>${i + 1}.</span><span>${m}:${sec.toString().padStart(2, '0')}</span></div>`;
+                }).join('');
+            }
+        }
+
+        updateHomeLeaderboard();
 
         let figureActive = false;
         let figureTriggered = false;
@@ -949,6 +1333,8 @@
             sprint = false;
             isJumping = false;
             jumpVel = 0;
+            jumpVelX = 0;
+            jumpVelZ = 0;
             isSliding = false;
             currentStaticOpacity = 0;
             setStaticOpacity(0);
@@ -1010,14 +1396,26 @@
                     if (slideTimer <= 0) isSliding = false;
                 }
 
+                if (dashCooldown > 0) dashCooldown -= dt;
+
                 if (isJumping) {
-                    jumpVel -= 45 * dt;
+                    if (jumpVel > 0) {
+                        jumpVel -= 32 * dt;
+                    } else {
+                        jumpVel -= 65 * dt;
+                    }
                     camera.position.y += jumpVel * dt;
+                    camera.position.x += jumpVelX * dt;
+                    camera.position.z += jumpVelZ * dt;
+                    jumpVelX *= 0.98;
+                    jumpVelZ *= 0.98;
                     const groundY = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y;
                     if (camera.position.y <= groundY) {
                         camera.position.y = groundY;
                         isJumping = false;
                         jumpVel = 0;
+                        jumpVelX = 0;
+                        jumpVelZ = 0;
                     }
                 }
 
@@ -1130,8 +1528,8 @@
                             figPos.z += toPlayer.z * currentFigureSpeed * dt;
                             figPos.y = getTerrainHeight(figPos.x, figPos.z) + 2.5;
 
-                            if (bearTrapPos && figPos.distanceTo(bearTrapPos) < 3) {
-                                figureStuckTimer = 10;
+                            if (bearTrapPos && figPos.distanceTo(bearTrapPos) < 4) {
+                                figureStuckTimer = 12;
                                 bearTrapPos = null;
                                 bearTrapPlaced = false;
                             }
