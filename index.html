@@ -3,7 +3,34 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Run N Not Gun</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RUN-N-NOT GUN - Escape the Horror</title>
+    
+    <!-- SEO & Description -->
+    <meta name="description" content="A horror survival game. Run, hide, and survive. Choose your character and escape the figure chasing you.">
+    <meta name="keywords" content="horror game, survival, escape, scary, browser game, indie game">
+    <meta name="author" content="Run-N-Not Gun">
+    <meta name="theme-color" content="#000000">
+    
+    <!-- Open Graph / Discord -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="RUN-N-NOT GUN">
+    <meta property="og:description" content="Escape the horror. Run, hide, and survive.">
+    <meta property="og:site_name" content="RUN-N-NOT GUN">
+    <meta property="og:url" content="https://runnnotgun.github.io/">
+    <meta property="og:image" content="https://runnnotgun.github.io/figureface.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="RUN-N-NOT GUN">
+    <meta name="twitter:description" content="Escape the horror. Run, hide, and survive.">
+    <meta name="twitter:image" content="https://runnnotgun.github.io/figureface.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==">
+    
+    <!-- Canonical -->
+    <link rel="canonical" href="https://runnnotgun.github.io/">
     <style>
         * {
             margin: 0;
@@ -212,6 +239,17 @@
             margin-top: auto;
         }
 
+        #homescreen .coins-display {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #fff;
+            letter-spacing: 0.1em;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            padding: 10px 16px;
+            width: fit-content;
+        }
+
         #homescreen .leaderboard-panel {
             background: rgba(0, 0, 0, 0.5);
             border: 1px solid #333;
@@ -305,6 +343,47 @@
             letter-spacing: 0.1em;
             opacity: 0.8;
             z-index: 15;
+        }
+
+        #coins {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #fff;
+            letter-spacing: 0.1em;
+            opacity: 0.9;
+            z-index: 15;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            padding: 10px 16px;
+        }
+
+        #workTimer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            z-index: 16;
+            display: none;
+        }
+
+        #workTimer.visible {
+            display: block;
+        }
+
+        #workTimer svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        #workTimerCircle {
+            stroke-dasharray: 251.2;
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 0.1s linear;
         }
 
         #inventory {
@@ -537,7 +616,8 @@
                 </select>
                 
                 <button id="playBtn">Start Game</button>
-                <div class="version">v1.0</div>
+                <div class="coins-display" id="homeCoins">COINS: 0</div>
+                <div class="version">v1.2</div>
             </div>
             
             <div class="info-panel">
@@ -584,6 +664,13 @@
                         <div class="item-desc">Temporary speed boost</div>
                     </div>
                 </div>
+                <div class="item-row">
+                    <div class="item-icon"><img src="machine.png"></div>
+                    <div>
+                        <div class="item-name">Generator</div>
+                        <div class="item-desc">Press F to work for 8s, earn 10 coins</div>
+                    </div>
+                </div>
             </div>
             
             <div class="leaderboard-panel" id="homeLeaderboard">
@@ -593,6 +680,13 @@
     </div>
     <div id="hud" class="game-ui hidden">RUN...</div>
     <div id="timer" class="game-ui hidden">0:00</div>
+    <div id="coins" class="game-ui hidden">0</div>
+    <div id="workTimer" class="game-ui">
+        <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.2)" stroke-width="8" fill="none"/>
+            <circle id="workTimerCircle" cx="50" cy="50" r="40" stroke="#fff" stroke-width="8" fill="none" transform="rotate(-90 50 50)"/>
+        </svg>
+    </div>
     <div id="inventory" class="game-ui hidden">
         <div class="inv-slot" id="slot1"></div>
         <div class="inv-slot" id="slot2"></div>
@@ -786,6 +880,21 @@
 
         let figureMaterial;
         let itemMeshes = [];
+        let bearTrapMesh = null;
+        let machineMeshes = [];
+        let machines = [];
+
+        loader.load('bear.png', tex => {
+            tex.minFilter = tex.magFilter = THREE.NearestFilter;
+            const aspect = tex.image.width / tex.image.height;
+            const bearGeo = new THREE.PlaneGeometry(2 * aspect, 2);
+            const bearMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+            bearTrapMesh = new THREE.Mesh(bearGeo, bearMat);
+            bearTrapMesh.visible = false;
+            bearTrapMesh.userData.isTrap = true;
+            scene.add(bearTrapMesh);
+            billboards.push(bearTrapMesh);
+        });
 
         function spawnItem(type, x, z) {
             const texName = type === 'bear' ? 'bear.png' : 'gem.png';
@@ -812,6 +921,29 @@
             if (Math.abs(x) < 25 && Math.abs(z) < 50) continue;
             spawnItem(i % 2 === 0 ? 'bear' : 'gem', x, z);
         }
+
+        loader.load('machine.png', tex => {
+            tex.minFilter = tex.magFilter = THREE.NearestFilter;
+            const aspect = tex.image.width / tex.image.height;
+            const MACHINE_H = 3;
+            const machineGeo = new THREE.PlaneGeometry(MACHINE_H * aspect, MACHINE_H);
+            const machineMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+
+            for (let i = 0; i < 3; i++) {
+                const x = (Math.random() - 0.5) * MAP_SIZE * 0.7;
+                const z = (Math.random() - 0.5) * MAP_SIZE * 0.7;
+                if (Math.abs(x) < 30 && Math.abs(z) < 60) continue;
+                const machine = new THREE.Mesh(machineGeo, machineMat);
+                const terrainH = getTerrainHeight(x, z);
+                machine.position.set(x, terrainH + MACHINE_H / 2, z);
+                machine.userData.isMachine = true;
+                machine.userData.active = true;
+                scene.add(machine);
+                machineMeshes.push(machine);
+                billboards.push(machine);
+                machines.push({ x, z, active: true });
+            }
+        });
 
         const figureTex = {};
 
@@ -952,6 +1084,7 @@
             figureActive = true;
             figureSpeedVar = 0;
             document.querySelectorAll('.game-ui').forEach(el => el.classList.remove('hidden'));
+            document.getElementById('coins').textContent = 'COINS: ' + coins;
             if (figureMesh && figureTex[figureSelect.value]) {
                 const aspect = figureAspects[figureSelect.value] || 0.5;
                 figureMesh.geometry.dispose();
@@ -976,13 +1109,24 @@
             gameStarted = false;
             inventory = [null, null];
             speedBoostTimer = 0;
+            isWorking = false;
+            workTimer = 0;
+            nearMachine = null;
             bearTrapPlaced = false;
             bearTrapPos = null;
+            if (bearTrapMesh) bearTrapMesh.visible = false;
             updateInventoryUI();
 
             for (const item of itemMeshes) {
                 item.userData.collected = false;
                 item.visible = true;
+            }
+
+            for (const m of machineMeshes) {
+                m.visible = true;
+            }
+            for (const m of machines) {
+                m.active = true;
             }
 
             if (figureMesh && figureTex[figureSelect.value]) {
@@ -1029,13 +1173,24 @@
             gameStarted = false;
             inventory = [null, null];
             speedBoostTimer = 0;
+            isWorking = false;
+            workTimer = 0;
+            nearMachine = null;
             bearTrapPlaced = false;
             bearTrapPos = null;
+            if (bearTrapMesh) bearTrapMesh.visible = false;
             updateInventoryUI();
 
             for (const item of itemMeshes) {
                 item.userData.collected = false;
                 item.visible = true;
+            }
+
+            for (const m of machineMeshes) {
+                m.visible = true;
+            }
+            for (const m of machines) {
+                m.active = true;
             }
 
             if (figureMesh && figureTex[figureSelect.value]) {
@@ -1156,42 +1311,52 @@
                     dashCooldown = 0.8;
                 } else {
                     isSliding = true;
-                    slideTimer = 0.6;
+                    slideTimer = 0.3;
+                    speedBoostTimer = 3;
                 }
                 wasInAir = false;
                 lastSlideTime = now;
             }
             if (code === 'KeyF' && locked) {
                 setKeyActive('f', true);
-                let usedSlot = -1;
-                if (inventory[0]) {
-                    usedSlot = 0;
-                } else if (inventory[1]) {
-                    usedSlot = 1;
-                }
-
-                if (usedSlot !== -1) {
-                    activeItem = inventory[usedSlot];
-                    inventory[usedSlot] = null;
-                    updateInventoryUI();
-
-                    if (activeItem === 'bear') {
-                        if (!bearTrapPlaced) {
-                            bearTrapPlaced = true;
-                            bearTrapPos = new THREE.Vector3(
-                                camera.position.x + Math.sin(yaw) * 3,
-                                getTerrainHeight(camera.position.x, camera.position.z),
-                                camera.position.z + Math.cos(yaw) * 3
-                            );
-                            spawnItem('bear', bearTrapPos.x, bearTrapPos.z);
-                        } else {
-                            inventory[usedSlot] = 'bear';
-                            updateInventoryUI();
-                        }
-                    } else if (activeItem === 'gem') {
-                        speedBoostTimer += 10;
+                
+                if (!isWorking && nearMachine) {
+                    isWorking = true;
+                    workTimer = 8;
+                    nearMachine.active = false;
+                    const mesh = machineMeshes.find(m => m.position.x === nearMachine.x && m.position.z === nearMachine.z);
+                    if (mesh) mesh.visible = false;
+                } else {
+                    let usedSlot = -1;
+                    if (inventory[0]) {
+                        usedSlot = 0;
+                    } else if (inventory[1]) {
+                        usedSlot = 1;
                     }
-                    activeItem = null;
+
+                    if (usedSlot !== -1) {
+                        activeItem = inventory[usedSlot];
+                        inventory[usedSlot] = null;
+                        updateInventoryUI();
+
+                        if (activeItem === 'bear') {
+                            if (!bearTrapPlaced && bearTrapMesh) {
+                                bearTrapPlaced = true;
+                                const trapX = camera.position.x + Math.sin(yaw) * 3;
+                                const trapZ = camera.position.z + Math.cos(yaw) * 3;
+                                const trapY = getTerrainHeight(trapX, trapZ);
+                                bearTrapPos = new THREE.Vector3(trapX, trapY, trapZ);
+                                bearTrapMesh.position.set(trapX, trapY + 1, trapZ);
+                                bearTrapMesh.visible = true;
+                            } else {
+                                inventory[usedSlot] = 'bear';
+                                updateInventoryUI();
+                            }
+                        } else if (activeItem === 'gem') {
+                            speedBoostTimer += 10;
+                        }
+                        activeItem = null;
+                    }
                 }
             }
             if (['Space', 'KeyC'].includes(code)) {
@@ -1236,6 +1401,95 @@
             src.start();
         }
 
+        let windNode = null;
+        function startWind() {
+            if (windNode) return;
+            const bufLen = audioCtx.sampleRate * 4;
+            const buf = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
+            const data = buf.getChannelData(0);
+            for (let i = 0; i < bufLen; i++) {
+                data[i] = (Math.random() * 2 - 1) * 0.3;
+            }
+            windNode = audioCtx.createBufferSource();
+            windNode.buffer = buf;
+            windNode.loop = true;
+            const lp = audioCtx.createBiquadFilter();
+            lp.type = 'lowpass';
+            lp.frequency.value = 400;
+            const gain = audioCtx.createGain();
+            gain.gain.value = 0.08;
+            windNode.connect(lp);
+            lp.connect(gain);
+            gain.connect(audioCtx.destination);
+            windNode.start();
+        }
+
+        let figureSoundGain = null;
+        let figureOsc = null;
+        let kanyeAudio = null;
+        let kanyeGainNode = null;
+
+        function playFigureSound(distance) {
+            if (figureSelect.value === 'kanye') {
+                if (!kanyeAudio) {
+                    kanyeAudio = new Audio('kanye.mp3');
+                    kanyeAudio.loop = true;
+                    kanyeAudio.crossOrigin = 'anonymous';
+                    kanyeAudio.addEventListener('canplaythrough', () => {
+                        if (audioCtx.state === 'suspended') audioCtx.resume();
+                        const source = audioCtx.createMediaElementSource(kanyeAudio);
+                        kanyeGainNode = audioCtx.createGain();
+                        kanyeGainNode.gain.value = 0;
+                        source.connect(kanyeGainNode);
+                        kanyeGainNode.connect(audioCtx.destination);
+                        kanyeAudio.play();
+                    }, { once: true });
+                }
+                if (kanyeGainNode) {
+                    const volume = Math.max(0, Math.min(0.5, 0.5 - distance / 120));
+                    kanyeGainNode.gain.setTargetAtTime(volume, audioCtx.currentTime, 0.3);
+                }
+            } else {
+                if (!figureOsc) {
+                    figureOsc = audioCtx.createOscillator();
+                    figureOsc.type = 'sine';
+                    figureSoundGain = audioCtx.createGain();
+                    figureSoundGain.gain.value = 0;
+                    const lp = audioCtx.createBiquadFilter();
+                    lp.type = 'lowpass';
+                    lp.frequency.value = 300;
+                    figureOsc.connect(lp);
+                    lp.connect(figureSoundGain);
+                    figureSoundGain.connect(audioCtx.destination);
+                    figureOsc.start();
+                }
+                const volume = Math.max(0, Math.min(0.3, 0.3 - distance / 150));
+                const freq = 80 + (figureSelect.value === 'scaryguy' ? 40 : 0);
+                figureOsc.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.3);
+                figureSoundGain.gain.setTargetAtTime(volume, audioCtx.currentTime, 0.3);
+            }
+        }
+
+        function stopFigureSound() {
+            if (figureSoundGain) {
+                figureSoundGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.2);
+            }
+            if (kanyeGainNode) {
+                kanyeGainNode.gain.setTargetAtTime(0, audioCtx.currentTime, 0.2);
+            }
+            if (figureOsc) {
+                figureOsc.stop();
+                figureOsc = null;
+                figureSoundGain = null;
+            }
+            if (kanyeAudio) {
+                kanyeAudio.pause();
+                kanyeAudio.currentTime = 0;
+                kanyeAudio = null;
+                kanyeGainNode = null;
+            }
+        }
+
         const BASE_Y = 1.7;
         const SPEED = 22;
 
@@ -1245,6 +1499,17 @@
         const dir = new THREE.Vector3();
         let dead = false;
         let gameTime = 0;
+
+        function loadCoins() {
+            const stored = localStorage.getItem('rngCoins');
+            return stored ? parseInt(stored, 10) : 0;
+        }
+
+        function saveCoins(c) {
+            localStorage.setItem('rngCoins', c.toString());
+        }
+
+        let coins = loadCoins();
 
         function loadLeaderboard() {
             const stored = localStorage.getItem('rngLeaderboard');
@@ -1276,6 +1541,7 @@
         }
 
         updateHomeLeaderboard();
+        document.getElementById('homeCoins').textContent = 'COINS: ' + coins;
 
         let figureActive = false;
         let figureTriggered = false;
@@ -1290,6 +1556,10 @@
         let figureStuckTimer = 0;
         let bearTrapPlaced = false;
         let bearTrapPos = null;
+
+        let workTimer = 0;
+        let isWorking = false;
+        let nearMachine = null;
 
         let placedItems = [];
 
@@ -1311,6 +1581,7 @@
             speedBoostTimer = 0;
             bearTrapPlaced = false;
             bearTrapPos = null;
+            if (bearTrapMesh) bearTrapMesh.visible = false;
             updateInventoryUI();
 
             for (const item of itemMeshes) {
@@ -1387,6 +1658,7 @@
 
             if (gameStarted && locked && !dead) {
                 gameTime += dt;
+                const speedIncrease = 1 + Math.floor(gameTime / 10) * 0.01;
                 const mins = Math.floor(gameTime / 60);
                 const secs = Math.floor(gameTime % 60);
                 document.getElementById('timer').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
@@ -1397,6 +1669,39 @@
                 }
 
                 if (dashCooldown > 0) dashCooldown -= dt;
+
+                if (isWorking) {
+                    workTimer -= dt;
+                    const timerEl = document.getElementById('workTimer');
+                    timerEl.classList.add('visible');
+                    const circle = document.getElementById('workTimerCircle');
+                    const progress = (workTimer / 8) * 251.2;
+                    circle.style.strokeDashoffset = 251.2 - progress;
+                    if (workTimer <= 0) {
+                        isWorking = false;
+                        timerEl.classList.remove('visible');
+                        coins += 10;
+                        saveCoins(coins);
+                        document.getElementById('coins').textContent = coins;
+                        hud.textContent = '+10 COINS!';
+                        setTimeout(() => hud.textContent = 'RUN...', 2000);
+                    }
+                }
+
+                nearMachine = null;
+                for (const m of machines) {
+                    if (!m.active) continue;
+                    const dist = Math.sqrt(Math.pow(camera.position.x - m.x, 2) + Math.pow(camera.position.z - m.z, 2));
+                    if (dist < 4) {
+                        nearMachine = m;
+                        if (!isWorking) hud.textContent = 'Press F to work';
+                        break;
+                    }
+                }
+
+                if (isWorking) {
+                    camera.position.y = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y;
+                }
 
                 if (isJumping) {
                     if (jumpVel > 0) {
@@ -1422,8 +1727,18 @@
                 let speedMult = 1;
                 if (sprint) speedMult = 3.5;
                 let targetSpeed = SPEED * speedMult;
+                if (isWorking) targetSpeed = 0;
                 if (isSliding) {
-                    targetSpeed += wasInAir ? 25 : 10;
+                    const h1 = getTerrainHeight(camera.position.x, camera.position.z);
+                    const nextX = camera.position.x + dir.x * 2;
+                    const nextZ = camera.position.z + dir.z * 2;
+                    const h2 = getTerrainHeight(nextX, nextZ);
+                    const slope = (h1 - h2) / 2;
+                    if (slope > 0.1) {
+                        targetSpeed *= 1.6;
+                    } else {
+                        targetSpeed *= 1.1;
+                    }
                     wasInAir = false;
                 }
                 if (speedBoostTimer > 0) {
@@ -1523,7 +1838,7 @@
                             toPlayer.normalize();
                             figureSpeedVar += (Math.random() - 0.7) * 0.5;
                             figureSpeedVar = Math.max(-8, Math.min(3, figureSpeedVar));
-                            const currentFigureSpeed = FIGURE_CHASE_SPEED + figureSpeedVar;
+                            const currentFigureSpeed = (FIGURE_CHASE_SPEED + figureSpeedVar) * speedIncrease;
                             figPos.x += toPlayer.x * currentFigureSpeed * dt;
                             figPos.z += toPlayer.z * currentFigureSpeed * dt;
                             figPos.y = getTerrainHeight(figPos.x, figPos.z) + 2.5;
@@ -1532,6 +1847,7 @@
                                 figureStuckTimer = 12;
                                 bearTrapPos = null;
                                 bearTrapPlaced = false;
+                                if (bearTrapMesh) bearTrapMesh.visible = false;
                             }
                         } else {
                             figureTriggered = true;
@@ -1559,12 +1875,15 @@
 
                     const chaseDist = camera.position.distanceTo(figureMesh.position);
                     let targetStatic = 0;
-                    if (chaseDist < 70) {
-                        targetStatic = Math.max(0, Math.min(1, 1 - chaseDist / 70)) * 0.45;
+                    const soundRange = 150;
+                    if (chaseDist < soundRange) {
+                        targetStatic = Math.max(0, Math.min(1, 1 - chaseDist / soundRange)) * 0.45;
                         const distStr = Math.floor(chaseDist);
                         hud.textContent = `RUN... ${distStr}m`;
+                        playFigureSound(chaseDist);
                     } else {
                         hud.textContent = 'RUN...';
+                        stopFigureSound();
                     }
 
                     currentStaticOpacity += (targetStatic - currentStaticOpacity) * 0.1;
