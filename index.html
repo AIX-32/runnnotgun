@@ -2293,7 +2293,11 @@ const FIG_H = 5;
         document.addEventListener('keydown', e => {
             const code = e.code;
             if (code === 'Escape' && gameStarted && !dead && countdown <= 0) {
-                togglePause();
+                if (isPuzzleActive) {
+                    closePuzzle();
+                } else {
+                    togglePause();
+                }
                 return;
             }
             if (code === 'KeyW' || code === 'ArrowUp') { moveF = true; setKeyActive('w', true); }
@@ -2902,7 +2906,7 @@ const FIG_H = 5;
                 }
             }
 
-            if (gameStarted && locked && !dead && !isPaused && !isPuzzleActive) {
+            if (gameStarted && (locked || isPuzzleActive) && !dead && !isPaused) {
                 gameTime += dt;
                 
                 if (flareActive) {
@@ -3199,6 +3203,7 @@ const FIG_H = 5;
                         } else {
                             figureTriggered = true;
                             dead = true;
+                            if (isPuzzleActive) closePuzzle();
                             stopFigureSound();
                             if (handsMesh) handsMesh.visible = false;
                             document.exitPointerLock();
