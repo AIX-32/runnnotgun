@@ -1948,19 +1948,54 @@ const FIG_H = 5;
                         if (figureTargetFlare && flareActive && flarePos) {
                             targetPos = flarePos;
                         } else {
-                            targetPos = camera.position;
+                            const playerVel = new THREE.Vector3(moveF ? 1 : (moveB ? -1 : 0), 0, moveL ? -1 : (moveR ? 1 : 0));
+                            if (playerVel.length() > 0) {
+                                playerVel.normalize().multiplyScalar(5);
+                                targetPos = new THREE.Vector3(
+                                    camera.position.x + playerVel.x,
+                                    0,
+                                    camera.position.z + playerVel.z
+                                );
+                            } else {
+                                targetPos = camera.position;
+                            }
                             figureTargetFlare = false;
                         }
                         const toTarget = new THREE.Vector3(targetPos.x - figPos.x, 0, targetPos.z - figPos.z);
                         const distToTarget = toTarget.length();
 
+                        const FIGURE_AVOID_DIST = 8;
+                        let avoidX = 0, avoidZ = 0;
+                        for (const tree of trees) {
+                            const d = new THREE.Vector3(tree.x - figPos.x, 0, tree.z - figPos.z).length();
+                            if (d < FIGURE_AVOID_DIST) {
+                                const push = (FIGURE_AVOID_DIST - d) / FIGURE_AVOID_DIST;
+                                avoidX += (figPos.x - tree.x) * push * 2;
+                                avoidZ += (figPos.z - tree.z) * push * 2;
+                            }
+                        }
+                        for (const rock of rocks) {
+                            const d = new THREE.Vector3(rock.x - figPos.x, 0, rock.z - figPos.z).length();
+                            if (d < FIGURE_AVOID_DIST * 0.8) {
+                                const push = (FIGURE_AVOID_DIST * 0.8 - d) / (FIGURE_AVOID_DIST * 0.8);
+                                avoidX += (figPos.x - rock.x) * push * 2;
+                                avoidZ += (figPos.z - rock.z) * push * 2;
+                            }
+                        }
+
                         if (figureStuckTimer > 0) {
                             figureStuckTimer -= dt;
                         } else if (distToTarget > 2.0) {
                             toTarget.normalize();
-                            figureSpeedVar += (Math.random() - 0.7) * 0.5;
-                            figureSpeedVar = Math.max(-8, Math.min(3, figureSpeedVar));
-                            const currentFigureSpeed = (FIGURE_CHASE_SPEED + figureSpeedVar) * speedIncrease;
+                            figureSpeedVar += (Math.random() - 0.7) * 0.3;
+                            figureSpeedVar = Math.max(-5, Math.min(5, figureSpeedVar));
+                            let currentFigureSpeed = (FIGURE_CHASE_SPEED + figureSpeedVar) * speedIncrease;
+                            if (avoidX !== 0 || avoidZ !== 0) {
+                                currentFigureSpeed *= 0.6;
+                            }
+                            toTarget.x += avoidX * dt * 2;
+                            toTarget.z += avoidZ * dt * 2;
+                            toTarget.normalize();
                             figPos.x += toTarget.x * currentFigureSpeed * dt;
                             figPos.z += toTarget.z * currentFigureSpeed * dt;
                             figPos.y = getTerrainHeight(figPos.x, figPos.z) + 2.5;
@@ -1972,7 +2007,6 @@ const FIG_H = 5;
                                 if (bearTrapMesh) bearTrapMesh.visible = false;
                             }
                         } else if (figureTargetFlare && flareActive) {
-                            // Wait at flare until it expires
                         } else {
                             figureTriggered = true;
                             dead = true;
