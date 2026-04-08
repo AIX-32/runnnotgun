@@ -852,6 +852,58 @@
         .key-btn.wide {
             width: 72px;
         }
+
+        #pause {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            z-index: 30;
+        }
+
+        #pause.active {
+            display: flex;
+        }
+
+        #pause h1 {
+            font-family: 'Courier New', monospace;
+            font-size: 36px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: #fff;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        #pause .pause-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        #pause button {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #fff;
+            background: none;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            padding: 14px 28px;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+
+        #pause button:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #fff;
+        }
     </style>
 </head>
 
@@ -1005,6 +1057,14 @@
         <div id="leaderboard"></div>
     </div>
 
+    <div id="pause">
+        <h1>Paused</h1>
+        <div class="pause-buttons">
+            <button id="resumeBtn">Resume</button>
+            <button id="pauseHomeBtn">Quit to Home</button>
+        </div>
+    </div>
+
     <script type="importmap">
     {
       "imports": {
@@ -1064,8 +1124,8 @@
         scene.add(skyMesh);
 
         const sunMoonGeo = new THREE.SphereGeometry(30, 16, 16);
-        const sunMat = new THREE.MeshBasicMaterial({ color: 0xffdd44 });
-        const moonMat = new THREE.MeshBasicMaterial({ color: 0xdddddd });
+        const sunMat = new THREE.MeshBasicMaterial({ color: 0xffdd44, fog: false });
+        const moonMat = new THREE.MeshBasicMaterial({ color: 0xdddddd, fog: false });
         const sunMesh = new THREE.Mesh(sunMoonGeo, sunMat);
         const moonMesh = new THREE.Mesh(sunMoonGeo, moonMat);
         scene.add(sunMesh);
@@ -1079,10 +1139,18 @@
         loader.load('assets/images/hands.png', tex => {
             tex.minFilter = tex.magFilter = THREE.NearestFilter;
             const handsGeo = new THREE.PlaneGeometry(2.5, 2.5);
-            const handsMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+            const handsMat = new THREE.MeshBasicMaterial({ 
+                map: tex, 
+                transparent: true, 
+                alphaTest: 0.1, 
+                side: THREE.DoubleSide,
+                depthTest: false,
+                depthWrite: false
+            });
             handsMesh = new THREE.Mesh(handsGeo, handsMat);
             handsMesh.position.set(0, -1.0, -2.5);
             handsMesh.visible = false;
+            handsMesh.renderOrder = 999;
             camera.add(handsMesh);
             scene.add(camera);
         });
@@ -1202,29 +1270,50 @@
         const rocks = [];
 
         function createTree() {
-            const useTree2 = Math.random() > 0.5;
-            loader.load('assets/images/' + (useTree2 ? 'tree2.png' : 'tree.png'), tex => {
+            loader.load('assets/images/tree.png', tex => {
                 tex.minFilter = tex.magFilter = THREE.NearestFilter;
-                const aspect = tex.image.width / tex.image.height;
-                const TREE_H = 22;
-                const treeGeo = new THREE.PlaneGeometry(TREE_H * aspect, TREE_H);
-                const treeMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+                const tree1Aspect = tex.image.width / tex.image.height;
+                const tree1Geo = new THREE.PlaneGeometry(22 * tree1Aspect, 22);
+                const tree1Mat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+                
+                loader.load('assets/images/tree2.png', tex2 => {
+                    tex2.minFilter = tex2.magFilter = THREE.NearestFilter;
+                    const tree2Aspect = tex2.image.width / tex2.image.height;
+                    const tree2Geo = new THREE.PlaneGeometry(22 * tree2Aspect, 22);
+                    const tree2Mat = new THREE.MeshLambertMaterial({ map: tex2, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
 
-                for (let i = 0; i < 120; i++) {
-                    const x = (Math.random() - 0.5) * MAP_SIZE * 0.9;
-                    const z = (Math.random() - 0.5) * MAP_SIZE * 0.9;
-                    if (Math.abs(x) < 25 && Math.abs(z) < 45) continue;
-                    const scale = 0.8 + Math.random() * 0.8;
-                    const tree = new THREE.Mesh(treeGeo, treeMat);
-                    const terrainH = getTerrainHeight(x, z);
-                    tree.position.set(x, terrainH + TREE_H / 2 * scale, z);
-                    tree.scale.setScalar(scale);
-                    tree.userData.baseY = terrainH + TREE_H / 2 * scale;
-                    tree.userData.isTree = true;
-                    scene.add(tree);
-                    billboards.push(tree);
-                    trees.push(tree);
-                }
+                    loader.load('assets/images/tree3.png', tex3 => {
+                        tex3.minFilter = tex3.magFilter = THREE.NearestFilter;
+                        const tree3Aspect = tex3.image.width / tex3.image.height;
+                        const tree3Geo = new THREE.PlaneGeometry(22 * tree3Aspect, 22);
+                        const tree3Mat = new THREE.MeshLambertMaterial({ map: tex3, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+
+                        for (let i = 0; i < 120; i++) {
+                            const r = Math.random();
+                            let useTree = 1;
+                            if (r > 0.66) useTree = 3;
+                            else if (r > 0.33) useTree = 2;
+                            
+                            const geo = useTree === 3 ? tree3Geo : (useTree === 2 ? tree2Geo : tree1Geo);
+                            const mat = useTree === 3 ? tree3Mat : (useTree === 2 ? tree2Mat : tree1Mat);
+                            const aspect = useTree === 3 ? tree3Aspect : (useTree === 2 ? tree2Aspect : tree1Aspect);
+                            
+                            const x = (Math.random() - 0.5) * MAP_SIZE * 0.9;
+                            const z = (Math.random() - 0.5) * MAP_SIZE * 0.9;
+                            if (Math.abs(x) < 25 && Math.abs(z) < 45) continue;
+                            const scale = 0.8 + Math.random() * 0.8;
+                            const tree = new THREE.Mesh(geo, mat);
+                            const terrainH = getTerrainHeight(x, z);
+                            tree.position.set(x, terrainH + 22 / 2 * scale, z);
+                            tree.scale.setScalar(scale);
+                            tree.userData.baseY = terrainH + 22 / 2 * scale;
+                            tree.userData.isTree = true;
+                            scene.add(tree);
+                            billboards.push(tree);
+                            trees.push(tree);
+                        }
+                    });
+                });
             });
         }
         createTree();
@@ -1429,6 +1518,11 @@ const FIG_H = 5;
         const retryBtn = document.getElementById('retryBtn');
         const staticEl = document.getElementById('static');
         const flashEl = document.getElementById('flash');
+        const pauseEl = document.getElementById('pause');
+        const resumeBtn = document.getElementById('resumeBtn');
+        const pauseHomeBtn = document.getElementById('pauseHomeBtn');
+
+        let isPaused = false;
 
         function flash() {
             flashEl.style.opacity = 0.6;
@@ -1595,6 +1689,56 @@ const FIG_H = 5;
 
         const homeBtn = document.getElementById('homeBtn');
         homeBtn.addEventListener('click', () => {
+            stopFigureSound();
+            goHome();
+        });
+
+        renderer.domElement.addEventListener('click', () => {
+            if (!locked) renderer.domElement.requestPointerLock();
+        });
+
+        document.addEventListener('pointerlockchange', () => {
+            locked = document.pointerLockElement === renderer.domElement;
+            if (locked) {
+                overlay.classList.add('hidden');
+                overlay.style.display = 'none';
+            } else if (!dead && gameStarted && countdown <= 0 && !isPaused) {
+                togglePause();
+            }
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && gameStarted && !dead && countdown <= 0 && !isPaused) {
+                togglePause();
+            }
+        });
+
+        function togglePause() {
+            if (dead) return;
+            isPaused = !isPaused;
+            if (isPaused) {
+                pauseEl.classList.add('active');
+                document.exitPointerLock();
+                stopFigureSound();
+            } else {
+                pauseEl.classList.remove('active');
+                renderer.domElement.requestPointerLock();
+            }
+        }
+
+        resumeBtn.addEventListener('click', () => {
+            isPaused = false;
+            pauseEl.classList.remove('active');
+            renderer.domElement.requestPointerLock();
+        });
+
+        pauseHomeBtn.addEventListener('click', () => {
+            isPaused = false;
+            pauseEl.classList.remove('active');
+            goHome();
+        });
+
+        function goHome() {
             dead = false;
             gameTime = 0;
             figureActive = false;
@@ -1610,6 +1754,7 @@ const FIG_H = 5;
             nearMachine = null;
             bearTrapPlaced = false;
             bearTrapPos = null;
+            stopFigureSound();
             if (bearTrapMesh) bearTrapMesh.visible = false;
             updateInventoryUI();
 
@@ -1653,24 +1798,7 @@ const FIG_H = 5;
             updateHomeLeaderboard();
             document.querySelectorAll('.game-ui').forEach(el => el.classList.remove('hidden'));
             document.getElementById('timer').textContent = '0:00';
-        });
-
-        renderer.domElement.addEventListener('click', () => {
-            if (!locked) renderer.domElement.requestPointerLock();
-        });
-
-        document.addEventListener('pointerlockchange', () => {
-            locked = document.pointerLockElement === renderer.domElement;
-            if (locked) {
-                overlay.classList.add('hidden');
-                overlay.style.display = 'none';
-            } else if (!dead && gameStarted && countdown <= 0) {
-                overlay.setAttribute('data-visible', 'true');
-                overlay.style.display = 'flex';
-                updateHomeLeaderboard();
-                document.querySelectorAll('.game-ui').forEach(el => el.classList.remove('hidden'));
-            }
-        });
+        }
 
         document.addEventListener('mousemove', e => {
             if (dead) return;
@@ -1701,6 +1829,10 @@ const FIG_H = 5;
 
         document.addEventListener('keydown', e => {
             const code = e.code;
+            if (code === 'Escape' && gameStarted && !dead && countdown <= 0) {
+                togglePause();
+                return;
+            }
             if (code === 'KeyW' || code === 'ArrowUp') { moveF = true; setKeyActive('w', true); }
             if (code === 'KeyS' || code === 'ArrowDown') { moveB = true; setKeyActive('s', true); }
             if (code === 'KeyA') { moveL = true; setKeyActive('a', true); }
@@ -2208,7 +2340,7 @@ const FIG_H = 5;
                 }
             }
 
-            if (gameStarted && locked && !dead) {
+            if (gameStarted && locked && !dead && !isPaused) {
                 gameTime += dt;
                 
                 if (flareActive) {
@@ -2471,6 +2603,7 @@ const FIG_H = 5;
                         } else {
                             figureTriggered = true;
                             dead = true;
+                            stopFigureSound();
                             if (handsMesh) handsMesh.visible = false;
                             document.exitPointerLock();
                             deathEl.classList.add('active');
@@ -2537,14 +2670,13 @@ const FIG_H = 5;
                 const isSprinting = sprint;
                 const bob = Math.sin(bobTime) * (isMoving ? (isSprinting ? 0.15 : 0.1) : 0);
                 
+                handsTargetX = 0;
+                handsTargetZ = -2.5;
+                
                 if (moveF) handsTargetZ = -2.7;
-                else if (moveB) handsTargetZ = -2.3;
-                else if (moveLeft || moveL) handsTargetX = -0.2;
-                else if (moveRight || moveR) handsTargetX = 0.2;
-                else {
-                    handsTargetX = 0;
-                    handsTargetZ = -2.5;
-                }
+                if (moveB) handsTargetZ = -2.3;
+                if (moveLeft || moveL) handsTargetX = -0.2;
+                if (moveRight || moveR) handsTargetX = 0.2;
                 
                 handsMesh.position.x += (handsTargetX - handsMesh.position.x) * 0.15;
                 handsMesh.position.z += (handsTargetZ - handsMesh.position.z) * 0.15;
