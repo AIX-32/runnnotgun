@@ -1846,7 +1846,7 @@ const FIG_H = 5;
                 if (isMoving) {
                     isJumping = true;
                     wasInAir = true;
-                    jumpVel = 48;
+                    jumpVel = 30;
                     const cos = Math.cos(yaw), sin = Math.sin(yaw);
                     let boostDirX = 0, boostDirZ = 0;
                     if (moveF) { boostDirX -= sin; boostDirZ -= cos; }
@@ -1855,14 +1855,14 @@ const FIG_H = 5;
                     if (moveR) { boostDirX += cos; boostDirZ -= sin; }
                     const len = Math.sqrt(boostDirX * boostDirX + boostDirZ * boostDirZ);
                     if (len > 0) {
-                        const boostSpeed = 25;
+                        const boostSpeed = 18;
                         jumpVelX = (boostDirX / len) * boostSpeed;
                         jumpVelZ = (boostDirZ / len) * boostSpeed;
                     }
                 } else {
                     isJumping = true;
                     wasInAir = true;
-                    jumpVel = 38;
+                    jumpVel = 22;
                 }
             }
             if (code === 'KeyC' && !isSliding && !isJumping && locked) {
@@ -2417,8 +2417,6 @@ const FIG_H = 5;
                     camera.position.y += jumpVel * dt;
                     camera.position.x += jumpVelX * dt;
                     camera.position.z += jumpVelZ * dt;
-                    jumpVelX *= 0.98;
-                    jumpVelZ *= 0.98;
                     const groundY = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y;
                     if (camera.position.y <= groundY) {
                         camera.position.y = groundY;
@@ -2426,12 +2424,21 @@ const FIG_H = 5;
                         jumpVel = 0;
                         jumpVelX = 0;
                         jumpVelZ = 0;
+                        baseCameraY = groundY;
                     }
                 }
 
-                let speedMult = 1;
-                if (sprint) speedMult = 3.5;
-                let targetSpeed = SPEED * speedMult;
+                // Compute movement direction early
+                dir.set(0, 0, 0);
+                if (moveF) dir.z -= 1;
+                if (moveB) dir.z += 1;
+                if (moveL) dir.x -= 1;
+                if (moveR) dir.x += 1;
+                if (dir.length() > 0) dir.normalize();
+                const moveDirLen = dir.length();
+
+                // Speed calculation
+                let targetSpeed = SPEED * (sprint ? 2.8 : 1);
                 if (isWorking) targetSpeed = 0;
                 if (isSliding) {
                     const h1 = getTerrainHeight(camera.position.x, camera.position.z);
@@ -2439,11 +2446,8 @@ const FIG_H = 5;
                     const nextZ = camera.position.z + dir.z * 2;
                     const h2 = getTerrainHeight(nextX, nextZ);
                     const slope = (h1 - h2) / 2;
-                    if (slope > 0.1) {
-                        targetSpeed *= 1.6;
-                    } else {
-                        targetSpeed *= 1.1;
-                    }
+                    const slideBoost = 1.0 + Math.max(0, slope) * 1.5;
+                    targetSpeed *= slideBoost;
                     wasInAir = false;
                 }
                 if (speedBoostTimer > 0) {
@@ -2451,38 +2455,54 @@ const FIG_H = 5;
                     speedBoostTimer -= dt;
                 }
 
-                if (!('_curSpeed' in window)) window._curSpeed = SPEED;
-                window._curSpeed += (targetSpeed - window._curSpeed) * 0.15;
+                // Apply speed (but not when in air)
+                if (!('_curSpeed' in window)) window._curSpeed = 0;
+                if (isJumping) {
+                    // No change to speed while in air - keep current momentum
+                } else if (moveDirLen > 0) {
+                    window._curSpeed += (targetSpeed - window._curSpeed) * 0.25;
+                } else {
+                    window._curSpeed += (0 - window._curSpeed) * 0.2;
+                }
                 const currentSpeed = window._curSpeed;
-
-                const targetCamY = isSliding ? getTerrainHeight(camera.position.x, camera.position.z) + 0.6 : baseCameraY;
-                camera.position.y += (targetCamY - camera.position.y) * 0.2;
 
                 if (moveLeft) yaw += 2.5 * dt;
                 if (moveRight) yaw -= 2.5 * dt;
-
-                dir.set(0, 0, 0);
-                if (moveF) dir.z -= 1;
-                if (moveB) dir.z += 1;
-                if (moveL) dir.x -= 1;
-                if (moveR) dir.x += 1;
-                if (dir.length() > 0) dir.normalize();
 
                 const isMovingOnGround = (moveF || moveB || moveL || moveR) && !isJumping && !isSliding;
                 if (isMovingOnGround) {
                     bobTime += dt * (sprint ? 18 : 12);
                     const bobAmount = sprint ? 0.08 : 0.05;
                     baseCameraY = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y + Math.sin(bobTime) * bobAmount;
+                } else if (!isJumping) {
+                    baseCameraY = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y;
                 } else {
-                    baseCameraY += (getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y - baseCameraY) * 0.1;
+                    // keep baseCameraY unchanged during jump
+                }
+
+                // Snap Y position to ground when not jumping
+                if (!isJumping && !isWorking) {
+                    const groundY = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y;
+                    camera.position.y = groundY;
                 }
 
                 const cos = Math.cos(yaw), sin = Math.sin(yaw);
                 const dx = cos * dir.x + sin * dir.z;
                 const dz = -sin * dir.x + cos * dir.z;
 
-                const nx = camera.position.x + dx * currentSpeed * dt;
-                const nz = camera.position.z + dz * currentSpeed * dt;
+                let currentSpeedAdjusted = currentSpeed;
+                if (!isJumping && !isSliding) {
+                    const forward = dir.z < 0;
+                    const backward = dir.z > 0;
+                    const left = dir.x < 0;
+                    const right = dir.x > 0;
+                    if (forward && sprint) currentSpeedAdjusted *= 1.0;
+                    else if (backward) currentSpeedAdjusted *= 0.6;
+                    else if (left || right) currentSpeedAdjusted *= 0.85;
+                }
+
+                const nx = camera.position.x + dx * currentSpeedAdjusted * dt;
+                const nz = camera.position.z + dz * currentSpeedAdjusted * dt;
 
                 let newX = nx, newZ = nz;
                 const playerRadius = 0.5;
