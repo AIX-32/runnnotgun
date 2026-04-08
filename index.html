@@ -93,27 +93,34 @@
         #homescreen .controls-row {
             display: flex;
             gap: 10px;
-            align-items: center;
+            align-items: stretch;
         }
 
         #homescreen .controls-row select {
             width: 140px;
             font-size: 11px;
             padding: 10px 12px;
+            box-sizing: border-box;
+            height: auto;
+            min-height: 42px;
         }
 
         #homescreen .controls-row button {
             font-family: 'Courier New', monospace;
-            font-size: 12px;
-            letter-spacing: 0.2em;
+            font-size: 11px;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
             color: #fff;
             background: none;
             border: 2px solid #fff;
-            padding: 10px 20px;
+            padding: 10px 12px;
             cursor: pointer;
             opacity: 0.9;
             transition: all 0.3s;
+            width: 140px;
+            box-sizing: border-box;
+            height: auto;
+            min-height: 42px;
         }
 
         #homescreen .controls-row button:hover {
@@ -331,19 +338,26 @@
 
         #homescreen #customizeBtn {
             font-family: 'Courier New', monospace;
-            font-size: 12px;
+            font-size: 11px;
             letter-spacing: 0.15em;
-            color: #aaa;
+            text-transform: uppercase;
+            color: #fff;
             background: none;
-            border: 1px solid #555;
-            padding: 10px 20px;
+            border: 2px solid #fff;
+            padding: 10px 12px;
             cursor: pointer;
-            margin-top: 10px;
+            opacity: 0.9;
+            transition: all 0.3s;
+            width: 140px;
+            box-sizing: border-box;
+            height: auto;
+            min-height: 42px;
         }
 
         #homescreen #customizeBtn:hover {
+            opacity: 1;
             background: rgba(255, 255, 255, 0.1);
-            color: #fff;
+            transform: scale(1.02);
         }
 
         .popup {
@@ -841,9 +855,9 @@
                 <h1>RUN-N-NOT GUN</h1>
                 <p class="subtitle">Escape the horror</p>
                 
-                <button id="playBtn">START GAME</button>
+                <button id="playBtn" style="margin-bottom: 0px !important;">START GAME</button>
                 
-                <div class="controls-row">
+                <div class="controls-row" style="margin-top: -10px !important; margin-right: 0px !important;">
                     <select id="figureSelect">
                         <option value="default">FLIGHT</option>
                         <option value="kanye">KANYE</option>
@@ -852,7 +866,7 @@
                         <option value="training">TRAINING</option>
                     </select>
                     
-                    <button id="customizeBtn">Customize</button>
+                    <button id="customizeBtn" style="margin-top: 0px !important;">Customize</button>
                 </div>
                 
                 <div class="coins-display" id="homeCoins">COINS: 0</div>
