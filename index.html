@@ -84,6 +84,9 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+            padding: 24px;
         }
 
         #homescreen h1 {
@@ -614,6 +617,7 @@
                     <option value="kanye">KANYE</option>
                     <option value="scaryguy">SCARY GUY</option>
                     <option value="stalin">STALIN</option>
+                    <option value="training">TRAINING (NO FIGURE)</option>
                 </select>
                 
                 <button id="playBtn">Start Game</button>
@@ -652,14 +656,14 @@
                 <div class="divider"></div>
                 
                 <div class="item-row">
-                    <div class="item-icon"><img src="bear.png"></div>
+                    <div class="item-icon"><img src="assets/images/bear.png"></div>
                     <div>
                         <div class="item-name">Bear Trap</div>
                         <div class="item-desc">Stops the figure temporarily</div>
                     </div>
                 </div>
                 <div class="item-row">
-                    <div class="item-icon"><img src="gem.png"></div>
+                    <div class="item-icon"><img src="assets/images/gem.png"></div>
                     <div>
                         <div class="item-name">Speed Gem</div>
                         <div class="item-desc">Temporary speed boost</div>
@@ -814,8 +818,8 @@
         }
         groundGeo.computeVertexNormals();
 
-        const grassTex = makeNoiseTexture(64, 64, 100, 140, 60, 50, 16);
-        grassTex.repeat.set(80, 80);
+        const grassTex = makeNoiseTexture(256, 256, 100, 140, 60, 50, 8);
+        grassTex.repeat.set(100, 100);
         const groundMat = new THREE.MeshLambertMaterial({ map: grassTex });
         const ground = new THREE.Mesh(groundGeo, groundMat);
         ground.rotation.x = -Math.PI / 2;
@@ -831,7 +835,7 @@
         const trees = [];
         const rocks = [];
 
-        loader.load('tree.png', tex => {
+        loader.load('assets/images/tree.png', tex => {
             tex.minFilter = tex.magFilter = THREE.NearestFilter;
             const aspect = tex.image.width / tex.image.height;
             const TREE_H = 14;
@@ -855,7 +859,7 @@
             }
         });
 
-        loader.load('rock.png', tex => {
+        loader.load('assets/images/rock.png', tex => {
             tex.minFilter = tex.magFilter = THREE.NearestFilter;
             const aspect = tex.image.width / tex.image.height;
             const ROCK_H = 2;
@@ -885,7 +889,7 @@
         let machineMeshes = [];
         let machines = [];
 
-        loader.load('bear.png', tex => {
+        loader.load('assets/images/bear.png', tex => {
             tex.minFilter = tex.magFilter = THREE.NearestFilter;
             const aspect = tex.image.width / tex.image.height;
             const bearGeo = new THREE.PlaneGeometry(2 * aspect, 2);
@@ -900,7 +904,7 @@
         function spawnItem(type, x, z) {
             const texName = type === 'bear' ? 'bear.png' : 'gem.png';
             const itemTerrainH = getTerrainHeight(x, z);
-            loader.load(texName, tex => {
+            loader.load(texName.startsWith('assets') ? texName : 'assets/images/' + texName, tex => {
                 tex.minFilter = tex.magFilter = THREE.NearestFilter;
                 const ITEM_H = 1.5;
                 const aspect = tex.image.width / tex.image.height;
@@ -923,7 +927,7 @@
             spawnItem(i % 2 === 0 ? 'bear' : 'gem', x, z);
         }
 
-        loader.load('machine.png', tex => {
+        loader.load('assets/images/machine.png', tex => {
             tex.minFilter = tex.magFilter = THREE.NearestFilter;
             const aspect = tex.image.width / tex.image.height;
             const MACHINE_H = 3;
@@ -946,36 +950,31 @@
             }
         });
 
-        const figureTex = {};
+const figureTex = {};
 
-        loader.load('figure.png', tex => {
-            tex.minFilter = tex.magFilter = THREE.NearestFilter;
-            figureTex.default = tex;
-        });
-
-        loader.load('kanye.png', tex => {
-            tex.minFilter = tex.magFilter = THREE.NearestFilter;
-            figureTex.kanye = tex;
-        });
-
-        loader.load('scaryguy.png', tex => {
-            tex.minFilter = tex.magFilter = THREE.NearestFilter;
+loader.load('assets/images/figure.png', tex => {
+    figureTex.default = tex;
+    loader.load('assets/images/kanye.png', tex => {
+        figureTex.kanye = tex;
+        loader.load('assets/images/scaryguy.png', tex => {
             figureTex.scaryguy = tex;
+            loader.load('assets/images/stalin.png', tex => {
+                tex.minFilter = tex.magFilter = THREE.NearestFilter;
+                figureTex.stalin = tex;
+            });
         });
+    });
+});
 
-        loader.load('stalin.png', tex => {
-            tex.minFilter = tex.magFilter = THREE.NearestFilter;
-            figureTex.stalin = tex;
-        });
-
-        const FIG_H = 5;
+const FIG_H = 5;
         let figureGeo, figureMesh;
 
         const figureAspects = {
             default: 0.5,
             kanye: 0.7,
             scaryguy: 0.5,
-            stalin: 0.5
+            stalin: 0.5,
+            training: 0.5
         };
 
         function createFigureMesh() {
@@ -1041,7 +1040,7 @@
             if (inventory[0]) {
                 slot1.classList.add('filled');
                 const img = document.createElement('img');
-                img.src = inventory[0] === 'bear' ? 'bear.png' : 'gem.png';
+                img.src = inventory[0] === 'bear' ? 'assets/images/bear.png' : 'assets/images/gem.png';
                 slot1.appendChild(img);
             } else {
                 slot1.classList.remove('filled');
@@ -1049,7 +1048,7 @@
             if (inventory[1]) {
                 slot2.classList.add('filled');
                 const img = document.createElement('img');
-                img.src = inventory[1] === 'bear' ? 'bear.png' : 'gem.png';
+                img.src = inventory[1] === 'bear' ? 'assets/images/bear.png' : 'assets/images/gem.png';
                 slot2.appendChild(img);
             } else {
                 slot2.classList.remove('filled');
@@ -1088,11 +1087,12 @@
         function startGame() {
             gameStarted = true;
             gameTime = 0;
-            figureActive = true;
+            isTraining = figureSelect.value === 'training';
+            figureActive = !isTraining;
             figureSpeedVar = 0;
             document.querySelectorAll('.game-ui').forEach(el => el.classList.remove('hidden'));
             document.getElementById('coins').textContent = 'COINS: ' + coins;
-            if (figureMesh && figureTex[figureSelect.value]) {
+            if (!isTraining && figureMesh && figureTex[figureSelect.value]) {
                 const aspect = figureAspects[figureSelect.value] || 0.5;
                 figureMesh.geometry.dispose();
                 figureMesh.geometry = new THREE.PlaneGeometry(FIG_H * aspect, FIG_H);
@@ -1100,8 +1100,10 @@
                 figureMesh.material.needsUpdate = true;
                 figureMesh.visible = true;
                 figureMesh.position.set(0, getTerrainHeight(0, camera.position.z - 60) + 2.5, camera.position.z - 60);
+            } else if (figureMesh) {
+                figureMesh.visible = false;
             }
-            hud.textContent = 'RUN...';
+            hud.textContent = isTraining ? 'TRAINING MODE' : 'RUN...';
             renderer.domElement.requestPointerLock();
         }
 
@@ -1435,26 +1437,39 @@
         let figureOsc = null;
         let kanyeAudio = null;
         let kanyeGainNode = null;
+        let stalinAudio = null;
+        let stalinGainNode = null;
+        let flightAudio = null;
+        let flightGainNode = null;
+
+        const figureAudioMap = {
+            default: { audio: null, gainNode: null, file: 'assets/audio/flight.mp3' },
+            kanye: { audio: null, gainNode: null, file: 'assets/audio/kanye.mp3' },
+            scaryguy: null,
+            stalin: { audio: null, gainNode: null, file: 'assets/audio/stalin.mp3' },
+            training: null
+        };
 
         function playFigureSound(distance) {
-            if (figureSelect.value === 'kanye') {
-                if (!kanyeAudio) {
-                    kanyeAudio = new Audio('kanye.mp3');
-                    kanyeAudio.loop = true;
-                    kanyeAudio.crossOrigin = 'anonymous';
-                    kanyeAudio.addEventListener('canplaythrough', () => {
+            const audioConfig = figureAudioMap[figureSelect.value];
+            if (audioConfig) {
+                if (!audioConfig.audio) {
+                    audioConfig.audio = new Audio(audioConfig.file);
+                    audioConfig.audio.loop = true;
+                    audioConfig.audio.crossOrigin = 'anonymous';
+                    audioConfig.audio.addEventListener('canplaythrough', () => {
                         if (audioCtx.state === 'suspended') audioCtx.resume();
-                        const source = audioCtx.createMediaElementSource(kanyeAudio);
-                        kanyeGainNode = audioCtx.createGain();
-                        kanyeGainNode.gain.value = 0;
-                        source.connect(kanyeGainNode);
-                        kanyeGainNode.connect(audioCtx.destination);
-                        kanyeAudio.play();
+                        const source = audioCtx.createMediaElementSource(audioConfig.audio);
+                        audioConfig.gainNode = audioCtx.createGain();
+                        audioConfig.gainNode.gain.value = 0;
+                        source.connect(audioConfig.gainNode);
+                        audioConfig.gainNode.connect(audioCtx.destination);
+                        audioConfig.audio.play();
                     }, { once: true });
                 }
-                if (kanyeGainNode) {
+                if (audioConfig.gainNode) {
                     const volume = Math.max(0, Math.min(0.5, 0.5 - distance / 120));
-                    kanyeGainNode.gain.setTargetAtTime(volume, audioCtx.currentTime, 0.3);
+                    audioConfig.gainNode.gain.setTargetAtTime(volume, audioCtx.currentTime, 0.3);
                 }
             } else {
                 if (!figureOsc) {
@@ -1481,19 +1496,22 @@
             if (figureSoundGain) {
                 figureSoundGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.2);
             }
-            if (kanyeGainNode) {
-                kanyeGainNode.gain.setTargetAtTime(0, audioCtx.currentTime, 0.2);
+            for (const key in figureAudioMap) {
+                const cfg = figureAudioMap[key];
+                if (cfg && cfg.gainNode) {
+                    cfg.gainNode.gain.setTargetAtTime(0, audioCtx.currentTime, 0.2);
+                }
+                if (cfg && cfg.audio) {
+                    cfg.audio.pause();
+                    cfg.audio.currentTime = 0;
+                    cfg.audio = null;
+                    cfg.gainNode = null;
+                }
             }
             if (figureOsc) {
                 figureOsc.stop();
                 figureOsc = null;
                 figureSoundGain = null;
-            }
-            if (kanyeAudio) {
-                kanyeAudio.pause();
-                kanyeAudio.currentTime = 0;
-                kanyeAudio = null;
-                kanyeGainNode = null;
             }
         }
 
@@ -1506,6 +1524,7 @@
         const dir = new THREE.Vector3();
         let dead = false;
         let gameTime = 0;
+        let isTraining = false;
 
         function loadCoins() {
             const stored = localStorage.getItem('rngCoins');
@@ -1687,11 +1706,16 @@
                     if (workTimer <= 0) {
                         isWorking = false;
                         timerEl.classList.remove('visible');
-                        coins += 10;
-                        saveCoins(coins);
-                        document.getElementById('coins').textContent = coins;
-                        hud.textContent = '+10 COINS!';
-                        setTimeout(() => hud.textContent = 'RUN...', 2000);
+                        if (!isTraining) {
+                            coins += 10;
+                            saveCoins(coins);
+                            document.getElementById('coins').textContent = coins;
+                            hud.textContent = '+10 COINS!';
+                            setTimeout(() => hud.textContent = isTraining ? 'TRAINING MODE' : 'RUN...', 2000);
+                        } else {
+                            hud.textContent = '+10 COINS (NOT SAVED)';
+                            setTimeout(() => hud.textContent = 'TRAINING MODE', 2000);
+                        }
                     }
                 }
 
