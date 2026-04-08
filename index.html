@@ -622,7 +622,7 @@
                 
                 <button id="playBtn">Start Game</button>
                 <div class="coins-display" id="homeCoins">COINS: 0</div>
-                <div class="version">v1.2</div>
+                <div class="version">v1.4</div>
             </div>
             
             <div class="info-panel">
@@ -670,7 +670,14 @@
                     </div>
                 </div>
                 <div class="item-row">
-                    <div class="item-icon"><img src="machine.png"></div>
+                    <div class="item-icon"><img src="assets/images/flaregun.png"></div>
+                    <div>
+                        <div class="item-name">Flare Gun</div>
+                        <div class="item-desc">Distracts the figure for 8s</div>
+                    </div>
+                </div>
+                <div class="item-row">
+                    <div class="item-icon"><img src="assets/images/machine.png"></div>
                     <div>
                         <div class="item-name">Generator</div>
                         <div class="item-desc">Press F to work for 8s, earn 10 coins</div>
@@ -886,6 +893,7 @@
         let figureMaterial;
         let itemMeshes = [];
         let bearTrapMesh = null;
+        let flareMesh = null;
         let machineMeshes = [];
         let machines = [];
 
@@ -901,12 +909,28 @@
             billboards.push(bearTrapMesh);
         });
 
+        loader.load('assets/images/flare.png', tex => {
+            tex.minFilter = tex.magFilter = THREE.NearestFilter;
+            const FLARE_H = 4;
+            const aspect = tex.image.width / tex.image.height;
+            const flareGeo = new THREE.PlaneGeometry(FLARE_H * aspect, FLARE_H);
+            const flareMat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+            flareMesh = new THREE.Mesh(flareGeo, flareMat);
+            flareMesh.visible = false;
+            flareMesh.userData.isFlare = true;
+            scene.add(flareMesh);
+            billboards.push(flareMesh);
+        });
+
         function spawnItem(type, x, z) {
-            const texName = type === 'bear' ? 'bear.png' : 'gem.png';
+            let texName;
+            if (type === 'bear') texName = 'bear.png';
+            else if (type === 'gem') texName = 'gem.png';
+            else if (type === 'flaregun') texName = 'flaregun.png';
             const itemTerrainH = getTerrainHeight(x, z);
             loader.load(texName.startsWith('assets') ? texName : 'assets/images/' + texName, tex => {
                 tex.minFilter = tex.magFilter = THREE.NearestFilter;
-                const ITEM_H = 1.5;
+                const ITEM_H = type === 'flaregun' ? 2 : 1.5;
                 const aspect = tex.image.width / tex.image.height;
                 const itemGeo = new THREE.PlaneGeometry(ITEM_H * aspect, ITEM_H);
                 const itemMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
@@ -920,11 +944,14 @@
             });
         }
 
-        for (let i = 0; i < 15; i++) {
+        for (let i = 0; i < 18; i++) {
             const x = (Math.random() - 0.5) * MAP_SIZE * 0.8;
             const z = (Math.random() - 0.5) * MAP_SIZE * 0.8;
             if (Math.abs(x) < 25 && Math.abs(z) < 50) continue;
-            spawnItem(i % 2 === 0 ? 'bear' : 'gem', x, z);
+            let type;
+            if (i < 12) type = i % 2 === 0 ? 'bear' : 'gem';
+            else type = 'flaregun';
+            spawnItem(type, x, z);
         }
 
         loader.load('assets/images/machine.png', tex => {
@@ -1040,7 +1067,9 @@ const FIG_H = 5;
             if (inventory[0]) {
                 slot1.classList.add('filled');
                 const img = document.createElement('img');
-                img.src = inventory[0] === 'bear' ? 'assets/images/bear.png' : 'assets/images/gem.png';
+                if (inventory[0] === 'bear') img.src = 'assets/images/bear.png';
+                else if (inventory[0] === 'gem') img.src = 'assets/images/gem.png';
+                else if (inventory[0] === 'flaregun') img.src = 'assets/images/flaregun.png';
                 slot1.appendChild(img);
             } else {
                 slot1.classList.remove('filled');
@@ -1048,7 +1077,9 @@ const FIG_H = 5;
             if (inventory[1]) {
                 slot2.classList.add('filled');
                 const img = document.createElement('img');
-                img.src = inventory[1] === 'bear' ? 'assets/images/bear.png' : 'assets/images/gem.png';
+                if (inventory[1] === 'bear') img.src = 'assets/images/bear.png';
+                else if (inventory[1] === 'gem') img.src = 'assets/images/gem.png';
+                else if (inventory[1] === 'flaregun') img.src = 'assets/images/flaregun.png';
                 slot2.appendChild(img);
             } else {
                 slot2.classList.remove('filled');
@@ -1123,21 +1154,23 @@ const FIG_H = 5;
             nearMachine = null;
             bearTrapPlaced = false;
             bearTrapPos = null;
+            flareActive = false;
+            flareTimer = 0;
+            flarePos = null;
+            figureTargetFlare = false;
             if (bearTrapMesh) bearTrapMesh.visible = false;
+            if (flareMesh) flareMesh.visible = false;
             updateInventoryUI();
-
             for (const item of itemMeshes) {
                 item.userData.collected = false;
                 item.visible = true;
             }
-
             for (const m of machineMeshes) {
                 m.visible = true;
             }
             for (const m of machines) {
                 m.active = true;
             }
-
             if (figureMesh && figureTex[figureSelect.value]) {
                 const aspect = figureAspects[figureSelect.value] || 0.5;
                 figureMesh.geometry.dispose();
@@ -1147,27 +1180,35 @@ const FIG_H = 5;
                 figureMesh.visible = false;
                 figureMesh.position.set(0, getTerrainHeight(0, -60) + 2.5, -60);
             }
-
-            camera.position.set(0, getTerrainHeight(0, 0) + BASE_Y, 0);
+            camera.position.set(0, getTerrainHeight(0, camera.position.z) + BASE_Y, camera.position.z);
             moveF = moveB = moveL = moveR = false;
             moveLeft = moveRight = false;
             sprint = false;
-            isJumping = false;
             jumpVel = 0;
             jumpVelX = 0;
             jumpVelZ = 0;
             isSliding = false;
-            currentStaticOpacity = 0;
-            setStaticOpacity(0);
-
-            deathEl.classList.remove('active');
-            countdown = 3;
-            countdownEl.classList.add('active');
-            countdownText.textContent = '3';
+            speedBoostTimer = 0;
+            bearTrapPlaced = false;
+            bearTrapPos = null;
+            flareActive = false;
+            flareTimer = 0;
+            flarePos = null;
+            figureTargetFlare = false;
+            if (bearTrapMesh) bearTrapMesh.visible = false;
+            if (flareMesh) flareMesh.visible = false;
+            isWorking = false;
+            workTimer = 0;
+            nearMachine = null;
+            for (const m of machines) {
+                m.active = true;
+            }
+            for (const m of machineMeshes) {
+                m.visible = true;
+            }
+            if (figureMesh) figureMesh.visible = false;
+            overlay.classList.remove('hidden');
             hud.textContent = 'RUN...';
-            document.getElementById('timer').textContent = '0:00';
-
-            renderer.domElement.requestPointerLock();
         });
 
         const homeBtn = document.getElementById('homeBtn');
@@ -1363,6 +1404,21 @@ const FIG_H = 5;
                             }
                         } else if (activeItem === 'gem') {
                             speedBoostTimer += 10;
+                        } else if (activeItem === 'flaregun') {
+                            if (!flareActive && flareMesh) {
+                                flareActive = true;
+                                flareTimer = 8;
+                                const flareX = camera.position.x + Math.sin(yaw) * 5;
+                                const flareZ = camera.position.z + Math.cos(yaw) * 5;
+                                const flareY = getTerrainHeight(flareX, flareZ);
+                                flarePos = new THREE.Vector3(flareX, flareY + 2, flareZ);
+                                flareMesh.position.copy(flarePos);
+                                flareMesh.visible = true;
+                                figureTargetFlare = true;
+                            } else {
+                                inventory[usedSlot] = 'flaregun';
+                                updateInventoryUI();
+                            }
                         }
                         activeItem = null;
                     }
@@ -1582,6 +1638,10 @@ const FIG_H = 5;
         let figureStuckTimer = 0;
         let bearTrapPlaced = false;
         let bearTrapPos = null;
+        let flareActive = false;
+        let flareTimer = 0;
+        let flarePos = null;
+        let figureTargetFlare = false;
 
         let workTimer = 0;
         let isWorking = false;
@@ -1607,7 +1667,12 @@ const FIG_H = 5;
             speedBoostTimer = 0;
             bearTrapPlaced = false;
             bearTrapPos = null;
+            flareActive = false;
+            flareTimer = 0;
+            flarePos = null;
+            figureTargetFlare = false;
             if (bearTrapMesh) bearTrapMesh.visible = false;
+            if (flareMesh) flareMesh.visible = false;
             updateInventoryUI();
 
             for (const item of itemMeshes) {
@@ -1684,6 +1749,22 @@ const FIG_H = 5;
 
             if (gameStarted && locked && !dead) {
                 gameTime += dt;
+                
+                if (flareActive) {
+                    flareTimer -= dt;
+                    if (flareMesh) {
+                        const flash = Math.sin(Date.now() * 0.02) > 0;
+                        flareMesh.material.opacity = flash ? 1 : 0.3;
+                        flareMesh.material.needsUpdate = true;
+                    }
+                    if (flareTimer <= 0) {
+                        flareActive = false;
+                        figureTargetFlare = false;
+                        if (flareMesh) flareMesh.visible = false;
+                        flarePos = null;
+                    }
+                }
+
                 const speedIncrease = 1 + Math.floor(gameTime / 10) * 0.01;
                 const mins = Math.floor(gameTime / 60);
                 const secs = Math.floor(gameTime % 60);
@@ -1863,15 +1944,25 @@ const FIG_H = 5;
                     }
 
                     if (figureActive && !figureTriggered) {
+                        let targetPos;
+                        if (figureTargetFlare && flareActive && flarePos) {
+                            targetPos = flarePos;
+                        } else {
+                            targetPos = camera.position;
+                            figureTargetFlare = false;
+                        }
+                        const toTarget = new THREE.Vector3(targetPos.x - figPos.x, 0, targetPos.z - figPos.z);
+                        const distToTarget = toTarget.length();
+
                         if (figureStuckTimer > 0) {
                             figureStuckTimer -= dt;
-                        } else if (dist > 2.0) {
-                            toPlayer.normalize();
+                        } else if (distToTarget > 2.0) {
+                            toTarget.normalize();
                             figureSpeedVar += (Math.random() - 0.7) * 0.5;
                             figureSpeedVar = Math.max(-8, Math.min(3, figureSpeedVar));
                             const currentFigureSpeed = (FIGURE_CHASE_SPEED + figureSpeedVar) * speedIncrease;
-                            figPos.x += toPlayer.x * currentFigureSpeed * dt;
-                            figPos.z += toPlayer.z * currentFigureSpeed * dt;
+                            figPos.x += toTarget.x * currentFigureSpeed * dt;
+                            figPos.z += toTarget.z * currentFigureSpeed * dt;
                             figPos.y = getTerrainHeight(figPos.x, figPos.z) + 2.5;
 
                             if (bearTrapPos && figPos.distanceTo(bearTrapPos) < 4) {
@@ -1880,6 +1971,8 @@ const FIG_H = 5;
                                 bearTrapPlaced = false;
                                 if (bearTrapMesh) bearTrapMesh.visible = false;
                             }
+                        } else if (figureTargetFlare && flareActive) {
+                            // Wait at flare until it expires
                         } else {
                             figureTriggered = true;
                             dead = true;
