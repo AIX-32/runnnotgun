@@ -707,6 +707,22 @@
             display: flex;
         }
 
+        #death #jumpscare {
+            position: fixed;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0;
+            z-index: 25;
+            pointer-events: none;
+            transition: opacity 0.05s;
+        }
+
+        #death #jumpscare.flash {
+            opacity: 1;
+        }
+
         #death .death-content {
             display: flex;
             flex-direction: column;
@@ -977,6 +993,7 @@
         </div>
     </div>
     <div id="death">
+        <div id="jumpscare"></div>
         <div class="death-content">
             <h1>It caught you</h1>
             <div id="finalTime">You survived 0:00</div>
@@ -1026,7 +1043,8 @@
         const sunLight = new THREE.DirectionalLight(0xffe8c0, 1.2);
         sunLight.position.set(50, 100, 50);
         scene.add(sunLight);
-        scene.add(new THREE.AmbientLight(0x667788, 0.6));
+        const ambientLight = new THREE.AmbientLight(0x667788, 0.6);
+        scene.add(ambientLight);
 
         const SKY_R = 600;
         const skyGeo = new THREE.SphereGeometry(SKY_R, 16, 10);
@@ -1044,6 +1062,86 @@
         const skyMat = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide });
         const skyMesh = new THREE.Mesh(skyGeo, skyMat);
         scene.add(skyMesh);
+
+        const sunMoonGeo = new THREE.SphereGeometry(30, 16, 16);
+        const sunMat = new THREE.MeshBasicMaterial({ color: 0xffdd44 });
+        const moonMat = new THREE.MeshBasicMaterial({ color: 0xdddddd });
+        const sunMesh = new THREE.Mesh(sunMoonGeo, sunMat);
+        const moonMesh = new THREE.Mesh(sunMoonGeo, moonMat);
+        scene.add(sunMesh);
+        scene.add(moonMesh);
+
+        const loader = new THREE.TextureLoader();
+
+        let handsMesh;
+        let handsTargetX = 0;
+        let handsTargetZ = -2;
+        loader.load('assets/images/hands.png', tex => {
+            tex.minFilter = tex.magFilter = THREE.NearestFilter;
+            const handsGeo = new THREE.PlaneGeometry(2.5, 2.5);
+            const handsMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+            handsMesh = new THREE.Mesh(handsGeo, handsMat);
+            handsMesh.position.set(0, -1.0, -2.5);
+            handsMesh.visible = false;
+            camera.add(handsMesh);
+            scene.add(camera);
+        });
+
+        function updateCelestialBodies() {
+            const now = new Date();
+            const hour = now.getHours() + now.getMinutes() / 60;
+            const angle = ((hour - 6) / 24) * Math.PI * 2;
+            
+            sunMesh.position.set(
+                Math.cos(angle) * 500,
+                Math.sin(angle) * 500,
+                -100
+            );
+            moonMesh.position.set(
+                Math.cos(angle + Math.PI) * 500,
+                Math.sin(angle + Math.PI) * 500,
+                -100
+            );
+        }
+
+        function updateDayNight() {
+            const now = new Date();
+            const hour = now.getHours() + now.getMinutes() / 60;
+            const dayProgress = hour / 24;
+            
+            const nightAmt = Math.abs(dayProgress - 0.5) * 2;
+            const isNight = hour < 6 || hour > 18;
+            const darkness = Math.max(0, Math.min(1, nightAmt * 0.7));
+            
+            const lightIntensity = 1.2 * (1 - darkness * 0.7);
+            sunLight.intensity = lightIntensity;
+            
+            const ambientIntensity = 0.6 * (1 - darkness * 0.6);
+            ambientLight.intensity = ambientIntensity;
+            
+            if (isNight) {
+                sunLight.color.setHex(0x8899bb);
+                ambientLight.color.setHex(0x334466);
+                skyMat.color.setRGB(
+                    0.1 * (1 - darkness),
+                    0.12 * (1 - darkness),
+                    0.3 * (1 - darkness) + darkness * 0.4
+                );
+            } else {
+                sunLight.color.setHex(0xffe8c0);
+                ambientLight.color.setHex(0x667788);
+                skyMat.color.setRGB(
+                    0.29 * (1 - darkness * 0.3),
+                    0.47 * (1 - darkness * 0.3),
+                    0.72 * (1 - darkness * 0.3)
+                );
+            }
+            
+            scene.fog.color.setHex(isNight ? 0x1a1a2e : 0x8899aa);
+            scene.fog.near = 60 * (1 - darkness * 0.5);
+            scene.fog.far = 600 * (1 - darkness * 0.4);
+        }
+        updateDayNight();
 
         function makeNoiseTexture(w, h, baseR, baseG, baseB, spread, pixSize) {
             const off = document.createElement('canvas');
@@ -1098,35 +1196,38 @@
             return noise2D(x, -z);
         }
 
-        const loader = new THREE.TextureLoader();
         let treeMat, rockMat;
         const billboards = [];
         const trees = [];
         const rocks = [];
 
-        loader.load('assets/images/tree.png', tex => {
-            tex.minFilter = tex.magFilter = THREE.NearestFilter;
-            const aspect = tex.image.width / tex.image.height;
-            const TREE_H = 14;
-            const treeGeo = new THREE.PlaneGeometry(TREE_H * aspect, TREE_H);
-            treeMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+        function createTree() {
+            const useTree2 = Math.random() > 0.5;
+            loader.load('assets/images/' + (useTree2 ? 'tree2.png' : 'tree.png'), tex => {
+                tex.minFilter = tex.magFilter = THREE.NearestFilter;
+                const aspect = tex.image.width / tex.image.height;
+                const TREE_H = 22;
+                const treeGeo = new THREE.PlaneGeometry(TREE_H * aspect, TREE_H);
+                const treeMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
 
-            for (let i = 0; i < 120; i++) {
-                const x = (Math.random() - 0.5) * MAP_SIZE * 0.9;
-                const z = (Math.random() - 0.5) * MAP_SIZE * 0.9;
-                if (Math.abs(x) < 25 && Math.abs(z) < 45) continue;
-                const scale = 0.9 + Math.random() * 0.6;
-                const tree = new THREE.Mesh(treeGeo, treeMat);
-                const terrainH = getTerrainHeight(x, z);
-                tree.position.set(x, terrainH + TREE_H / 2 * scale, z);
-                tree.scale.setScalar(scale);
-                tree.userData.baseY = terrainH + TREE_H / 2 * scale;
-                tree.userData.isTree = true;
-                scene.add(tree);
-                billboards.push(tree);
-                trees.push(tree);
-            }
-        });
+                for (let i = 0; i < 120; i++) {
+                    const x = (Math.random() - 0.5) * MAP_SIZE * 0.9;
+                    const z = (Math.random() - 0.5) * MAP_SIZE * 0.9;
+                    if (Math.abs(x) < 25 && Math.abs(z) < 45) continue;
+                    const scale = 0.8 + Math.random() * 0.8;
+                    const tree = new THREE.Mesh(treeGeo, treeMat);
+                    const terrainH = getTerrainHeight(x, z);
+                    tree.position.set(x, terrainH + TREE_H / 2 * scale, z);
+                    tree.scale.setScalar(scale);
+                    tree.userData.baseY = terrainH + TREE_H / 2 * scale;
+                    tree.userData.isTree = true;
+                    scene.add(tree);
+                    billboards.push(tree);
+                    trees.push(tree);
+                }
+            });
+        }
+        createTree();
 
         loader.load('assets/images/rock.png', tex => {
             tex.minFilter = tex.magFilter = THREE.NearestFilter;
@@ -1403,6 +1504,7 @@ const FIG_H = 5;
             figureSpeedVar = 0;
             document.querySelectorAll('.game-ui').forEach(el => el.classList.remove('hidden'));
             document.getElementById('coins').textContent = 'COINS: ' + coins;
+            if (handsMesh) handsMesh.visible = true;
             if (!isTraining && figureMesh && figureTex[figureSelect.value]) {
                 const aspect = figureAspects[figureSelect.value] || 0.5;
                 figureMesh.geometry.dispose();
@@ -1858,7 +1960,7 @@ const FIG_H = 5;
             }
         }
 
-        const BASE_Y = 1.7;
+        const BASE_Y = 3;
         const SPEED = 22;
 
         const figureSelect = document.getElementById('figureSelect');
@@ -2359,7 +2461,7 @@ const FIG_H = 5;
                             figPos.z += toTarget.z * currentFigureSpeed * dt;
                             figPos.y = getTerrainHeight(figPos.x, figPos.z) + 2.5;
 
-                            if (bearTrapPos && figPos.distanceTo(bearTrapPos) < 4) {
+                            if (bearTrapPos && figPos.distanceTo(bearTrapPos) < 8) {
                                 figureStuckTimer = 12;
                                 bearTrapPos = null;
                                 bearTrapPlaced = false;
@@ -2369,10 +2471,21 @@ const FIG_H = 5;
                         } else {
                             figureTriggered = true;
                             dead = true;
+                            if (handsMesh) handsMesh.visible = false;
                             document.exitPointerLock();
                             deathEl.classList.add('active');
                             currentStaticOpacity = 0.8;
                             setStaticOpacity(0.8);
+                            document.getElementById('workTimer').classList.remove('visible');
+
+                            const jumpscare = document.getElementById('jumpscare');
+                            if (figureTex[figureSelect.value] && figureTex[figureSelect.value].image) {
+                                jumpscare.style.backgroundImage = 'url(' + figureTex[figureSelect.value].image.src + ')';
+                                jumpscare.classList.add('flash');
+                                setTimeout(() => jumpscare.classList.remove('flash'), 150);
+                                setTimeout(() => jumpscare.classList.add('flash'), 200);
+                                setTimeout(() => jumpscare.classList.remove('flash'), 350);
+                            }
 
                             const finalTimeEl = document.getElementById('finalTime');
                             const minutes = Math.floor(gameTime / 60);
@@ -2419,6 +2532,25 @@ const FIG_H = 5;
             }
 
             renderer.render(scene, camera);
+            if (handsMesh && gameStarted) {
+                const isMoving = moveF || moveB || moveL || moveR || moveLeft || moveRight;
+                const isSprinting = sprint;
+                const bob = Math.sin(bobTime) * (isMoving ? (isSprinting ? 0.15 : 0.1) : 0);
+                
+                if (moveF) handsTargetZ = -2.7;
+                else if (moveB) handsTargetZ = -2.3;
+                else if (moveLeft || moveL) handsTargetX = -0.2;
+                else if (moveRight || moveR) handsTargetX = 0.2;
+                else {
+                    handsTargetX = 0;
+                    handsTargetZ = -2.5;
+                }
+                
+                handsMesh.position.x += (handsTargetX - handsMesh.position.x) * 0.15;
+                handsMesh.position.z += (handsTargetZ - handsMesh.position.z) * 0.15;
+                handsMesh.position.y = -1.0 + bob;
+            }
+            updateCelestialBodies();
         }
         loop();
     </script>
