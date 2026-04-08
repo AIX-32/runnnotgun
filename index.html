@@ -73,11 +73,35 @@
         }
 
         #homescreen {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 1fr;
+            gap: 30px;
+            align-items: start;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        #homescreen .left-column {
             display: flex;
-            gap: 60px;
-            align-items: flex-start;
-            text-align: left;
-            padding-right: 40px;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        #homescreen .center-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            padding: 40px 30px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #444;
+        }
+
+        #homescreen .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         #homescreen .main-section {
@@ -85,15 +109,15 @@
             flex-direction: column;
             align-items: center;
             gap: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #333;
-            padding: 30px 40px;
+            width: 100%;
         }
 
         #homescreen .controls-row {
             display: flex;
             gap: 10px;
             align-items: stretch;
+            width: 100%;
+            justify-content: center;
         }
 
         #homescreen .controls-row select {
@@ -131,20 +155,22 @@
 
         #homescreen h1 {
             font-family: 'Courier New', monospace;
-            font-size: 42px;
-            letter-spacing: 0.25em;
+            font-size: 36px;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
             color: #fff;
             margin: 0;
             opacity: 0.95;
+            text-align: center;
         }
 
         #homescreen .subtitle {
             font-family: 'Courier New', monospace;
-            font-size: 13px;
-            color: #888;
+            font-size: 12px;
+            color: #666;
             letter-spacing: 0.15em;
             margin: 0;
+            text-align: center;
         }
 
         #homescreen .section-label {
@@ -158,13 +184,13 @@
 
         #homescreen button {
             font-family: 'Courier New', monospace;
-            font-size: 18px;
-            letter-spacing: 0.35em;
+            font-size: 16px;
+            letter-spacing: 0.3em;
             text-transform: uppercase;
             color: #fff;
             background: none;
             border: 2px solid #fff;
-            padding: 16px 50px;
+            padding: 14px 40px;
             cursor: pointer;
             opacity: 0.9;
             transition: all 0.3s;
@@ -180,15 +206,15 @@
 
         #homescreen select {
             font-family: 'Courier New', monospace;
-            font-size: 12px;
-            letter-spacing: 0.15em;
+            font-size: 11px;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
             color: #fff;
             background: rgba(0, 0, 0, 0.6);
             border: 2px solid #fff;
-            padding: 10px 20px;
+            padding: 10px 15px;
             cursor: pointer;
-            width: 140px;
+            width: 160px;
         }
 
         #homescreen input[type="text"] {
@@ -252,19 +278,18 @@
 
         #homescreen .info-panel {
             background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #333;
-            padding: 24px;
-            width: 280px;
+            border: 1px solid #444;
+            padding: 20px;
         }
 
         #homescreen .info-panel h3 {
             font-family: 'Courier New', monospace;
-            font-size: 12px;
+            font-size: 11px;
             letter-spacing: 0.2em;
             text-transform: uppercase;
-            color: #aaa;
-            margin: 0 0 16px 0;
-            padding-bottom: 10px;
+            color: #888;
+            margin: 0 0 12px 0;
+            padding-bottom: 8px;
             border-bottom: 1px solid #333;
         }
 
@@ -300,31 +325,39 @@
             margin-bottom: 12px;
         }
 
+        #homescreen .info-panel .item-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
         #homescreen .info-panel .item-icon {
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             border: 1px solid rgba(255, 255, 255, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
         #homescreen .info-panel .item-icon img {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             image-rendering: pixelated;
         }
 
         #homescreen .info-panel .item-desc {
             font-family: 'Courier New', monospace;
-            font-size: 10px;
-            color: #777;
-            line-height: 1.4;
+            font-size: 9px;
+            color: #666;
+            line-height: 1.3;
         }
 
         #homescreen .info-panel .item-name {
-            color: #aaa;
-            font-size: 11px;
+            color: #888;
+            font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 0.1em;
         }
@@ -491,19 +524,18 @@
 
         #homescreen .leaderboard-panel {
             background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #333;
-            padding: 24px;
-            width: 220px;
+            border: 1px solid #444;
+            padding: 20px;
         }
 
         #homescreen .leaderboard-panel h3 {
             font-family: 'Courier New', monospace;
-            font-size: 12px;
+            font-size: 11px;
             letter-spacing: 0.2em;
             text-transform: uppercase;
-            color: #aaa;
-            margin: 0 0 16px 0;
-            padding-bottom: 10px;
+            color: #888;
+            margin: 0 0 12px 0;
+            padding-bottom: 8px;
             border-bottom: 1px solid #333;
         }
 
@@ -512,12 +544,92 @@
             justify-content: space-between;
             font-family: 'Courier New', monospace;
             font-size: 11px;
-            margin-bottom: 10px;
-            color: #666;
+            margin-bottom: 8px;
+            color: #555;
         }
 
         #homescreen .leaderboard-panel .score-row.first {
             color: #ffd700;
+        }
+
+        #homescreen .shop-panel {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #444;
+            padding: 20px;
+        }
+
+        #homescreen .shop-panel h3 {
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #888;
+            margin: 0 0 12px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #333;
+        }
+
+        #homescreen .shop-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #333;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        #homescreen .shop-item:hover {
+            border-color: #555;
+        }
+
+        #homescreen .shop-item.owned {
+            border-color: #4a4;
+        }
+
+        #homescreen .shop-item.equipped {
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        #homescreen .shop-item img {
+            width: 30px;
+            height: 30px;
+            image-rendering: pixelated;
+        }
+
+        #homescreen .shop-item-info {
+            flex: 1;
+        }
+
+        #homescreen .shop-item-name {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        #homescreen .shop-item-price {
+            font-family: 'Courier New', monospace;
+            font-size: 9px;
+            color: #666;
+        }
+
+        #homescreen .shop-item-status {
+            font-family: 'Courier New', monospace;
+            font-size: 9px;
+            color: #4a4;
+        }
+
+        #homescreen .shop-item-status.owned {
+            color: #4a4;
+        }
+
+        #homescreen .shop-item-status.locked {
+            color: #a44;
         }
 
         .game-ui {
@@ -904,6 +1016,138 @@
             background: rgba(255, 255, 255, 0.1);
             border-color: #fff;
         }
+
+        #puzzle {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            z-index: 30;
+        }
+
+        #puzzle.active {
+            display: flex;
+        }
+
+        #puzzle h2 {
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #fff;
+            margin: 0;
+        }
+
+        #puzzle .puzzle-hint {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #888;
+            margin-top: -10px;
+        }
+
+        #puzzleGrid {
+            display: grid;
+            grid-template-columns: repeat(2, 60px);
+            grid-template-rows: repeat(3, 60px);
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 16px;
+            border: 2px solid #444;
+        }
+
+        .puzzle-slot {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .puzzle-slot:hover {
+            border-color: #888;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .puzzle-slot.selected {
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .puzzle-slot img {
+            width: 40px;
+            height: 40px;
+            image-rendering: pixelated;
+        }
+
+        #puzzleItems {
+            display: flex;
+            gap: 12px;
+        }
+
+        .puzzle-item {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .puzzle-item:hover {
+            border-color: #888;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .puzzle-item img {
+            width: 35px;
+            height: 35px;
+            image-rendering: pixelated;
+        }
+
+        #puzzle .puzzle-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 10px;
+        }
+
+        #puzzle button {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #fff;
+            background: none;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            padding: 10px 20px;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+
+        #puzzle button:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #fff;
+        }
+
+        #puzzle .puzzle-distance {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #ff4444;
+            letter-spacing: 0.1em;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 
@@ -915,29 +1159,104 @@
     <canvas id="static"></canvas>
     <div id="overlay" class="">
         <div id="homescreen">
-            <div class="leaderboard-panel" id="homeLeaderboard">
-                <h3>Top Runs</h3>
+            <div class="left-column">
+                <div class="leaderboard-panel" id="homeLeaderboard">
+                    <h3>Top Runs</h3>
+                </div>
+                <div class="shop-panel" id="shopPanel">
+                    <h3>Shop</h3>
+                    <div id="shopItems"></div>
+                </div>
             </div>
             
-            <div class="main-section">
-                <h1>RUN-N-NOT GUN</h1>
-                <p class="subtitle">Escape the horror</p>
-                
-                <button id="playBtn" style="margin-bottom: 0px !important;">START GAME</button>
-                
-                <div class="controls-row" style="margin-top: -10px !important; margin-right: 0px !important;">
-                    <select id="figureSelect">
-                        <option value="default">FLIGHT</option>
-                        <option value="kanye">KANYE</option>
-                        <option value="scaryguy">SCARY GUY</option>
-                        <option value="stalin">STALIN</option>
-                        <option value="training">TRAINING</option>
-                    </select>
+            <div class="center-column">
+                <div class="main-section">
+                    <h1>RUN-N-NOT GUN</h1>
+                    <p class="subtitle">Escape the horror</p>
                     
-                    <button id="customizeBtn" style="margin-top: 0px !important;">Customize</button>
+                    <button id="playBtn">START GAME</button>
+                    
+                    <div class="controls-row">
+                        <select id="figureSelect">
+                            <option value="default">FLIGHT</option>
+                            <option value="kanye">KANYE</option>
+                            <option value="scaryguy">SCARY GUY</option>
+                            <option value="stalin">STALIN</option>
+                            <option value="training">TRAINING</option>
+                        </select>
+                        
+                        <button id="customizeBtn">Customize</button>
+                    </div>
+                    
+                    <div class="coins-display" id="homeCoins">COINS: 0</div>
                 </div>
-                
-                <div class="coins-display" id="homeCoins">COINS: 0</div>
+            </div>
+            
+            <div class="right-column">
+                <div class="info-panel">
+                    <h3>Controls</h3>
+                    
+                    <div class="control-row">
+                        <span class="control-key">W A S D</span>
+                        <span class="control-action">Move</span>
+                    </div>
+                    <div class="control-row">
+                        <span class="control-key">SPACE</span>
+                        <span class="control-action">Jump</span>
+                    </div>
+                    <div class="control-row">
+                        <span class="control-key">SHIFT</span>
+                        <span class="control-action">Sprint</span>
+                    </div>
+                    <div class="control-row">
+                        <span class="control-key">F</span>
+                        <span class="control-action">Use Item / Puzzle</span>
+                    </div>
+                    <div class="control-row">
+                        <span class="control-key">MOUSE</span>
+                        <span class="control-action">Look</span>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <h3>Items</h3>
+                    
+                    <div class="item-row">
+                        <div class="item-icon"><img src="assets/images/bear.png"></div>
+                        <div>
+                            <div class="item-name">Bear Trap</div>
+                            <div class="item-desc">Stops the figure temporarily</div>
+                        </div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-icon"><img src="assets/images/gem.png"></div>
+                        <div>
+                            <div class="item-name">Speed Gem</div>
+                            <div class="item-desc">Temporary speed boost</div>
+                        </div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-icon"><img src="assets/images/flaregun.png"></div>
+                        <div>
+                            <div class="item-name">Flare Gun</div>
+                            <div class="item-desc">Distracts the figure for 8s</div>
+                        </div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-icon"><img src="assets/images/machine.png"></div>
+                        <div>
+                            <div class="item-name">Generator</div>
+                            <div class="item-desc">Press F to work for 8s, earn 10 coins</div>
+                        </div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-icon"><img src="assets/images/puzzle.png"></div>
+                        <div>
+                            <div class="item-name">Puzzle</div>
+                            <div class="item-desc">Press F to solve, match pairs for 60 coins</div>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div id="customizePopup" class="popup hidden">
@@ -949,66 +1268,6 @@
                     <input type="file" id="customFigureUpload" accept="image/*">
                     <button id="createFigureBtn">Create (30 coins)</button>
                     <div id="customFiguresList"></div>
-                </div>
-            </div>
-            
-            <div class="info-panel">
-                <h3>Controls & Items</h3>
-                
-                <div class="control-row">
-                    <span class="control-key">W A S D</span>
-                    <span class="control-action">Move</span>
-                </div>
-                <div class="control-row">
-                    <span class="control-key">SPACE</span>
-                    <span class="control-action">Jump</span>
-                </div>
-                <div class="control-row">
-                    <span class="control-key">C + SPACE</span>
-                    <span class="control-action">Dash</span>
-                </div>
-                <div class="control-row">
-                    <span class="control-key">SHIFT</span>
-                    <span class="control-action">Sprint</span>
-                </div>
-                <div class="control-row">
-                    <span class="control-key">F</span>
-                    <span class="control-action">Use Item</span>
-                </div>
-                <div class="control-row">
-                    <span class="control-key">MOUSE</span>
-                    <span class="control-action">Look</span>
-                </div>
-                
-                <div class="divider"></div>
-                
-                <div class="item-row">
-                    <div class="item-icon"><img src="assets/images/bear.png"></div>
-                    <div>
-                        <div class="item-name">Bear Trap</div>
-                        <div class="item-desc">Stops the figure temporarily</div>
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-icon"><img src="assets/images/gem.png"></div>
-                    <div>
-                        <div class="item-name">Speed Gem</div>
-                        <div class="item-desc">Temporary speed boost</div>
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-icon"><img src="assets/images/flaregun.png"></div>
-                    <div>
-                        <div class="item-name">Flare Gun</div>
-                        <div class="item-desc">Distracts the figure for 8s</div>
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-icon"><img src="assets/images/machine.png"></div>
-                    <div>
-                        <div class="item-name">Generator</div>
-                        <div class="item-desc">Press F to work for 8s, earn 10 coins</div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -1062,6 +1321,24 @@
         <div class="pause-buttons">
             <button id="resumeBtn">Resume</button>
             <button id="pauseHomeBtn">Quit to Home</button>
+        </div>
+    </div>
+
+    <div id="puzzle">
+        <h2>Match the pairs</h2>
+        <div class="puzzle-hint">Drag and drop to swap items</div>
+        <div id="puzzleDistance" class="puzzle-distance">FIGURES: ---m</div>
+        <div id="puzzleGrid">
+            <div class="puzzle-slot" data-index="0"></div>
+            <div class="puzzle-slot" data-index="1"></div>
+            <div class="puzzle-slot" data-index="2"></div>
+            <div class="puzzle-slot" data-index="3"></div>
+            <div class="puzzle-slot" data-index="4"></div>
+            <div class="puzzle-slot" data-index="5"></div>
+        </div>
+        <div class="puzzle-buttons">
+            <button id="puzzleCheck">Check</button>
+            <button id="puzzleClose">Close</button>
         </div>
     </div>
 
@@ -1136,8 +1413,26 @@
         let handsMesh;
         let handsTargetX = 0;
         let handsTargetZ = -2;
-        loader.load('assets/images/hands.png', tex => {
-            tex.minFilter = tex.magFilter = THREE.NearestFilter;
+        
+        const handsTextures = {};
+        function loadHandsTexture(name) {
+            return new Promise(resolve => {
+                loader.load('assets/images/' + name, tex => {
+                    tex.minFilter = tex.magFilter = THREE.NearestFilter;
+                    handsTextures[name] = tex;
+                    resolve();
+                });
+            });
+        }
+        
+        Promise.all([
+            loadHandsTexture('hands.png'),
+            loadHandsTexture('hand2.png'),
+            loadHandsTexture('hand3.png')
+        ]).then(() => {
+            const { equipped } = loadShopData();
+            const handImage = equipped.hands && handsTextures[equipped.hands + '.png'] ? equipped.hands + '.png' : 'hands.png';
+            const tex = handsTextures[handImage];
             const handsGeo = new THREE.PlaneGeometry(2.5, 2.5);
             const handsMat = new THREE.MeshBasicMaterial({ 
                 map: tex, 
@@ -1274,19 +1569,19 @@
                 tex.minFilter = tex.magFilter = THREE.NearestFilter;
                 const tree1Aspect = tex.image.width / tex.image.height;
                 const tree1Geo = new THREE.PlaneGeometry(22 * tree1Aspect, 22);
-                const tree1Mat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+                const tree1Mat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
                 
                 loader.load('assets/images/tree2.png', tex2 => {
                     tex2.minFilter = tex2.magFilter = THREE.NearestFilter;
                     const tree2Aspect = tex2.image.width / tex2.image.height;
                     const tree2Geo = new THREE.PlaneGeometry(22 * tree2Aspect, 22);
-                    const tree2Mat = new THREE.MeshLambertMaterial({ map: tex2, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+                    const tree2Mat = new THREE.MeshLambertMaterial({ map: tex2, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
 
                     loader.load('assets/images/tree3.png', tex3 => {
                         tex3.minFilter = tex3.magFilter = THREE.NearestFilter;
                         const tree3Aspect = tex3.image.width / tex3.image.height;
                         const tree3Geo = new THREE.PlaneGeometry(22 * tree3Aspect, 22);
-                        const tree3Mat = new THREE.MeshLambertMaterial({ map: tex3, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+                        const tree3Mat = new THREE.MeshLambertMaterial({ map: tex3, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
 
                         for (let i = 0; i < 120; i++) {
                             const r = Math.random();
@@ -1323,7 +1618,7 @@
             const aspect = tex.image.width / tex.image.height;
             const ROCK_H = 2;
             const rockGeo = new THREE.PlaneGeometry(ROCK_H * aspect, ROCK_H);
-            rockMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+            rockMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
 
             for (let i = 0; i < 60; i++) {
                 const x = (Math.random() - 0.5) * MAP_SIZE * 0.85;
@@ -1348,12 +1643,20 @@
         let flareMesh = null;
         let machineMeshes = [];
         let machines = [];
+        let puzzleMeshes = [];
+        let puzzles = [];
+        let nearPuzzle = null;
+        let puzzleGrid = [null, null, null, null, null, null];
+        let puzzleSelectedSlot = null;
+        let isPuzzleActive = false;
+
+        const puzzleItemTypes = ['bear', 'gem', 'flaregun', 'bear', 'gem', 'flaregun'];
 
         loader.load('assets/images/bear.png', tex => {
             tex.minFilter = tex.magFilter = THREE.NearestFilter;
             const aspect = tex.image.width / tex.image.height;
             const bearGeo = new THREE.PlaneGeometry(2 * aspect, 2);
-            const bearMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+            const bearMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
             bearTrapMesh = new THREE.Mesh(bearGeo, bearMat);
             bearTrapMesh.visible = false;
             bearTrapMesh.userData.isTrap = true;
@@ -1366,7 +1669,7 @@
             const FLARE_H = 4;
             const aspect = tex.image.width / tex.image.height;
             const flareGeo = new THREE.PlaneGeometry(FLARE_H * aspect, FLARE_H);
-            const flareMat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+            const flareMat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
             flareMesh = new THREE.Mesh(flareGeo, flareMat);
             flareMesh.visible = false;
             flareMesh.userData.isFlare = true;
@@ -1385,7 +1688,7 @@
                 const ITEM_H = type === 'flaregun' ? 2 : 1.5;
                 const aspect = tex.image.width / tex.image.height;
                 const itemGeo = new THREE.PlaneGeometry(ITEM_H * aspect, ITEM_H);
-                const itemMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+                const itemMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
                 const item = new THREE.Mesh(itemGeo, itemMat);
                 item.position.set(x, itemTerrainH + ITEM_H / 2, z);
                 item.userData.itemType = type;
@@ -1411,7 +1714,7 @@
             const aspect = tex.image.width / tex.image.height;
             const MACHINE_H = 3;
             const machineGeo = new THREE.PlaneGeometry(MACHINE_H * aspect, MACHINE_H);
-            const machineMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+            const machineMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
 
             for (let i = 0; i < 3; i++) {
                 const x = (Math.random() - 0.5) * MAP_SIZE * 0.7;
@@ -1426,6 +1729,29 @@
                 machineMeshes.push(machine);
                 billboards.push(machine);
                 machines.push({ x, z, active: true });
+            }
+        });
+
+        loader.load('assets/images/puzzle.png', tex => {
+            tex.minFilter = tex.magFilter = THREE.NearestFilter;
+            const aspect = tex.image.width / tex.image.height;
+            const PUZZLE_H = 3;
+            const puzzleGeo = new THREE.PlaneGeometry(PUZZLE_H * aspect, PUZZLE_H);
+            const puzzleMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
+
+            for (let i = 0; i < 2; i++) {
+                const x = (Math.random() - 0.5) * MAP_SIZE * 0.7;
+                const z = (Math.random() - 0.5) * MAP_SIZE * 0.7;
+                if (Math.abs(x) < 30 && Math.abs(z) < 60) continue;
+                const puzzle = new THREE.Mesh(puzzleGeo, puzzleMat);
+                const terrainH = getTerrainHeight(x, z);
+                puzzle.position.set(x, terrainH + PUZZLE_H / 2, z);
+                puzzle.userData.isPuzzle = true;
+                puzzle.userData.solved = false;
+                scene.add(puzzle);
+                puzzleMeshes.push(puzzle);
+                billboards.push(puzzle);
+                puzzles.push({ x, z, solved: false });
             }
         });
 
@@ -1521,8 +1847,126 @@ const FIG_H = 5;
         const pauseEl = document.getElementById('pause');
         const resumeBtn = document.getElementById('resumeBtn');
         const pauseHomeBtn = document.getElementById('pauseHomeBtn');
+        const puzzleEl = document.getElementById('puzzle');
+        const puzzleCloseBtn = document.getElementById('puzzleClose');
 
         let isPaused = false;
+        let currentPuzzle = null;
+
+        function openPuzzle() {
+            currentPuzzle = nearPuzzle;
+            const items = ['bear', 'gem', 'flaregun', 'bear', 'gem', 'flaregun'];
+            puzzleGrid = [...items];
+            for (let i = puzzleGrid.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [puzzleGrid[i], puzzleGrid[j]] = [puzzleGrid[j], puzzleGrid[i]];
+            }
+            puzzleSelectedSlot = null;
+            isPuzzleActive = true;
+            document.exitPointerLock();
+            puzzleEl.classList.add('active');
+            renderPuzzleGrid();
+            renderPuzzleItems();
+        }
+
+        function closePuzzle() {
+            isPuzzleActive = false;
+            puzzleEl.classList.remove('active');
+            renderer.domElement.requestPointerLock();
+        }
+
+        function renderPuzzleGrid() {
+            const slots = document.querySelectorAll('.puzzle-slot');
+            let draggedItem = null;
+            
+            slots.forEach((slot, i) => {
+                slot.innerHTML = '';
+                slot.classList.remove('selected');
+                slot.draggable = false;
+                slot.ondragstart = null;
+                slot.ondragover = null;
+                slot.ondrop = null;
+                
+                if (puzzleGrid[i]) {
+                    const img = document.createElement('img');
+                    img.src = 'assets/images/' + puzzleGrid[i] + '.png';
+                    img.draggable = true;
+                    img.ondragstart = (e) => {
+                        e.dataTransfer.setData('text/plain', i);
+                        draggedItem = i;
+                    };
+                    img.style.cursor = 'grab';
+                    slot.appendChild(img);
+                }
+                if (i === puzzleSelectedSlot) {
+                    slot.classList.add('selected');
+                }
+                slot.onclick = () => {
+                    puzzleSelectedSlot = i;
+                    renderPuzzleGrid();
+                };
+                slot.ondragover = (e) => {
+                    e.preventDefault();
+                };
+                slot.ondrop = (e) => {
+                    e.preventDefault();
+                    const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                    if (fromIndex !== i) {
+                        [puzzleGrid[fromIndex], puzzleGrid[i]] = [puzzleGrid[i], puzzleGrid[fromIndex]];
+                        renderPuzzleGrid();
+                        checkPuzzleWin();
+                    }
+                };
+            });
+            document.getElementById('puzzleItems').style.display = 'none';
+        }
+
+        function renderPuzzleItems() {
+            // Hide the bottom items row since we're using drag and drop in grid
+            const container = document.getElementById('puzzleItems');
+            container.style.display = 'none';
+        }
+
+        function checkPuzzleWin() {
+            let matches = 0;
+            // Check all adjacent pairs
+            for (let i = 0; i < puzzleGrid.length - 1; i++) {
+                if (puzzleGrid[i] && puzzleGrid[i+1] && puzzleGrid[i] === puzzleGrid[i+1]) {
+                    // Make sure it's an even index (left side of pair)
+                    if (i % 2 === 0) {
+                        matches++;
+                    }
+                }
+            }
+            if (matches >= 3) {
+                setTimeout(() => {
+                    closePuzzle();
+                    if (currentPuzzle) {
+                        currentPuzzle.solved = true;
+                        const mesh = puzzleMeshes.find(p => p.position.x === currentPuzzle.x && p.position.z === currentPuzzle.z);
+                        if (mesh) mesh.visible = false;
+                    }
+                    coins += 60;
+                    saveCoins(coins);
+                    document.getElementById('coins').textContent = coins;
+                    hud.textContent = '+60 COINS!';
+                    setTimeout(() => hud.textContent = isTraining ? 'TRAINING MODE' : 'RUN...', 2000);
+                }, 100);
+            }
+        }
+
+        function updatePuzzleUI() {
+            if (isPuzzleActive && figureMesh) {
+                const dist = Math.floor(camera.position.distanceTo(figureMesh.position));
+                document.getElementById('puzzleDistance').textContent = 'FIGURE: ' + dist + 'm';
+            }
+        }
+
+        puzzleCloseBtn.addEventListener('click', closePuzzle);
+        
+        document.getElementById('puzzleCheck').addEventListener('click', () => {
+            checkPuzzleWin();
+        });
 
         function flash() {
             flashEl.style.opacity = 0.6;
@@ -1598,7 +2042,26 @@ const FIG_H = 5;
             figureSpeedVar = 0;
             document.querySelectorAll('.game-ui').forEach(el => el.classList.remove('hidden'));
             document.getElementById('coins').textContent = 'COINS: ' + coins;
-            if (handsMesh) handsMesh.visible = true;
+            
+            // Update hands based on equipped
+            const { equipped } = loadShopData();
+            if (handsMesh && handsTextures) {
+                const handImage = equipped.hands && handsTextures[equipped.hands + '.png'] ? equipped.hands + '.png' : 'hands.png';
+                if (handsTextures[handImage]) {
+                    handsMesh.material.map = handsTextures[handImage];
+                    handsMesh.material.needsUpdate = true;
+                }
+                handsMesh.visible = true;
+            }
+            
+            // Reset puzzles
+            for (const p of puzzles) {
+                p.solved = false;
+            }
+            for (const m of puzzleMeshes) {
+                m.visible = true;
+            }
+            
             if (!isTraining && figureMesh && figureTex[figureSelect.value]) {
                 const aspect = figureAspects[figureSelect.value] || 0.5;
                 figureMesh.geometry.dispose();
@@ -1702,13 +2165,13 @@ const FIG_H = 5;
             if (locked) {
                 overlay.classList.add('hidden');
                 overlay.style.display = 'none';
-            } else if (!dead && gameStarted && countdown <= 0 && !isPaused) {
+            } else if (!dead && gameStarted && countdown <= 0 && !isPaused && !isPuzzleActive) {
                 togglePause();
             }
         });
 
         document.addEventListener('visibilitychange', () => {
-            if (document.hidden && gameStarted && !dead && countdown <= 0 && !isPaused) {
+            if (document.hidden && gameStarted && !dead && countdown <= 0 && !isPaused && !isPuzzleActive) {
                 togglePause();
             }
         });
@@ -1890,6 +2353,8 @@ const FIG_H = 5;
                     nearMachine.active = false;
                     const mesh = machineMeshes.find(m => m.position.x === nearMachine.x && m.position.z === nearMachine.z);
                     if (mesh) mesh.visible = false;
+                } else if (nearPuzzle && !nearPuzzle.solved) {
+                    openPuzzle();
                 } else {
                     let usedSlot = -1;
                     if (inventory[0]) {
@@ -2015,7 +2480,7 @@ const FIG_H = 5;
         const figureAudioMap = {
             default: { audio: null, gainNode: null, file: 'assets/audio/flight.mp3' },
             kanye: { audio: null, gainNode: null, file: 'assets/audio/kanye.mp3' },
-            scaryguy: null,
+            scaryguy: { audio: null, gainNode: null, file: 'assets/audio/scary.mp3' },
             stalin: { audio: null, gainNode: null, file: 'assets/audio/stalin.mp3' },
             training: null
         };
@@ -2164,6 +2629,7 @@ const FIG_H = 5;
                 customFigures.push({ name: name, image: e.target.result });
                 saveCustomFigures(customFigures);
                 updateCustomFiguresList();
+                alert('Figure created! Please refresh the page to use it.');
                 nameInput.value = '';
                 fileInput.value = '';
             };
@@ -2217,6 +2683,102 @@ const FIG_H = 5;
 
         updateHomeLeaderboard();
         document.getElementById('homeCoins').textContent = 'COINS: ' + coins;
+
+        // Shop system
+        const shopItems = [
+            { id: 'hand2', name: 'Suit', price: 100, image: 'hand2.png', type: 'hands' },
+            { id: 'hand3', name: 'Cuty', price: 100, image: 'hand3.png', type: 'hands' },
+            { id: 'hardmode', name: 'Hard Mode', price: 500, image: 'hardy.png', type: 'mode' }
+        ];
+
+        function loadShopData() {
+            const owned = JSON.parse(localStorage.getItem('rngShopOwned') || '[]');
+            const equipped = JSON.parse(localStorage.getItem('rngShopEquipped') || '{"hands": "default", "mode": null}');
+            return { owned, equipped };
+        }
+
+        function saveShopData(owned, equipped) {
+            localStorage.setItem('rngShopOwned', JSON.stringify(owned));
+            localStorage.setItem('rngShopEquipped', JSON.stringify(equipped));
+        }
+
+        function updateShopUI() {
+            const { owned, equipped } = loadShopData();
+            const container = document.getElementById('shopItems');
+            container.innerHTML = '';
+            
+            shopItems.forEach(item => {
+                const isOwned = owned.includes(item.id);
+                const isEquipped = equipped[item.type] === item.id || (item.type === 'mode' && equipped.mode === item.id);
+                
+                const div = document.createElement('div');
+                div.className = 'shop-item' + (isOwned ? ' owned' : '') + (isEquipped ? ' equipped' : '');
+                
+                const img = document.createElement('img');
+                img.src = 'assets/images/' + item.image;
+                
+                const info = document.createElement('div');
+                info.className = 'shop-item-info';
+                info.innerHTML = `
+                    <div class="shop-item-name">${item.name}</div>
+                    <div class="shop-item-price">${isOwned ? (isEquipped ? 'EQUIPPED' : 'OWNED') : item.price + ' coins'}</div>
+                `;
+                
+                div.appendChild(img);
+                div.appendChild(info);
+                
+                div.onclick = () => buyOrEquip(item);
+                container.appendChild(div);
+            });
+        }
+
+        function buyOrEquip(item) {
+            const { owned, equipped } = loadShopData();
+            
+            if (item.type === 'mode') {
+                if (equipped.mode === item.id) {
+                    // Unequip
+                    equipped.mode = null;
+                    saveShopData(owned, equipped);
+                    updateShopUI();
+                    return;
+                }
+            } else {
+                if (equipped.hands === item.id) {
+                    // Already equipped
+                    return;
+                }
+            }
+            
+            if (owned.includes(item.id)) {
+                // Equip
+                if (item.type === 'mode') {
+                    equipped.mode = item.id;
+                } else {
+                    equipped.hands = item.id;
+                }
+                saveShopData(owned, equipped);
+                updateShopUI();
+            } else {
+                // Buy
+                if (coins >= item.price) {
+                    coins -= item.price;
+                    saveCoins(coins);
+                    owned.push(item.id);
+                    equipped.hands = item.id;
+                    saveShopData(owned, equipped);
+                    document.getElementById('homeCoins').textContent = 'COINS: ' + coins;
+                    updateShopUI();
+                }
+            }
+        }
+
+        function hasHardMode() {
+            const { equipped } = loadShopData();
+            return equipped.mode === 'hardmode';
+        }
+
+        updateShopUI();
 
         let figureActive = false;
         let figureTriggered = false;
@@ -2340,7 +2902,7 @@ const FIG_H = 5;
                 }
             }
 
-            if (gameStarted && locked && !dead && !isPaused) {
+            if (gameStarted && locked && !dead && !isPaused && !isPuzzleActive) {
                 gameTime += dt;
                 
                 if (flareActive) {
@@ -2400,6 +2962,17 @@ const FIG_H = 5;
                     if (dist < 4) {
                         nearMachine = m;
                         if (!isWorking) hud.textContent = 'Press F to work';
+                        break;
+                    }
+                }
+
+                nearPuzzle = null;
+                for (const p of puzzles) {
+                    if (p.solved) continue;
+                    const dist = Math.sqrt(Math.pow(camera.position.x - p.x, 2) + Math.pow(camera.position.z - p.z, 2));
+                    if (dist < 4) {
+                        nearPuzzle = p;
+                        hud.textContent = 'Press F to solve puzzle';
                         break;
                     }
                 }
@@ -2603,6 +3176,9 @@ const FIG_H = 5;
                             figureSpeedVar += (Math.random() - 0.7) * 0.3;
                             figureSpeedVar = Math.max(-5, Math.min(5, figureSpeedVar));
                             let currentFigureSpeed = (FIGURE_CHASE_SPEED + figureSpeedVar) * speedIncrease;
+                            if (hasHardMode()) {
+                                currentFigureSpeed *= 1.3;
+                            }
                             if (avoidX !== 0 || avoidZ !== 0) {
                                 currentFigureSpeed *= 0.6;
                             }
@@ -2685,6 +3261,7 @@ const FIG_H = 5;
             }
 
             renderer.render(scene, camera);
+            updatePuzzleUI();
             if (handsMesh && gameStarted) {
                 const isMoving = moveF || moveB || moveL || moveR || moveLeft || moveRight;
                 const isSprinting = sprint;
