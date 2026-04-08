@@ -613,6 +613,7 @@
                     <option value="default">FLIGHT</option>
                     <option value="kanye">KANYE</option>
                     <option value="scaryguy">SCARY GUY</option>
+                    <option value="stalin">STALIN</option>
                 </select>
                 
                 <button id="playBtn">Start Game</button>
@@ -962,13 +963,19 @@
             figureTex.scaryguy = tex;
         });
 
+        loader.load('stalin.png', tex => {
+            tex.minFilter = tex.magFilter = THREE.NearestFilter;
+            figureTex.stalin = tex;
+        });
+
         const FIG_H = 5;
         let figureGeo, figureMesh;
 
         const figureAspects = {
             default: 0.5,
             kanye: 0.7,
-            scaryguy: 0.5
+            scaryguy: 0.5,
+            stalin: 0.5
         };
 
         function createFigureMesh() {
