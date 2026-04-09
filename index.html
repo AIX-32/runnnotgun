@@ -687,6 +687,15 @@
             z-index: 15;
         }
 
+        #speedo {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        #hudText {
+            font-size: 12px;
+        }
+
         #timer {
             position: fixed;
             top: 20px;
@@ -1272,7 +1281,10 @@
             </div>
         </div>
     </div>
-    <div id="hud" class="game-ui hidden">RUN...</div>
+    <div id="hud" class="game-ui hidden">
+        <div id="speedo">0 mph</div>
+        <div id="hudText">RUN...</div>
+    </div>
     <div id="timer" class="game-ui hidden">0:00</div>
     <div id="coins" class="game-ui hidden">0</div>
     <div id="workTimer" class="game-ui">
@@ -1826,18 +1838,22 @@ const FIG_H = 5;
         let sprint = false;
         let locked = false;
         let isJumping = false;
-        let jumpVel = 0;
-        let jumpVelX = 0;
-        let jumpVelZ = 0;
+        let jumpBuffered = false;
+        let jumpBufferTimer = 0;
+        const JUMP_BUFFER_WINDOW = 0.12;
+        let landingMomentumTimer = 0;
+        const LANDING_MOMENTUM_TIME = 0.15;
         let dashCooldown = 0;
         let lastSlideTime = 0;
         let isSliding = false;
-        let slideTimer = 0;
-        let wasInAir = false;
+        let slideVelX = 0, slideVelZ = 0;
+        let slideFriction = 0;
+        const SLIDE_FRICTION_BASE = 6;
+        const SLIDE_MIN_SPEED = 4;
 
         const overlay = document.getElementById('overlay');
         const playBtn = document.getElementById('playBtn');
-        const hud = document.getElementById('hud');
+        const hudText = document.getElementById('hudText');
         const countdownEl = document.getElementById('countdown');
         const countdownText = countdownEl.querySelector('span');
         const deathEl = document.getElementById('death');
@@ -1949,8 +1965,8 @@ const FIG_H = 5;
                     coins += 60;
                     saveCoins(coins);
                     document.getElementById('coins').textContent = coins;
-                    hud.textContent = '+60 COINS!';
-                    setTimeout(() => hud.textContent = isTraining ? 'TRAINING MODE' : 'RUN...', 2000);
+                    hudText.textContent = '+60 COINS!';
+                    setTimeout(() => hudText.textContent = isTraining ? 'TRAINING MODE' : 'RUN...', 2000);
                 }, 100);
             }
         }
@@ -2019,10 +2035,12 @@ const FIG_H = 5;
             moveLeft = moveRight = false;
             sprint = false;
             isJumping = false;
-            jumpVel = 0;
-            jumpVelX = 0;
-            jumpVelZ = 0;
+            velX = 0;
+            velY = 0;
+            velZ = 0;
             isSliding = false;
+            jumpBuffered = false;
+            jumpBufferTimer = 0;
             if (figureMesh && figureTex[figureSelect.value]) {
                 const aspect = figureAspects[figureSelect.value] || 0.5;
                 figureMesh.geometry.dispose();
@@ -2073,7 +2091,7 @@ const FIG_H = 5;
             } else if (figureMesh) {
                 figureMesh.visible = false;
             }
-            hud.textContent = isTraining ? 'TRAINING MODE' : 'RUN...';
+            hudText.textContent = isTraining ? 'TRAINING MODE' : 'RUN...';
             renderer.domElement.requestPointerLock();
         }
 
@@ -2123,10 +2141,13 @@ const FIG_H = 5;
             moveF = moveB = moveL = moveR = false;
             moveLeft = moveRight = false;
             sprint = false;
-            jumpVel = 0;
-            jumpVelX = 0;
-            jumpVelZ = 0;
+            isJumping = false;
+            velX = 0;
+            velY = 0;
+            velZ = 0;
             isSliding = false;
+            jumpBuffered = false;
+            jumpBufferTimer = 0;
             speedBoostTimer = 0;
             bearTrapPlaced = false;
             bearTrapPos = null;
@@ -2134,6 +2155,12 @@ const FIG_H = 5;
             flareTimer = 0;
             flarePos = null;
             figureTargetFlare = false;
+            isWorking = false;
+            workTimer = 0;
+            nearMachine = null;
+            if (bearTrapMesh) bearTrapMesh.visible = false;
+            if (flareMesh) flareMesh.visible = false;
+            updateInventoryUI();
             if (bearTrapMesh) bearTrapMesh.visible = false;
             if (flareMesh) flareMesh.visible = false;
             isWorking = false;
@@ -2147,7 +2174,7 @@ const FIG_H = 5;
             }
             if (figureMesh) figureMesh.visible = false;
             overlay.classList.remove('hidden');
-            hud.textContent = 'RUN...';
+            hudText.textContent = 'RUN...';
         });
 
         const homeBtn = document.getElementById('homeBtn');
@@ -2248,10 +2275,12 @@ const FIG_H = 5;
             moveLeft = moveRight = false;
             sprint = false;
             isJumping = false;
-            jumpVel = 0;
-            jumpVelX = 0;
-            jumpVelZ = 0;
+            velX = 0;
+            velY = 0;
+            velZ = 0;
             isSliding = false;
+            jumpBuffered = false;
+            jumpBufferTimer = 0;
             currentStaticOpacity = 0;
             setStaticOpacity(0);
 
@@ -2307,34 +2336,28 @@ const FIG_H = 5;
             if (code === 'ArrowLeft') { moveLeft = true; }
             if (code === 'ArrowRight') { moveRight = true; }
             if (code === 'ShiftLeft' || code === 'ShiftRight' || code === 'KeyL') { sprint = true; setKeyActive('shift', true); }
-            if (code === 'Space' && !isJumping && !isSliding && locked) {
+            if (code === 'Space' && locked) {
                 setKeyActive('space', true);
-                const isMoving = moveF || moveB || moveL || moveR || sprint;
-                if (isMoving) {
+                if (isSliding) {
+                    // Jump from slide - preserve speed into air
+                    isSliding = false;
                     isJumping = true;
-                    wasInAir = true;
-                    jumpVel = 30;
-                    const cos = Math.cos(yaw), sin = Math.sin(yaw);
-                    let boostDirX = 0, boostDirZ = 0;
-                    if (moveF) { boostDirX -= sin; boostDirZ -= cos; }
-                    if (moveB) { boostDirX += sin; boostDirZ += cos; }
-                    if (moveL) { boostDirX -= cos; boostDirZ += sin; }
-                    if (moveR) { boostDirX += cos; boostDirZ -= sin; }
-                    const len = Math.sqrt(boostDirX * boostDirX + boostDirZ * boostDirZ);
-                    if (len > 0) {
-                        const boostSpeed = 18;
-                        jumpVelX = (boostDirX / len) * boostSpeed;
-                        jumpVelZ = (boostDirZ / len) * boostSpeed;
-                    }
+                    velX = slideVelX;
+                    velZ = slideVelZ;
+                    velY = JUMP_FORCE;
+                    camera.position.y += 0.9; // stand up
+                    jumpBuffered = false;
+                    jumpBufferTimer = 0;
+                } else if (!isJumping) {
+                    doJump();
                 } else {
-                    isJumping = true;
-                    wasInAir = true;
-                    jumpVel = 22;
+                    jumpBuffered = true;
+                    jumpBufferTimer = JUMP_BUFFER_WINDOW;
                 }
             }
             if (code === 'KeyC' && !isSliding && !isJumping && locked) {
-                const now = Date.now();
                 setKeyActive('c', true);
+                const now = Date.now();
                 if (dashCooldown <= 0 && now - lastSlideTime < 150) {
                     const dashDist = 15;
                     camera.position.x += Math.sin(yaw) * dashDist;
@@ -2342,10 +2365,14 @@ const FIG_H = 5;
                     dashCooldown = 0.8;
                 } else {
                     isSliding = true;
-                    slideTimer = 0.3;
-                    speedBoostTimer = 3;
+                    slideVelX = velX;
+                    slideVelZ = velZ;
+                    // Small forward boost to help fall into dips
+                    const boostAmount = 8;
+                    slideVelX += Math.sin(yaw) * boostAmount;
+                    slideVelZ += Math.cos(yaw) * boostAmount;
+                    camera.position.y -= 0.9;
                 }
-                wasInAir = false;
                 lastSlideTime = now;
             }
             if (code === 'KeyF' && locked) {
@@ -2561,8 +2588,18 @@ const FIG_H = 5;
             }
         }
 
-        const BASE_Y = 3;
-        const SPEED = 22;
+        const BASE_Y = 1.7;
+        const WALK_SPEED = 14;
+        const SPRINT_SPEED = 30;
+        const GROUND_ACCEL = 12;
+        const GROUND_FRICTION_MOVING = 8;
+        const GROUND_FRICTION_STOP = 18;
+        const AIR_ACCEL = 2.5;
+        const AIR_WISHSPEED = 18;
+        const JUMP_FORCE = 9;
+        const GRAVITY = 24;
+
+        let velX = 0, velY = 0, velZ = 0;
 
         const figureSelect = document.getElementById('figureSelect');
 
@@ -2582,6 +2619,13 @@ const FIG_H = 5;
         }
 
         let coins = loadCoins();
+
+        function doJump() {
+            isJumping = true;
+            velY = JUMP_FORCE;
+            jumpBuffered = false;
+            jumpBufferTimer = 0;
+        }
 
         function saveCustomFigures(figures) {
             localStorage.setItem('rngCustomFigures', JSON.stringify(figures));
@@ -2853,10 +2897,12 @@ const FIG_H = 5;
             moveLeft = moveRight = false;
             sprint = false;
             isJumping = false;
-            jumpVel = 0;
-            jumpVelX = 0;
-            jumpVelZ = 0;
+            velX = 0;
+            velY = 0;
+            velZ = 0;
             isSliding = false;
+            jumpBuffered = false;
+            jumpBufferTimer = 0;
             currentStaticOpacity = 0;
             setStaticOpacity(0);
             deathEl.classList.remove('active');
@@ -2864,7 +2910,7 @@ const FIG_H = 5;
             countdown = 3;
             countdownEl.classList.add('active');
             countdownText.textContent = '3';
-            hud.textContent = 'RUN...';
+            hudText.textContent = 'RUN...';
             renderer.domElement.requestPointerLock();
         }
 
@@ -2929,11 +2975,6 @@ const FIG_H = 5;
                 const secs = Math.floor(gameTime % 60);
                 document.getElementById('timer').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
 
-                if (slideTimer > 0) {
-                    slideTimer -= dt;
-                    if (slideTimer <= 0) isSliding = false;
-                }
-
                 if (dashCooldown > 0) dashCooldown -= dt;
 
                 if (isWorking) {
@@ -2950,11 +2991,11 @@ const FIG_H = 5;
                             coins += 10;
                             saveCoins(coins);
                             document.getElementById('coins').textContent = coins;
-                            hud.textContent = '+10 COINS!';
-                            setTimeout(() => hud.textContent = isTraining ? 'TRAINING MODE' : 'RUN...', 2000);
+                            hudText.textContent = '+10 COINS!';
+                            setTimeout(() => hudText.textContent = isTraining ? 'TRAINING MODE' : 'RUN...', 2000);
                         } else {
-                            hud.textContent = '+10 COINS (NOT SAVED)';
-                            setTimeout(() => hud.textContent = 'TRAINING MODE', 2000);
+                            hudText.textContent = '+10 COINS (NOT SAVED)';
+                            setTimeout(() => hudText.textContent = 'TRAINING MODE', 2000);
                         }
                     }
                 }
@@ -2965,7 +3006,7 @@ const FIG_H = 5;
                     const dist = Math.sqrt(Math.pow(camera.position.x - m.x, 2) + Math.pow(camera.position.z - m.z, 2));
                     if (dist < 4) {
                         nearMachine = m;
-                        if (!isWorking) hud.textContent = 'Press F to work';
+                        if (!isWorking) hudText.textContent = 'Press F to work';
                         break;
                     }
                 }
@@ -2976,7 +3017,7 @@ const FIG_H = 5;
                     const dist = Math.sqrt(Math.pow(camera.position.x - p.x, 2) + Math.pow(camera.position.z - p.z, 2));
                     if (dist < 4) {
                         nearPuzzle = p;
-                        hud.textContent = 'Press F to solve puzzle';
+                        hudText.textContent = 'Press F to solve puzzle';
                         break;
                     }
                 }
@@ -2985,67 +3026,130 @@ const FIG_H = 5;
                     camera.position.y = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y;
                 }
 
-                if (isJumping) {
-                    if (jumpVel > 0) {
-                        jumpVel -= 32 * dt;
-                    } else {
-                        jumpVel -= 65 * dt;
-                    }
-                    camera.position.y += jumpVel * dt;
-                    camera.position.x += jumpVelX * dt;
-                    camera.position.z += jumpVelZ * dt;
-                    const groundY = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y;
-                    if (camera.position.y <= groundY) {
-                        camera.position.y = groundY;
-                        isJumping = false;
-                        jumpVel = 0;
-                        jumpVelX = 0;
-                        jumpVelZ = 0;
-                        baseCameraY = groundY;
-                    }
+                // Jump buffer timer tick
+                if (jumpBufferTimer > 0) {
+                    jumpBufferTimer -= dt;
+                    if (jumpBufferTimer <= 0) jumpBuffered = false;
                 }
 
-                // Compute movement direction early
+                // Landing momentum timer tick
+                if (landingMomentumTimer > 0) {
+                    landingMomentumTimer -= dt;
+                }
+
+                // Compute wish direction from input in camera-space
+                const cos = Math.cos(yaw), sin = Math.sin(yaw);
                 dir.set(0, 0, 0);
                 if (moveF) dir.z -= 1;
                 if (moveB) dir.z += 1;
                 if (moveL) dir.x -= 1;
                 if (moveR) dir.x += 1;
-                if (dir.length() > 0) dir.normalize();
-                const moveDirLen = dir.length();
 
-                // Speed calculation
-                let targetSpeed = SPEED * (sprint ? 2.8 : 1);
-                if (isWorking) targetSpeed = 0;
-                if (isSliding) {
-                    const h1 = getTerrainHeight(camera.position.x, camera.position.z);
-                    const nextX = camera.position.x + dir.x * 2;
-                    const nextZ = camera.position.z + dir.z * 2;
-                    const h2 = getTerrainHeight(nextX, nextZ);
-                    const slope = (h1 - h2) / 2;
-                    const slideBoost = 1.0 + Math.max(0, slope) * 1.5;
-                    targetSpeed *= slideBoost;
-                    wasInAir = false;
-                }
-                if (speedBoostTimer > 0) {
-                    targetSpeed *= 2;
-                    speedBoostTimer -= dt;
-                }
+                const wishX = cos * dir.x + sin * dir.z;
+                const wishZ = -sin * dir.x + cos * dir.z;
+                const wishLen = Math.sqrt(wishX * wishX + wishZ * wishZ);
 
-                // Apply speed (but not when in air)
-                if (!('_curSpeed' in window)) window._curSpeed = 0;
+                // Air strafing (Quake-style)
                 if (isJumping) {
-                    // No change to speed while in air - keep current momentum
-                } else if (moveDirLen > 0) {
-                    window._curSpeed += (targetSpeed - window._curSpeed) * 0.25;
+                    const wx = wishLen > 0 ? wishX / wishLen : 0;
+                    const wz = wishLen > 0 ? wishZ / wishLen : 0;
+
+                    const currentProj = velX * wx + velZ * wz;
+                    const addSpeed = Math.max(0, AIR_WISHSPEED - currentProj);
+                    const accelAmount = Math.min(addSpeed, AIR_ACCEL * AIR_WISHSPEED * dt);
+
+                    velX += wx * accelAmount;
+                    velZ += wz * accelAmount;
+
+                    velY -= GRAVITY * dt;
+                    camera.position.y += velY * dt;
+                    camera.position.x += velX * dt;
+                    camera.position.z += velZ * dt;
+
+                    const groundY = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y;
+                    if (camera.position.y <= groundY) {
+                        camera.position.y = groundY;
+                        isJumping = false;
+                        landingMomentumTimer = LANDING_MOMENTUM_TIME;
+                        if (jumpBuffered && jumpBufferTimer > 0) {
+                            doJump();
+                        }
+                    }
+                } else if (isSliding) {
+                    // Slide / boost - downhill gives speed boost
+                    const h1 = getTerrainHeight(camera.position.x, camera.position.z);
+                    const nx2 = camera.position.x + slideVelX * dt;
+                    const nz2 = camera.position.z + slideVelZ * dt;
+                    const h2 = getTerrainHeight(nx2, nz2);
+                    const slope = (h1 - h2) / (Math.sqrt(slideVelX * slideVelX + slideVelZ * slideVelZ) * dt + 0.001);
+
+                    // Downhill = positive slope, gives boost; uphill = negative, more friction
+                    const slideBoost = 1.0 + Math.max(0, slope) * 2.5;
+                    slideFriction = SLIDE_FRICTION_BASE / slideBoost;
+                    slideFriction = Math.max(2, slideFriction);
+
+                    const slideSpeed = Math.sqrt(slideVelX * slideVelX + slideVelZ * slideVelZ);
+                    if (slideSpeed < SLIDE_MIN_SPEED) {
+                        isSliding = false;
+                        velX = slideVelX;
+                        velZ = slideVelZ;
+                        camera.position.y += 0.9;
+                    } else {
+                        const drop = slideSpeed * slideFriction * dt;
+                        const newSlideSpeed = Math.max(0, slideSpeed - drop) * slideBoost;
+                        slideVelX *= newSlideSpeed / slideSpeed;
+                        slideVelZ *= newSlideSpeed / slideSpeed;
+                        velX = slideVelX;
+                        velZ = slideVelZ;
+                        camera.position.x += slideVelX * dt;
+                        camera.position.z += slideVelZ * dt;
+                        camera.position.y = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y - 0.9;
+                    }
                 } else {
-                    window._curSpeed += (0 - window._curSpeed) * 0.2;
+                    // Ground movement
+                    const maxSpeed = sprint ? SPRINT_SPEED : WALK_SPEED;
+
+                    if (wishLen > 0) {
+                        const wx = wishX / wishLen;
+                        const wz = wishZ / wishLen;
+
+                        const currentProj = velX * wx + velZ * wz;
+                        const addSpeed = Math.max(0, maxSpeed - currentProj);
+                        const accelAmount = Math.min(addSpeed, GROUND_ACCEL * maxSpeed * dt);
+
+                        velX += wx * accelAmount;
+                        velZ += wz * accelAmount;
+                    }
+
+                    const speed = Math.sqrt(velX * velX + velZ * velZ);
+                    if (speed > 0) {
+                        let frictionFactor = wishLen > 0
+                            ? GROUND_FRICTION_MOVING
+                            : GROUND_FRICTION_STOP;
+                        
+                        // Reduce friction during landing momentum (preserves speed)
+                        if (landingMomentumTimer > 0) {
+                            frictionFactor *= 0.2;
+                        }
+                        
+                        const drop = speed * frictionFactor * dt;
+                        const newSpeed = Math.max(0, speed - drop);
+                        velX *= newSpeed / speed;
+                        velZ *= newSpeed / speed;
+                    }
+
+                    camera.position.x += velX * dt;
+                    camera.position.z += velZ * dt;
                 }
-                const currentSpeed = window._curSpeed;
+
+                // Update speed display
+                const displaySpeed = Math.round(Math.sqrt(velX * velX + velZ * velZ) * 2.237);
+                document.getElementById('speedo').textContent = displaySpeed + ' mph';
 
                 if (moveLeft) yaw += 2.5 * dt;
                 if (moveRight) yaw -= 2.5 * dt;
 
+                // Camera bob
                 const isMovingOnGround = (moveF || moveB || moveL || moveR) && !isJumping && !isSliding;
                 if (isMovingOnGround) {
                     bobTime += dt * (sprint ? 18 : 12);
@@ -3053,35 +3157,17 @@ const FIG_H = 5;
                     baseCameraY = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y + Math.sin(bobTime) * bobAmount;
                 } else if (!isJumping) {
                     baseCameraY = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y;
-                } else {
-                    // keep baseCameraY unchanged during jump
                 }
 
-                // Snap Y position to ground when not jumping
-                if (!isJumping && !isWorking) {
+                // Snap Y position to ground when not jumping or sliding
+                if (!isJumping && !isWorking && !isSliding) {
                     const groundY = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y;
                     camera.position.y = groundY;
                 }
 
-                const cos = Math.cos(yaw), sin = Math.sin(yaw);
-                const dx = cos * dir.x + sin * dir.z;
-                const dz = -sin * dir.x + cos * dir.z;
-
-                let currentSpeedAdjusted = currentSpeed;
-                if (!isJumping && !isSliding) {
-                    const forward = dir.z < 0;
-                    const backward = dir.z > 0;
-                    const left = dir.x < 0;
-                    const right = dir.x > 0;
-                    if (forward && sprint) currentSpeedAdjusted *= 1.0;
-                    else if (backward) currentSpeedAdjusted *= 0.6;
-                    else if (left || right) currentSpeedAdjusted *= 0.85;
-                }
-
-                const nx = camera.position.x + dx * currentSpeedAdjusted * dt;
-                const nz = camera.position.z + dz * currentSpeedAdjusted * dt;
-
-                let newX = nx, newZ = nz;
+                // Collision detection
+                let newX = camera.position.x;
+                let newZ = camera.position.z;
                 const playerRadius = 0.5;
 
                 for (const tree of trees) {
@@ -3243,10 +3329,10 @@ const FIG_H = 5;
                     if (chaseDist < soundRange) {
                         targetStatic = Math.max(0, Math.min(1, 1 - chaseDist / soundRange)) * 0.45;
                         const distStr = Math.floor(chaseDist);
-                        hud.textContent = `RUN... ${distStr}m`;
+                        hudText.textContent = `RUN... ${distStr}m`;
                         playFigureSound(chaseDist);
                     } else {
-                        hud.textContent = 'RUN...';
+                        hudText.textContent = 'RUN...';
                         stopFigureSound();
                     }
 
@@ -3272,6 +3358,11 @@ const FIG_H = 5;
                 const isSprinting = sprint;
                 const bob = Math.sin(bobTime) * (isMoving ? (isSprinting ? 0.15 : 0.1) : 0);
                 
+                let jumpOffset = 0;
+                if (isJumping && velY < 0) {
+                    jumpOffset = velY * 0.008;
+                }
+                
                 handsTargetX = 0;
                 handsTargetZ = -2.5;
                 
@@ -3282,7 +3373,7 @@ const FIG_H = 5;
                 
                 handsMesh.position.x += (handsTargetX - handsMesh.position.x) * 0.15;
                 handsMesh.position.z += (handsTargetZ - handsMesh.position.z) * 0.15;
-                handsMesh.position.y = -1.0 + bob;
+                handsMesh.position.y = -1.0 + bob + jumpOffset;
             }
             updateCelestialBodies();
         }
