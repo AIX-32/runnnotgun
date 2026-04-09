@@ -769,10 +769,16 @@
             justify-content: center;
             image-rendering: pixelated;
             image-rendering: crisp-edges;
+            position: relative;
         }
 
         .inv-slot.filled {
             border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .inv-slot.selected {
+            border-color: #fff;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
         }
 
         .inv-slot img {
@@ -1294,8 +1300,9 @@
         </svg>
     </div>
     <div id="inventory" class="game-ui hidden">
-        <div class="inv-slot" id="slot1"></div>
-        <div class="inv-slot" id="slot2"></div>
+        <div class="inv-slot" id="slot1"><span class="key">1</span></div>
+        <div class="inv-slot" id="slot2"><span class="key">2</span></div>
+        <div class="inv-slot" id="slot3"><span class="key">3</span></div>
     </div>
     <div id="countdown"><span>3</span></div>
     <div id="flash"></div>
@@ -1694,6 +1701,7 @@
             if (type === 'bear') texName = 'bear.png';
             else if (type === 'gem') texName = 'gem.png';
             else if (type === 'flaregun') texName = 'flaregun.png';
+            else if (type === 'firework') texName = 'firework.png';
             const itemTerrainH = getTerrainHeight(x, z);
             loader.load(texName.startsWith('assets') ? texName : 'assets/images/' + texName, tex => {
                 tex.minFilter = tex.magFilter = THREE.NearestFilter;
@@ -1711,13 +1719,14 @@
             });
         }
 
-        for (let i = 0; i < 18; i++) {
+        for (let i = 0; i < 24; i++) {
             const x = (Math.random() - 0.5) * MAP_SIZE * 0.8;
             const z = (Math.random() - 0.5) * MAP_SIZE * 0.8;
             if (Math.abs(x) < 25 && Math.abs(z) < 50) continue;
             let type;
             if (i < 12) type = i % 2 === 0 ? 'bear' : 'gem';
-            else type = 'flaregun';
+            else if (i < 17) type = 'flaregun';
+            else type = 'firework';
             spawnItem(type, x, z);
         }
 
@@ -1848,7 +1857,9 @@ const FIG_H = 5;
         let isSliding = false;
         let slideVelX = 0, slideVelZ = 0;
         let slideFriction = 0;
-        const SLIDE_FRICTION_BASE = 6;
+        let slideTimer = 0;
+        const SLIDE_DURATION = 2;
+        const SLIDE_FRICTION_BASE = 2.5;
         const SLIDE_MIN_SPEED = 4;
 
         const overlay = document.getElementById('overlay');
@@ -1996,8 +2007,18 @@ const FIG_H = 5;
         function updateInventoryUI() {
             const slot1 = document.getElementById('slot1');
             const slot2 = document.getElementById('slot2');
-            slot1.innerHTML = '';
-            slot2.innerHTML = '';
+            const slot3 = document.getElementById('slot3');
+            slot1.innerHTML = '<span class="key">1</span>';
+            slot2.innerHTML = '<span class="key">2</span>';
+            slot3.innerHTML = '<span class="key">3</span>';
+
+            slot1.classList.remove('selected');
+            slot2.classList.remove('selected');
+            slot3.classList.remove('selected');
+
+            if (selectedSlot === 0) slot1.classList.add('selected');
+            if (selectedSlot === 1) slot2.classList.add('selected');
+            if (selectedSlot === 2) slot3.classList.add('selected');
 
             if (inventory[0]) {
                 slot1.classList.add('filled');
@@ -2005,6 +2026,7 @@ const FIG_H = 5;
                 if (inventory[0] === 'bear') img.src = 'assets/images/bear.png';
                 else if (inventory[0] === 'gem') img.src = 'assets/images/gem.png';
                 else if (inventory[0] === 'flaregun') img.src = 'assets/images/flaregun.png';
+                else if (inventory[0] === 'firework') img.src = 'assets/images/firework.png';
                 slot1.appendChild(img);
             } else {
                 slot1.classList.remove('filled');
@@ -2015,9 +2037,21 @@ const FIG_H = 5;
                 if (inventory[1] === 'bear') img.src = 'assets/images/bear.png';
                 else if (inventory[1] === 'gem') img.src = 'assets/images/gem.png';
                 else if (inventory[1] === 'flaregun') img.src = 'assets/images/flaregun.png';
+                else if (inventory[1] === 'firework') img.src = 'assets/images/firework.png';
                 slot2.appendChild(img);
             } else {
                 slot2.classList.remove('filled');
+            }
+            if (inventory[2]) {
+                slot3.classList.add('filled');
+                const img = document.createElement('img');
+                if (inventory[2] === 'bear') img.src = 'assets/images/bear.png';
+                else if (inventory[2] === 'gem') img.src = 'assets/images/gem.png';
+                else if (inventory[2] === 'flaregun') img.src = 'assets/images/flaregun.png';
+                else if (inventory[2] === 'firework') img.src = 'assets/images/firework.png';
+                slot3.appendChild(img);
+            } else {
+                slot3.classList.remove('filled');
             }
         }
 
@@ -2104,8 +2138,9 @@ const FIG_H = 5;
             figureSpeedVar = 0;
             figureStuckTimer = 0;
             gameStarted = false;
-            inventory = [null, null];
+            inventory = [null, null, null];
             speedBoostTimer = 0;
+            gemStacks = 0;
             isWorking = false;
             workTimer = 0;
             nearMachine = null;
@@ -2149,6 +2184,7 @@ const FIG_H = 5;
             jumpBuffered = false;
             jumpBufferTimer = 0;
             speedBoostTimer = 0;
+            gemStacks = 0;
             bearTrapPlaced = false;
             bearTrapPos = null;
             flareActive = false;
@@ -2237,8 +2273,9 @@ const FIG_H = 5;
             figureSpeedVar = 0;
             figureStuckTimer = 0;
             gameStarted = false;
-            inventory = [null, null];
+            inventory = [null, null, null];
             speedBoostTimer = 0;
+            gemStacks = 0;
             isWorking = false;
             workTimer = 0;
             nearMachine = null;
@@ -2336,6 +2373,9 @@ const FIG_H = 5;
             if (code === 'ArrowLeft') { moveLeft = true; }
             if (code === 'ArrowRight') { moveRight = true; }
             if (code === 'ShiftLeft' || code === 'ShiftRight' || code === 'KeyL') { sprint = true; setKeyActive('shift', true); }
+            if (code === 'Digit1') { selectedSlot = 0; updateInventoryUI(); }
+            if (code === 'Digit2') { selectedSlot = 1; updateInventoryUI(); }
+            if (code === 'Digit3') { selectedSlot = 2; updateInventoryUI(); }
             if (code === 'Space' && locked) {
                 setKeyActive('space', true);
                 if (isSliding) {
@@ -2365,12 +2405,24 @@ const FIG_H = 5;
                     dashCooldown = 0.8;
                 } else {
                     isSliding = true;
-                    slideVelX = velX;
-                    slideVelZ = velZ;
-                    // Small forward boost to help fall into dips
-                    const boostAmount = 8;
-                    slideVelX += Math.sin(yaw) * boostAmount;
-                    slideVelZ += Math.cos(yaw) * boostAmount;
+                    slideTimer = SLIDE_DURATION;
+                    // Use player velocity plus a base slide velocity
+                    const currentSpeed = Math.sqrt(velX * velX + velZ * velZ);
+                    const baseSlideSpeed = 12;
+                    const combinedSpeed = currentSpeed + baseSlideSpeed;
+                    
+                    // Normalize current direction or use facing direction
+                    let dirX = 0, dirZ = 0;
+                    if (currentSpeed > 0.1) {
+                        dirX = velX / currentSpeed;
+                        dirZ = velZ / currentSpeed;
+                    } else {
+                        dirX = Math.sin(yaw);
+                        dirZ = Math.cos(yaw);
+                    }
+                    
+                    slideVelX = dirX * combinedSpeed;
+                    slideVelZ = dirZ * combinedSpeed;
                     camera.position.y -= 0.9;
                 }
                 lastSlideTime = now;
@@ -2387,14 +2439,8 @@ const FIG_H = 5;
                 } else if (nearPuzzle && !nearPuzzle.solved) {
                     openPuzzle();
                 } else {
-                    let usedSlot = -1;
-                    if (inventory[0]) {
-                        usedSlot = 0;
-                    } else if (inventory[1]) {
-                        usedSlot = 1;
-                    }
-
-                    if (usedSlot !== -1) {
+                    const usedSlot = selectedSlot;
+                    if (inventory[usedSlot]) {
                         activeItem = inventory[usedSlot];
                         inventory[usedSlot] = null;
                         updateInventoryUI();
@@ -2414,6 +2460,13 @@ const FIG_H = 5;
                             }
                         } else if (activeItem === 'gem') {
                             speedBoostTimer += 10;
+                            gemStacks = Math.min(3, gemStacks + 1);
+                        } else if (activeItem === 'firework') {
+                            const boostAmount = 100;
+                            velX = -Math.sin(yaw) * boostAmount;
+                            velZ = -Math.cos(yaw) * boostAmount;
+                            isJumping = true;
+                            velY = 15;
                         } else if (activeItem === 'flaregun') {
                             if (!flareActive && flareMesh) {
                                 flareActive = true;
@@ -2590,7 +2643,7 @@ const FIG_H = 5;
 
         const BASE_Y = 1.7;
         const WALK_SPEED = 14;
-        const SPRINT_SPEED = 30;
+        const SPRINT_SPEED = 60;
         const GROUND_ACCEL = 12;
         const GROUND_FRICTION_MOVING = 8;
         const GROUND_FRICTION_STOP = 18;
@@ -2835,9 +2888,11 @@ const FIG_H = 5;
         let countdown = 0;
         let gameStarted = false;
 
-        let inventory = [null, null];
+        let inventory = [null, null, null];
+        let selectedSlot = 0;
         let activeItem = null;
         let speedBoostTimer = 0;
+        let gemStacks = 0;
         let figureStuckTimer = 0;
         let bearTrapPlaced = false;
         let bearTrapPos = null;
@@ -2866,8 +2921,9 @@ const FIG_H = 5;
             figureSpeedVar = 0;
             figureStuckTimer = 0;
             gameStarted = false;
-            inventory = [null, null];
+            inventory = [null, null, null];
             speedBoostTimer = 0;
+            gemStacks = 0;
             bearTrapPlaced = false;
             bearTrapPos = null;
             flareActive = false;
@@ -2977,6 +3033,8 @@ const FIG_H = 5;
 
                 if (dashCooldown > 0) dashCooldown -= dt;
 
+                if (speedBoostTimer > 0) speedBoostTimer -= dt;
+
                 if (isWorking) {
                     workTimer -= dt;
                     const timerEl = document.getElementById('workTimer');
@@ -3037,6 +3095,15 @@ const FIG_H = 5;
                     landingMomentumTimer -= dt;
                 }
 
+                // Slide timer tick
+                if (slideTimer > 0) {
+                    slideTimer -= dt;
+                    if (slideTimer <= 0) {
+                        isSliding = false;
+                        camera.position.y += 0.9;
+                    }
+                }
+
                 // Compute wish direction from input in camera-space
                 const cos = Math.cos(yaw), sin = Math.sin(yaw);
                 dir.set(0, 0, 0);
@@ -3084,7 +3151,7 @@ const FIG_H = 5;
                     const slope = (h1 - h2) / (Math.sqrt(slideVelX * slideVelX + slideVelZ * slideVelZ) * dt + 0.001);
 
                     // Downhill = positive slope, gives boost; uphill = negative, more friction
-                    const slideBoost = 1.0 + Math.max(0, slope) * 2.5;
+                    const slideBoost = 1.0 + Math.max(0, slope) * 0.6;
                     slideFriction = SLIDE_FRICTION_BASE / slideBoost;
                     slideFriction = Math.max(2, slideFriction);
 
@@ -3109,13 +3176,31 @@ const FIG_H = 5;
                     // Ground movement
                     const maxSpeed = sprint ? SPRINT_SPEED : WALK_SPEED;
 
+                    // Apply speed boost from gem
+                    let effectiveMaxSpeed = maxSpeed;
+                    let currentFriction = GROUND_FRICTION_MOVING;
+                    
+                    if (speedBoostTimer > 0) {
+                        speedBoostTimer -= dt;
+                        
+                        // 2x for 1 stack, 3x for 2 stacks, 4x for 3 stacks
+                        effectiveMaxSpeed = maxSpeed * (1 + gemStacks);
+                        
+                        // Reduce friction when boosted
+                        currentFriction = GROUND_FRICTION_MOVING * 0.3;
+                    }
+                    
+                    if (speedBoostTimer <= 0) {
+                        gemStacks = 0;
+                    }
+
                     if (wishLen > 0) {
                         const wx = wishX / wishLen;
                         const wz = wishZ / wishLen;
 
                         const currentProj = velX * wx + velZ * wz;
-                        const addSpeed = Math.max(0, maxSpeed - currentProj);
-                        const accelAmount = Math.min(addSpeed, GROUND_ACCEL * maxSpeed * dt);
+                        const addSpeed = Math.max(0, effectiveMaxSpeed - currentProj);
+                        const accelAmount = Math.min(addSpeed, GROUND_ACCEL * effectiveMaxSpeed * dt);
 
                         velX += wx * accelAmount;
                         velZ += wz * accelAmount;
@@ -3123,13 +3208,21 @@ const FIG_H = 5;
 
                     const speed = Math.sqrt(velX * velX + velZ * velZ);
                     if (speed > 0) {
-                        let frictionFactor = wishLen > 0
-                            ? GROUND_FRICTION_MOVING
-                            : GROUND_FRICTION_STOP;
+                        let frictionFactor = currentFriction;
                         
                         // Reduce friction during landing momentum (preserves speed)
                         if (landingMomentumTimer > 0) {
                             frictionFactor *= 0.2;
+                        }
+                        
+                        // When boosted above max speed, apply extra drag
+                        if (speed > effectiveMaxSpeed && speedBoostTimer <= 0) {
+                            frictionFactor += (speed - maxSpeed) * 4;
+                        }
+                        
+                        // Stop friction when not pressing keys
+                        if (wishLen === 0 && speedBoostTimer <= 0) {
+                            frictionFactor = GROUND_FRICTION_STOP;
                         }
                         
                         const drop = speed * frictionFactor * dt;
@@ -3261,7 +3354,7 @@ const FIG_H = 5;
 
                         if (figureStuckTimer > 0) {
                             figureStuckTimer -= dt;
-                        } else if (distToTarget > 2.0) {
+                        } else if (distToTarget > 0.5) {
                             toTarget.normalize();
                             figureSpeedVar += (Math.random() - 0.7) * 0.3;
                             figureSpeedVar = Math.max(-5, Math.min(5, figureSpeedVar));
