@@ -73,38 +73,171 @@
         }
 
         #homescreen {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 1fr;
+            gap: 30px;
+            align-items: start;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        #homescreen .left-column {
             display: flex;
-            gap: 60px;
-            align-items: flex-start;
-            text-align: left;
-            padding-right: 40px;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        #homescreen .center-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            padding: 40px 30px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #444;
+        }
+
+        #homescreen .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         #homescreen .main-section {
             display: flex;
             flex-direction: column;
+            align-items: center;
             gap: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #333;
-            padding: 24px;
+            width: 100%;
+        }
+
+        #homescreen .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            width: 100%;
+            justify-content: center;
+            align-items: stretch;
+        }
+
+        #homescreen .btn-group button,
+        #homescreen .btn-group select {
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #fff;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        #homescreen .btn-group button:hover,
+        #homescreen .btn-group select:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+        }
+
+        #homescreen .btn-group button {
+            flex: 3;
+            font-size: 14px;
+        }
+
+        #homescreen .btn-group select {
+            flex: 2;
+            font-size: 11px;
+            padding: 12px 14px;
+        }
+
+        #homescreen .btn-group button:nth-child(3) {
+            flex: 1;
+            font-size: 10px;
+            border-width: 1px;
+            border-color: #555;
+            color: #aaa;
+        }
+
+        #homescreen .btn-group select:nth-child(4) {
+            flex: 1;
+            font-size: 10px;
+            padding: 12px 10px;
+        }
+
+        #homescreen .btn-group select option {
+            background: #0a0a0a;
+            color: #ccc;
+            padding: 12px 16px;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            border: none;
+            outline: none;
+        }
+
+        #homescreen .btn-group select option:nth-child(odd) {
+            background: #151515;
+        }
+
+        #homescreen .controls-row {
+            display: flex;
+            gap: 10px;
+            align-items: stretch;
+            width: 100%;
+            justify-content: center;
+        }
+
+        #homescreen .controls-row select {
+            width: 140px;
+            font-size: 11px;
+            padding: 10px 12px;
+            box-sizing: border-box;
+            height: auto;
+            min-height: 42px;
+        }
+
+        #homescreen .controls-row button {
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #fff;
+            background: none;
+            border: 2px solid #fff;
+            padding: 10px 12px;
+            cursor: pointer;
+            opacity: 0.9;
+            transition: all 0.3s;
+            width: 140px;
+            box-sizing: border-box;
+            height: auto;
+            min-height: 42px;
+        }
+
+        #homescreen .controls-row button:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
         }
 
         #homescreen h1 {
             font-family: 'Courier New', monospace;
-            font-size: 42px;
-            letter-spacing: 0.25em;
+            font-size: 36px;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
             color: #fff;
             margin: 0;
             opacity: 0.95;
+            text-align: center;
         }
 
         #homescreen .subtitle {
             font-family: 'Courier New', monospace;
-            font-size: 13px;
-            color: #888;
+            font-size: 12px;
+            color: #666;
             letter-spacing: 0.15em;
             margin: 0;
+            text-align: center;
         }
 
         #homescreen .section-label {
@@ -118,13 +251,13 @@
 
         #homescreen button {
             font-family: 'Courier New', monospace;
-            font-size: 18px;
-            letter-spacing: 0.35em;
+            font-size: 16px;
+            letter-spacing: 0.3em;
             text-transform: uppercase;
             color: #fff;
             background: none;
             border: 2px solid #fff;
-            padding: 16px 50px;
+            padding: 14px 40px;
             cursor: pointer;
             opacity: 0.9;
             transition: all 0.3s;
@@ -140,15 +273,69 @@
 
         #homescreen select {
             font-family: 'Courier New', monospace;
-            font-size: 13px;
-            letter-spacing: 0.15em;
+            font-size: 11px;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
             color: #fff;
             background: rgba(0, 0, 0, 0.6);
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            padding: 12px 20px;
+            border: 2px solid #fff;
+            padding: 10px 15px;
             cursor: pointer;
-            width: 220px;
+            width: 160px;
+        }
+
+        #homescreen input[type="text"] {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            padding: 10px 15px;
+            width: 190px;
+            margin-bottom: 8px;
+        }
+
+        #homescreen input[type="file"] {
+            margin-bottom: 8px;
+        }
+
+        #homescreen #createFigureBtn {
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            color: #fff;
+            background: none;
+            border: 1px solid #666;
+            padding: 8px 16px;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        #homescreen #createFigureBtn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        #homescreen .custom-figure-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding: 6px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid #333;
+        }
+
+        #homescreen .custom-figure-item img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+            image-rendering: pixelated;
+        }
+
+        #homescreen .custom-figure-item span {
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: #aaa;
         }
 
         #homescreen select option {
@@ -158,19 +345,18 @@
 
         #homescreen .info-panel {
             background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #333;
-            padding: 24px;
-            width: 280px;
+            border: 1px solid #444;
+            padding: 20px;
         }
 
         #homescreen .info-panel h3 {
             font-family: 'Courier New', monospace;
-            font-size: 12px;
+            font-size: 11px;
             letter-spacing: 0.2em;
             text-transform: uppercase;
-            color: #aaa;
-            margin: 0 0 16px 0;
-            padding-bottom: 10px;
+            color: #888;
+            margin: 0 0 12px 0;
+            padding-bottom: 8px;
             border-bottom: 1px solid #333;
         }
 
@@ -206,31 +392,39 @@
             margin-bottom: 12px;
         }
 
+        #homescreen .info-panel .item-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
         #homescreen .info-panel .item-icon {
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             border: 1px solid rgba(255, 255, 255, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
         #homescreen .info-panel .item-icon img {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             image-rendering: pixelated;
         }
 
         #homescreen .info-panel .item-desc {
             font-family: 'Courier New', monospace;
-            font-size: 10px;
-            color: #777;
-            line-height: 1.4;
+            font-size: 9px;
+            color: #666;
+            line-height: 1.3;
         }
 
         #homescreen .info-panel .item-name {
-            color: #aaa;
-            font-size: 11px;
+            color: #888;
+            font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 0.1em;
         }
@@ -242,6 +436,146 @@
             margin-top: auto;
         }
 
+        #homescreen #customizeBtn {
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #fff;
+            background: none;
+            border: 2px solid #fff;
+            padding: 10px 12px;
+            cursor: pointer;
+            opacity: 0.9;
+            transition: all 0.3s;
+            width: 140px;
+            box-sizing: border-box;
+            height: auto;
+            min-height: 42px;
+        }
+
+        #homescreen #customizeBtn:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+        }
+
+        .popup {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .popup.hidden {
+            display: none;
+        }
+
+        .popup-content {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #333;
+            padding: 30px;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            color: #888;
+            cursor: pointer;
+        }
+
+        .popup-close:hover {
+            color: #fff;
+        }
+
+        .popup-content h2 {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            letter-spacing: 0.2em;
+            color: #aaa;
+            margin: 0 0 20px 0;
+            text-transform: uppercase;
+        }
+
+        .popup-content .section-label {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: #555;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            margin-top: 16px;
+        }
+
+        .popup-content input[type="text"] {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            padding: 10px 15px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 8px;
+        }
+
+        .popup-content input[type="file"] {
+            margin-bottom: 8px;
+        }
+
+        .popup-content #createFigureBtn {
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            color: #fff;
+            background: none;
+            border: 1px solid #666;
+            padding: 8px 16px;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .popup-content #createFigureBtn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .popup-content .custom-figure-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding: 6px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid #333;
+            cursor: pointer;
+        }
+
+        .popup-content .custom-figure-item:hover {
+            border-color: #666;
+        }
+
+        .popup-content .custom-figure-item img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+            image-rendering: pixelated;
+        }
+
+        .popup-content .custom-figure-item span {
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: #aaa;
+        }
+
         #homescreen .coins-display {
             font-family: 'Courier New', monospace;
             font-size: 14px;
@@ -250,24 +584,25 @@
             background: rgba(0, 0, 0, 0.6);
             border: 2px solid rgba(255, 255, 255, 0.4);
             padding: 10px 16px;
-            width: fit-content;
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
         }
 
         #homescreen .leaderboard-panel {
             background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #333;
-            padding: 24px;
-            width: 220px;
+            border: 1px solid #444;
+            padding: 20px;
         }
 
         #homescreen .leaderboard-panel h3 {
             font-family: 'Courier New', monospace;
-            font-size: 12px;
+            font-size: 11px;
             letter-spacing: 0.2em;
             text-transform: uppercase;
-            color: #aaa;
-            margin: 0 0 16px 0;
-            padding-bottom: 10px;
+            color: #888;
+            margin: 0 0 12px 0;
+            padding-bottom: 8px;
             border-bottom: 1px solid #333;
         }
 
@@ -276,12 +611,92 @@
             justify-content: space-between;
             font-family: 'Courier New', monospace;
             font-size: 11px;
-            margin-bottom: 10px;
-            color: #666;
+            margin-bottom: 8px;
+            color: #555;
         }
 
         #homescreen .leaderboard-panel .score-row.first {
             color: #ffd700;
+        }
+
+        #homescreen .shop-panel {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #444;
+            padding: 20px;
+        }
+
+        #homescreen .shop-panel h3 {
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #888;
+            margin: 0 0 12px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #333;
+        }
+
+        #homescreen .shop-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #333;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        #homescreen .shop-item:hover {
+            border-color: #555;
+        }
+
+        #homescreen .shop-item.owned {
+            border-color: #4a4;
+        }
+
+        #homescreen .shop-item.equipped {
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        #homescreen .shop-item img {
+            width: 30px;
+            height: 30px;
+            image-rendering: pixelated;
+        }
+
+        #homescreen .shop-item-info {
+            flex: 1;
+        }
+
+        #homescreen .shop-item-name {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        #homescreen .shop-item-price {
+            font-family: 'Courier New', monospace;
+            font-size: 9px;
+            color: #666;
+        }
+
+        #homescreen .shop-item-status {
+            font-family: 'Courier New', monospace;
+            font-size: 9px;
+            color: #4a4;
+        }
+
+        #homescreen .shop-item-status.owned {
+            color: #4a4;
+        }
+
+        #homescreen .shop-item-status.locked {
+            color: #a44;
         }
 
         .game-ui {
@@ -289,6 +704,10 @@
         }
 
         .game-ui.hidden {
+            display: none;
+        }
+
+        #overlay.hidden {
             display: none;
         }
 
@@ -333,6 +752,15 @@
             letter-spacing: 0.1em;
             opacity: 0.6;
             z-index: 15;
+        }
+
+        #speedo {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        #hudText {
+            font-size: 12px;
         }
 
         #timer {
@@ -408,10 +836,16 @@
             justify-content: center;
             image-rendering: pixelated;
             image-rendering: crisp-edges;
+            position: relative;
         }
 
         .inv-slot.filled {
             border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .inv-slot.selected {
+            border-color: #fff;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
         }
 
         .inv-slot img {
@@ -465,6 +899,22 @@
 
         #death.active {
             display: flex;
+        }
+
+        #death #jumpscare {
+            position: fixed;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0;
+            z-index: 25;
+            pointer-events: none;
+            transition: opacity 0.05s;
+        }
+
+        #death #jumpscare.flash {
+            opacity: 1;
         }
 
         #death .death-content {
@@ -596,6 +1046,190 @@
         .key-btn.wide {
             width: 72px;
         }
+
+        #pause {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            z-index: 30;
+        }
+
+        #pause.active {
+            display: flex;
+        }
+
+        #pause h1 {
+            font-family: 'Courier New', monospace;
+            font-size: 36px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: #fff;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        #pause .pause-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        #pause button {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #fff;
+            background: none;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            padding: 14px 28px;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+
+        #pause button:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #fff;
+        }
+
+        #puzzle {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            z-index: 30;
+        }
+
+        #puzzle.active {
+            display: flex;
+        }
+
+        #puzzle h2 {
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #fff;
+            margin: 0;
+        }
+
+        #puzzle .puzzle-hint {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #888;
+            margin-top: -10px;
+        }
+
+        #puzzleGrid {
+            display: grid;
+            grid-template-columns: repeat(2, 60px);
+            grid-template-rows: repeat(3, 60px);
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 16px;
+            border: 2px solid #444;
+        }
+
+        .puzzle-slot {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .puzzle-slot:hover {
+            border-color: #888;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .puzzle-slot.selected {
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .puzzle-slot img {
+            width: 40px;
+            height: 40px;
+            image-rendering: pixelated;
+        }
+
+        #puzzleItems {
+            display: flex;
+            gap: 12px;
+        }
+
+        .puzzle-item {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .puzzle-item:hover {
+            border-color: #888;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .puzzle-item img {
+            width: 35px;
+            height: 35px;
+            image-rendering: pixelated;
+        }
+
+        #puzzle .puzzle-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 10px;
+        }
+
+        #puzzle button {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #fff;
+            background: none;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            padding: 10px 20px;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+
+        #puzzle button:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #fff;
+        }
+
+        #puzzle .puzzle-distance {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #ff4444;
+            letter-spacing: 0.1em;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 
@@ -607,90 +1241,125 @@
     <canvas id="static"></canvas>
     <div id="overlay" class="">
         <div id="homescreen">
-            <div class="main-section">
-                <h1>RUN-N-NOT GUN</h1>
-                <p class="subtitle">Escape the horror</p>
-                
-                <div class="section-label">Character</div>
-                <select id="figureSelect">
-                    <option value="default">FLIGHT</option>
-                    <option value="kanye">KANYE</option>
-                    <option value="scaryguy">SCARY GUY</option>
-                    <option value="stalin">STALIN</option>
-                    <option value="training">TRAINING (NO FIGURE)</option>
-                </select>
-                
-                <button id="playBtn">Start Game</button>
-                <div class="coins-display" id="homeCoins">COINS: 0</div>
-                <div class="version">v1.4</div>
-            </div>
-            
-            <div class="info-panel">
-                <h3>Controls & Items</h3>
-                
-                <div class="control-row">
-                    <span class="control-key">W A S D</span>
-                    <span class="control-action">Move</span>
+            <div class="left-column">
+                <div class="leaderboard-panel" id="homeLeaderboard">
+                    <h3>Top Runs</h3>
                 </div>
-                <div class="control-row">
-                    <span class="control-key">SPACE</span>
-                    <span class="control-action">Jump</span>
-                </div>
-                <div class="control-row">
-                    <span class="control-key">C + SPACE</span>
-                    <span class="control-action">Dash</span>
-                </div>
-                <div class="control-row">
-                    <span class="control-key">SHIFT</span>
-                    <span class="control-action">Sprint</span>
-                </div>
-                <div class="control-row">
-                    <span class="control-key">F</span>
-                    <span class="control-action">Use Item</span>
-                </div>
-                <div class="control-row">
-                    <span class="control-key">MOUSE</span>
-                    <span class="control-action">Look</span>
-                </div>
-                
-                <div class="divider"></div>
-                
-                <div class="item-row">
-                    <div class="item-icon"><img src="assets/images/bear.png"></div>
-                    <div>
-                        <div class="item-name">Bear Trap</div>
-                        <div class="item-desc">Stops the figure temporarily</div>
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-icon"><img src="assets/images/gem.png"></div>
-                    <div>
-                        <div class="item-name">Speed Gem</div>
-                        <div class="item-desc">Temporary speed boost</div>
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-icon"><img src="assets/images/flaregun.png"></div>
-                    <div>
-                        <div class="item-name">Flare Gun</div>
-                        <div class="item-desc">Distracts the figure for 8s</div>
-                    </div>
-                </div>
-                <div class="item-row">
-                    <div class="item-icon"><img src="assets/images/machine.png"></div>
-                    <div>
-                        <div class="item-name">Generator</div>
-                        <div class="item-desc">Press F to work for 8s, earn 10 coins</div>
-                    </div>
+                <div class="shop-panel" id="shopPanel">
+                    <h3>Shop</h3>
+                    <div id="shopItems"></div>
                 </div>
             </div>
             
-            <div class="leaderboard-panel" id="homeLeaderboard">
-                <h3>Top Runs</h3>
+            <div class="center-column">
+                <div class="main-section">
+                    <h1>RUN-N-NOT GUN</h1>
+                    <p class="subtitle">Escape the horror</p>
+                    
+                    <div class="btn-group">
+                        <button id="playBtn">START GAME</button>
+                        <select id="figureSelect">
+                            <option value="default">FLIGHT</option>
+                            <option value="kanye">KANYE</option>
+                            <option value="scaryguy">SCARY GUY</option>
+                            <option value="stalin">STALIN</option>
+                            <option value="training">TRAINING</option>
+                        </select>
+                        <button id="customizeBtn">CUSTOMIZE</button>
+                        <select id="aiTypeSelect">
+                            <option value="chaser">Aggressive</option>
+                            <option value="strategist">Strategist</option>
+                        </select>
+                    </div>
+                    
+                    <div class="coins-display" id="homeCoins">COINS: 0</div>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="info-panel">
+                    <h3>Controls</h3>
+                    
+                    <div class="control-row">
+                        <span class="control-key">W A S D</span>
+                        <span class="control-action">Move</span>
+                    </div>
+                    <div class="control-row">
+                        <span class="control-key">SPACE</span>
+                        <span class="control-action">Jump</span>
+                    </div>
+                    <div class="control-row">
+                        <span class="control-key">SHIFT</span>
+                        <span class="control-action">Sprint</span>
+                    </div>
+                    <div class="control-row">
+                        <span class="control-key">F</span>
+                        <span class="control-action">Use Item / Puzzle</span>
+                    </div>
+                    <div class="control-row">
+                        <span class="control-key">MOUSE</span>
+                        <span class="control-action">Look</span>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <h3>Items</h3>
+                    
+                    <div class="item-row">
+                        <div class="item-icon"><img src="assets/images/bear.png"></div>
+                        <div>
+                            <div class="item-name">Bear Trap</div>
+                            <div class="item-desc">Stops the figure temporarily</div>
+                        </div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-icon"><img src="assets/images/gem.png"></div>
+                        <div>
+                            <div class="item-name">Speed Gem</div>
+                            <div class="item-desc">Temporary speed boost</div>
+                        </div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-icon"><img src="assets/images/flaregun.png"></div>
+                        <div>
+                            <div class="item-name">Flare Gun</div>
+                            <div class="item-desc">Distracts the figure for 8s</div>
+                        </div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-icon"><img src="assets/images/machine.png"></div>
+                        <div>
+                            <div class="item-name">Generator</div>
+                            <div class="item-desc">Press F to work for 8s, earn 10 coins</div>
+                        </div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-icon"><img src="assets/images/puzzle.png"></div>
+                        <div>
+                            <div class="item-name">Puzzle</div>
+                            <div class="item-desc">Press F to solve, match pairs for 60 coins</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="customizePopup" class="popup hidden">
+                <div class="popup-content">
+                    <span class="popup-close">&times;</span>
+                    <h2>Customize Figures</h2>
+                    <div class="section-label">Create Custom Figure (30 coins)</div>
+                    <input type="text" id="customFigureName" placeholder="Figure Name" maxlength="20">
+                    <input type="file" id="customFigureUpload" accept="image/*">
+                    <button id="createFigureBtn">Create (30 coins)</button>
+                    <div id="customFiguresList"></div>
+                </div>
             </div>
         </div>
     </div>
-    <div id="hud" class="game-ui hidden">RUN...</div>
+    <div id="hud" class="game-ui hidden">
+        <div id="speedo">0 mph</div>
+        <div id="hudText">RUN...</div>
+    </div>
     <div id="timer" class="game-ui hidden">0:00</div>
     <div id="coins" class="game-ui hidden">0</div>
     <div id="workTimer" class="game-ui">
@@ -700,8 +1369,9 @@
         </svg>
     </div>
     <div id="inventory" class="game-ui hidden">
-        <div class="inv-slot" id="slot1"></div>
-        <div class="inv-slot" id="slot2"></div>
+        <div class="inv-slot" id="slot1"><span class="key">1</span></div>
+        <div class="inv-slot" id="slot2"><span class="key">2</span></div>
+        <div class="inv-slot" id="slot3"><span class="key">3</span></div>
     </div>
     <div id="countdown"><span>3</span></div>
     <div id="flash"></div>
@@ -722,6 +1392,7 @@
         </div>
     </div>
     <div id="death">
+        <div id="jumpscare"></div>
         <div class="death-content">
             <h1>It caught you</h1>
             <div id="finalTime">You survived 0:00</div>
@@ -731,6 +1402,32 @@
             </div>
         </div>
         <div id="leaderboard"></div>
+    </div>
+
+    <div id="pause">
+        <h1>Paused</h1>
+        <div class="pause-buttons">
+            <button id="resumeBtn">Resume</button>
+            <button id="pauseHomeBtn">Quit to Home</button>
+        </div>
+    </div>
+
+    <div id="puzzle">
+        <h2>Match the pairs</h2>
+        <div class="puzzle-hint">Drag and drop to swap items</div>
+        <div id="puzzleDistance" class="puzzle-distance">FIGURES: ---m</div>
+        <div id="puzzleGrid">
+            <div class="puzzle-slot" data-index="0"></div>
+            <div class="puzzle-slot" data-index="1"></div>
+            <div class="puzzle-slot" data-index="2"></div>
+            <div class="puzzle-slot" data-index="3"></div>
+            <div class="puzzle-slot" data-index="4"></div>
+            <div class="puzzle-slot" data-index="5"></div>
+        </div>
+        <div class="puzzle-buttons">
+            <button id="puzzleCheck">Check</button>
+            <button id="puzzleClose">Close</button>
+        </div>
     </div>
 
     <script type="importmap">
@@ -743,6 +1440,13 @@
     <script type="module">
         import * as THREE from 'three';
 
+        function loadCustomFigures() {
+            const stored = localStorage.getItem('rngCustomFigures');
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        let customFigures = loadCustomFigures();
+
         const PS1_W = 320;
         const PS1_H = 240;
         const canvas = document.getElementById('game');
@@ -750,13 +1454,13 @@
         canvas.height = PS1_H;
 
         const scene = new THREE.Scene();
-        scene.fog = new THREE.Fog(0x8899aa, 60, 600);
+        scene.fog = new THREE.Fog(0x8899aa, 60, 2500);
 
         const renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
         renderer.setPixelRatio(1);
         renderer.setSize(PS1_W, PS1_H, false);
         renderer.shadowMap.enabled = false;
-        renderer.setClearColor(0x000000, 0);
+        renderer.setClearColor(0x8899aa, 1);
 
         const camera = new THREE.PerspectiveCamera(75, PS1_W / PS1_H, 0.1, 800);
         camera.position.set(0, 1.7, 0);
@@ -764,24 +1468,125 @@
         const sunLight = new THREE.DirectionalLight(0xffe8c0, 1.2);
         sunLight.position.set(50, 100, 50);
         scene.add(sunLight);
-        scene.add(new THREE.AmbientLight(0x667788, 0.6));
+        const ambientLight = new THREE.AmbientLight(0x667788, 0.6);
+        scene.add(ambientLight);
 
-        const SKY_R = 600;
-        const skyGeo = new THREE.SphereGeometry(SKY_R, 16, 10);
-        const topColor = new THREE.Color(0x4a78b8);
-        const horizColor = new THREE.Color(0xc8d8e8);
-        const pos = skyGeo.attributes.position;
-        const colors = [];
-        for (let i = 0; i < pos.count; i++) {
-            const y = pos.getY(i);
-            const t = Math.max(0, Math.min(1, (y + SKY_R) / (SKY_R * 1.5)));
-            const c = topColor.clone().lerp(horizColor, 1 - t);
-            colors.push(c.r, c.g, c.b);
-        }
-        skyGeo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-        const skyMat = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide });
+        const SKY_R = 2500;
+        const skyGeo = new THREE.SphereGeometry(SKY_R, 32, 16);
+        const skyMat = new THREE.MeshBasicMaterial({ 
+            color: 0x8899aa, 
+            side: THREE.BackSide, 
+            fog: false 
+        });
         const skyMesh = new THREE.Mesh(skyGeo, skyMat);
-        scene.add(skyMesh);
+        camera.add(skyMesh);
+        scene.add(camera);
+
+        const sunMoonGeo = new THREE.SphereGeometry(30, 16, 16);
+        const sunMat = new THREE.MeshBasicMaterial({ color: 0xffdd44, fog: false });
+        const moonMat = new THREE.MeshBasicMaterial({ color: 0xdddddd, fog: false });
+        const sunMesh = new THREE.Mesh(sunMoonGeo, sunMat);
+        const moonMesh = new THREE.Mesh(sunMoonGeo, moonMat);
+        scene.add(sunMesh);
+        scene.add(moonMesh);
+
+        const loader = new THREE.TextureLoader();
+
+        let handsMesh;
+        let handsTargetX = 0;
+        let handsTargetZ = -2;
+        
+        const handsTextures = {};
+        function loadHandsTexture(name) {
+            return new Promise(resolve => {
+                loader.load('assets/images/' + name, tex => {
+                    tex.minFilter = tex.magFilter = THREE.NearestFilter;
+                    handsTextures[name] = tex;
+                    resolve();
+                });
+            });
+        }
+        
+        Promise.all([
+            loadHandsTexture('hands.png'),
+            loadHandsTexture('hand2.png'),
+            loadHandsTexture('hand3.png')
+        ]).then(() => {
+            const { equipped } = loadShopData();
+            const handImage = equipped.hands && handsTextures[equipped.hands + '.png'] ? equipped.hands + '.png' : 'hands.png';
+            const tex = handsTextures[handImage];
+            const handsGeo = new THREE.PlaneGeometry(2.5, 2.5);
+            const handsMat = new THREE.MeshBasicMaterial({ 
+                map: tex, 
+                transparent: true, 
+                alphaTest: 0.1, 
+                side: THREE.DoubleSide,
+                depthTest: false,
+                depthWrite: false
+            });
+            handsMesh = new THREE.Mesh(handsGeo, handsMat);
+            handsMesh.position.set(0, -1.0, -2.5);
+            handsMesh.visible = false;
+            handsMesh.renderOrder = 999;
+            camera.add(handsMesh);
+            scene.add(camera);
+        });
+
+        function updateCelestialBodies() {
+            const now = new Date();
+            const hour = now.getHours() + now.getMinutes() / 60;
+            const angle = ((hour - 6) / 24) * Math.PI * 2;
+            
+            sunMesh.position.set(
+                Math.cos(angle) * 500,
+                Math.sin(angle) * 500,
+                -100
+            );
+            moonMesh.position.set(
+                Math.cos(angle + Math.PI) * 500,
+                Math.sin(angle + Math.PI) * 500,
+                -100
+            );
+        }
+
+        function updateDayNight() {
+            const now = new Date();
+            const hour = now.getHours() + now.getMinutes() / 60;
+            const dayProgress = hour / 24;
+            
+            const nightAmt = Math.abs(dayProgress - 0.5) * 2;
+            const isNight = hour < 6 || hour > 18;
+            const darkness = Math.max(0, Math.min(1, nightAmt * 0.7));
+            
+            const lightIntensity = 1.2 * (1 - darkness * 0.7);
+            sunLight.intensity = lightIntensity;
+            
+            const ambientIntensity = 0.6 * (1 - darkness * 0.6);
+            ambientLight.intensity = ambientIntensity;
+            
+            if (isNight) {
+                sunLight.color.setHex(0x8899bb);
+                ambientLight.color.setHex(0x334466);
+                skyMat.color.setRGB(
+                    0.1 * (1 - darkness),
+                    0.12 * (1 - darkness),
+                    0.3 * (1 - darkness) + darkness * 0.4
+                );
+            } else {
+                sunLight.color.setHex(0xffe8c0);
+                ambientLight.color.setHex(0x667788);
+                skyMat.color.setRGB(
+                    0.29 * (1 - darkness * 0.3),
+                    0.47 * (1 - darkness * 0.3),
+                    0.72 * (1 - darkness * 0.3)
+                );
+            }
+            
+            scene.fog.color.setHex(isNight ? 0x1a1a2e : 0x8899aa);
+            scene.fog.near = 60 * (1 - darkness * 0.5);
+            scene.fog.far = 1200 * (1 - darkness * 0.4);
+        }
+        updateDayNight();
 
         function makeNoiseTexture(w, h, baseR, baseG, baseB, spread, pixSize) {
             const off = document.createElement('canvas');
@@ -805,22 +1610,39 @@
             return tex;
         }
 
-        const MAP_SIZE = 800;
+        const MAP_SIZE = 1600;
         const TERRAIN_SEGMENTS = 128;
+        const MOUNTAIN_X = 250;
+        const MOUNTAIN_Z = -250;
+        const MOUNTAIN_RADIUS = 250;
+        const MOUNTAIN_HEIGHT = 90;
 
-        function noise2D(x, z) {
-            const n = Math.sin(x * 0.05) * Math.cos(z * 0.05) * 2 +
+        function baseNoise(x, z) {
+            return Math.sin(x * 0.05) * Math.cos(z * 0.05) * 2 +
                 Math.sin(x * 0.02 + 1.3) * Math.cos(z * 0.03) * 4 +
                 Math.sin(x * 0.08) * Math.cos(z * 0.07) * 1;
-            return n;
+        }
+
+        function getMountainAmount(x, z) {
+            const dx = x - MOUNTAIN_X;
+            const dz = z - MOUNTAIN_Z;
+            const dist = Math.sqrt(dx * dx + dz * dz);
+            if (dist > MOUNTAIN_RADIUS) return 0;
+            const t = 1 - dist / MOUNTAIN_RADIUS;
+            const smooth = t * t * (3 - 2 * t);
+            return MOUNTAIN_HEIGHT * smooth * smooth;
+        }
+
+        function getWorldHeight(x, z) {
+            return baseNoise(x, z) + getMountainAmount(x, z);
         }
 
         const groundGeo = new THREE.PlaneGeometry(MAP_SIZE, MAP_SIZE, TERRAIN_SEGMENTS, TERRAIN_SEGMENTS);
         const posAttr = groundGeo.attributes.position;
         for (let i = 0; i < posAttr.count; i++) {
-            const x = posAttr.getX(i);
-            const y = posAttr.getY(i);
-            const h = noise2D(x, -y);
+            const wx = posAttr.getX(i);
+            const wz = -posAttr.getY(i);
+            const h = getWorldHeight(wx, wz);
             posAttr.setZ(i, h);
         }
         groundGeo.computeVertexNormals();
@@ -833,47 +1655,71 @@
         scene.add(ground);
 
         function getTerrainHeight(x, z) {
-            return noise2D(x, -z);
+            return getWorldHeight(x, z);
         }
 
-        const loader = new THREE.TextureLoader();
         let treeMat, rockMat;
         const billboards = [];
         const trees = [];
         const rocks = [];
 
-        loader.load('assets/images/tree.png', tex => {
-            tex.minFilter = tex.magFilter = THREE.NearestFilter;
-            const aspect = tex.image.width / tex.image.height;
-            const TREE_H = 14;
-            const treeGeo = new THREE.PlaneGeometry(TREE_H * aspect, TREE_H);
-            treeMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+        function createTree() {
+            loader.load('assets/images/tree.png', tex => {
+                tex.minFilter = tex.magFilter = THREE.NearestFilter;
+                const tree1Aspect = tex.image.width / tex.image.height;
+                const tree1Geo = new THREE.PlaneGeometry(22 * tree1Aspect, 22);
+                const tree1Mat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
+                
+                loader.load('assets/images/tree2.png', tex2 => {
+                    tex2.minFilter = tex2.magFilter = THREE.NearestFilter;
+                    const tree2Aspect = tex2.image.width / tex2.image.height;
+                    const tree2Geo = new THREE.PlaneGeometry(22 * tree2Aspect, 22);
+                    const tree2Mat = new THREE.MeshLambertMaterial({ map: tex2, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
 
-            for (let i = 0; i < 120; i++) {
-                const x = (Math.random() - 0.5) * MAP_SIZE * 0.9;
-                const z = (Math.random() - 0.5) * MAP_SIZE * 0.9;
-                if (Math.abs(x) < 25 && Math.abs(z) < 45) continue;
-                const scale = 0.9 + Math.random() * 0.6;
-                const tree = new THREE.Mesh(treeGeo, treeMat);
-                const terrainH = getTerrainHeight(x, z);
-                tree.position.set(x, terrainH + TREE_H / 2 * scale, z);
-                tree.scale.setScalar(scale);
-                tree.userData.baseY = terrainH + TREE_H / 2 * scale;
-                tree.userData.isTree = true;
-                scene.add(tree);
-                billboards.push(tree);
-                trees.push(tree);
-            }
-        });
+                    loader.load('assets/images/tree3.png', tex3 => {
+                        tex3.minFilter = tex3.magFilter = THREE.NearestFilter;
+                        const tree3Aspect = tex3.image.width / tex3.image.height;
+                        const tree3Geo = new THREE.PlaneGeometry(22 * tree3Aspect, 22);
+                        const tree3Mat = new THREE.MeshLambertMaterial({ map: tex3, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
+
+                        for (let i = 0; i < 300; i++) {
+                            const r = Math.random();
+                            let useTree = 1;
+                            if (r > 0.66) useTree = 3;
+                            else if (r > 0.33) useTree = 2;
+                            
+                            const geo = useTree === 3 ? tree3Geo : (useTree === 2 ? tree2Geo : tree1Geo);
+                            const mat = useTree === 3 ? tree3Mat : (useTree === 2 ? tree2Mat : tree1Mat);
+                            const aspect = useTree === 3 ? tree3Aspect : (useTree === 2 ? tree2Aspect : tree1Aspect);
+                            
+                            const x = (Math.random() - 0.5) * MAP_SIZE * 0.9;
+                            const z = (Math.random() - 0.5) * MAP_SIZE * 0.9;
+                            if (Math.abs(x) < 25 && Math.abs(z) < 45) continue;
+                            const scale = 0.8 + Math.random() * 0.8;
+                            const tree = new THREE.Mesh(geo, mat);
+                            const terrainH = getTerrainHeight(x, z);
+                            tree.position.set(x, terrainH + 22 / 2 * scale, z);
+                            tree.scale.setScalar(scale);
+                            tree.userData.baseY = terrainH + 22 / 2 * scale;
+                            tree.userData.isTree = true;
+                            scene.add(tree);
+                            billboards.push(tree);
+                            trees.push(tree);
+                        }
+                    });
+                });
+            });
+        }
+        createTree();
 
         loader.load('assets/images/rock.png', tex => {
             tex.minFilter = tex.magFilter = THREE.NearestFilter;
             const aspect = tex.image.width / tex.image.height;
             const ROCK_H = 2;
             const rockGeo = new THREE.PlaneGeometry(ROCK_H * aspect, ROCK_H);
-            rockMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+            rockMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
 
-            for (let i = 0; i < 60; i++) {
+            for (let i = 0; i < 150; i++) {
                 const x = (Math.random() - 0.5) * MAP_SIZE * 0.85;
                 const z = (Math.random() - 0.5) * MAP_SIZE * 0.85;
                 if (Math.abs(x) < 20 && Math.abs(z) < 40) continue;
@@ -896,12 +1742,20 @@
         let flareMesh = null;
         let machineMeshes = [];
         let machines = [];
+        let puzzleMeshes = [];
+        let puzzles = [];
+        let nearPuzzle = null;
+        let puzzleGrid = [null, null, null, null, null, null];
+        let puzzleSelectedSlot = null;
+        let isPuzzleActive = false;
+
+        const puzzleItemTypes = ['bear', 'gem', 'flaregun', 'bear', 'gem', 'flaregun'];
 
         loader.load('assets/images/bear.png', tex => {
             tex.minFilter = tex.magFilter = THREE.NearestFilter;
             const aspect = tex.image.width / tex.image.height;
             const bearGeo = new THREE.PlaneGeometry(2 * aspect, 2);
-            const bearMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+            const bearMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
             bearTrapMesh = new THREE.Mesh(bearGeo, bearMat);
             bearTrapMesh.visible = false;
             bearTrapMesh.userData.isTrap = true;
@@ -914,7 +1768,7 @@
             const FLARE_H = 4;
             const aspect = tex.image.width / tex.image.height;
             const flareGeo = new THREE.PlaneGeometry(FLARE_H * aspect, FLARE_H);
-            const flareMat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+            const flareMat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
             flareMesh = new THREE.Mesh(flareGeo, flareMat);
             flareMesh.visible = false;
             flareMesh.userData.isFlare = true;
@@ -927,13 +1781,14 @@
             if (type === 'bear') texName = 'bear.png';
             else if (type === 'gem') texName = 'gem.png';
             else if (type === 'flaregun') texName = 'flaregun.png';
+            else if (type === 'firework') texName = 'firework.png';
             const itemTerrainH = getTerrainHeight(x, z);
             loader.load(texName.startsWith('assets') ? texName : 'assets/images/' + texName, tex => {
                 tex.minFilter = tex.magFilter = THREE.NearestFilter;
                 const ITEM_H = type === 'flaregun' ? 2 : 1.5;
                 const aspect = tex.image.width / tex.image.height;
                 const itemGeo = new THREE.PlaneGeometry(ITEM_H * aspect, ITEM_H);
-                const itemMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+                const itemMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
                 const item = new THREE.Mesh(itemGeo, itemMat);
                 item.position.set(x, itemTerrainH + ITEM_H / 2, z);
                 item.userData.itemType = type;
@@ -944,13 +1799,14 @@
             });
         }
 
-        for (let i = 0; i < 18; i++) {
+        for (let i = 0; i < 24; i++) {
             const x = (Math.random() - 0.5) * MAP_SIZE * 0.8;
             const z = (Math.random() - 0.5) * MAP_SIZE * 0.8;
             if (Math.abs(x) < 25 && Math.abs(z) < 50) continue;
             let type;
             if (i < 12) type = i % 2 === 0 ? 'bear' : 'gem';
-            else type = 'flaregun';
+            else if (i < 17) type = 'flaregun';
+            else type = 'firework';
             spawnItem(type, x, z);
         }
 
@@ -959,7 +1815,7 @@
             const aspect = tex.image.width / tex.image.height;
             const MACHINE_H = 3;
             const machineGeo = new THREE.PlaneGeometry(MACHINE_H * aspect, MACHINE_H);
-            const machineMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.DoubleSide });
+            const machineMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
 
             for (let i = 0; i < 3; i++) {
                 const x = (Math.random() - 0.5) * MAP_SIZE * 0.7;
@@ -974,6 +1830,51 @@
                 machineMeshes.push(machine);
                 billboards.push(machine);
                 machines.push({ x, z, active: true });
+            }
+        });
+
+        loader.load('assets/images/puzzle.png', tex => {
+            tex.minFilter = tex.magFilter = THREE.NearestFilter;
+            const aspect = tex.image.width / tex.image.height;
+            const PUZZLE_H = 3;
+            const puzzleGeo = new THREE.PlaneGeometry(PUZZLE_H * aspect, PUZZLE_H);
+            const puzzleMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
+
+            for (let i = 0; i < 2; i++) {
+                const x = (Math.random() - 0.5) * MAP_SIZE * 0.7;
+                const z = (Math.random() - 0.5) * MAP_SIZE * 0.7;
+                if (Math.abs(x) < 30 && Math.abs(z) < 60) continue;
+                const puzzle = new THREE.Mesh(puzzleGeo, puzzleMat);
+                const terrainH = getTerrainHeight(x, z);
+                puzzle.position.set(x, terrainH + PUZZLE_H / 2, z);
+                puzzle.userData.isPuzzle = true;
+                puzzle.userData.solved = false;
+                scene.add(puzzle);
+                puzzleMeshes.push(puzzle);
+                billboards.push(puzzle);
+                puzzles.push({ x, z, solved: false });
+            }
+        });
+
+        let cellTowerMeshes = [];
+        loader.load('assets/images/celltower.png', tex => {
+            tex.minFilter = tex.magFilter = THREE.NearestFilter;
+            const aspect = tex.image.width / tex.image.height;
+            const CELLTOWER_H = 100;
+            const cellTowerGeo = new THREE.PlaneGeometry(CELLTOWER_H * aspect, CELLTOWER_H);
+            const cellTowerMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
+
+            for (let i = 0; i < 3; i++) {
+                const x = (Math.random() - 0.5) * MAP_SIZE * 0.8;
+                const z = (Math.random() - 0.5) * MAP_SIZE * 0.8;
+                if (Math.abs(x) < 50 && Math.abs(z) < 80) continue;
+                const cellTower = new THREE.Mesh(cellTowerGeo, cellTowerMat);
+                const terrainH = getTerrainHeight(x, z);
+                cellTower.position.set(x, terrainH + CELLTOWER_H / 2, z);
+                cellTower.userData.isCellTower = true;
+                scene.add(cellTower);
+                cellTowerMeshes.push(cellTower);
+                billboards.push(cellTower);
             }
         });
 
@@ -1004,6 +1905,24 @@ const FIG_H = 5;
             training: 0.5
         };
 
+        function loadCustomFigureTexture(index) {
+            const fig = customFigures[index];
+            if (fig) {
+                const img = new Image();
+                img.onload = () => {
+                    const tex = new THREE.Texture(img);
+                    tex.minFilter = tex.magFilter = THREE.NearestFilter;
+                    tex.needsUpdate = true;
+                    figureTex['custom_' + index] = tex;
+                };
+                img.src = fig.image;
+            }
+        }
+
+        customFigures.forEach((fig, i) => {
+            loadCustomFigureTexture(i);
+        });
+
         function createFigureMesh() {
             figureGeo = new THREE.PlaneGeometry(FIG_H * 0.5, FIG_H);
             figureMaterial = new THREE.MeshLambertMaterial({
@@ -1030,24 +1949,153 @@ const FIG_H = 5;
         let sprint = false;
         let locked = false;
         let isJumping = false;
-        let jumpVel = 0;
-        let jumpVelX = 0;
-        let jumpVelZ = 0;
+        let jumpBuffered = false;
+        let jumpBufferTimer = 0;
+        const JUMP_BUFFER_WINDOW = 0.12;
+        let landingMomentumTimer = 0;
+        const LANDING_MOMENTUM_TIME = 0.15;
         let dashCooldown = 0;
         let lastSlideTime = 0;
         let isSliding = false;
+        let slideVelX = 0, slideVelZ = 0;
+        let slideFriction = 0;
         let slideTimer = 0;
-        let wasInAir = false;
+        const SLIDE_DURATION = 2;
+        const SLIDE_FRICTION_BASE = 2.5;
+        const SLIDE_MIN_SPEED = 4;
 
         const overlay = document.getElementById('overlay');
         const playBtn = document.getElementById('playBtn');
-        const hud = document.getElementById('hud');
+        const hudText = document.getElementById('hudText');
         const countdownEl = document.getElementById('countdown');
         const countdownText = countdownEl.querySelector('span');
         const deathEl = document.getElementById('death');
         const retryBtn = document.getElementById('retryBtn');
         const staticEl = document.getElementById('static');
         const flashEl = document.getElementById('flash');
+        const pauseEl = document.getElementById('pause');
+        const resumeBtn = document.getElementById('resumeBtn');
+        const pauseHomeBtn = document.getElementById('pauseHomeBtn');
+        const puzzleEl = document.getElementById('puzzle');
+        const puzzleCloseBtn = document.getElementById('puzzleClose');
+
+        let isPaused = false;
+        let currentPuzzle = null;
+
+        function openPuzzle() {
+            currentPuzzle = nearPuzzle;
+            const items = ['bear', 'gem', 'flaregun', 'bear', 'gem', 'flaregun'];
+            puzzleGrid = [...items];
+            for (let i = puzzleGrid.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [puzzleGrid[i], puzzleGrid[j]] = [puzzleGrid[j], puzzleGrid[i]];
+            }
+            puzzleSelectedSlot = null;
+            isPuzzleActive = true;
+            document.exitPointerLock();
+            puzzleEl.classList.add('active');
+            renderPuzzleGrid();
+            renderPuzzleItems();
+        }
+
+        function closePuzzle() {
+            isPuzzleActive = false;
+            puzzleEl.classList.remove('active');
+            renderer.domElement.requestPointerLock();
+        }
+
+        function renderPuzzleGrid() {
+            const slots = document.querySelectorAll('.puzzle-slot');
+            let draggedItem = null;
+            
+            slots.forEach((slot, i) => {
+                slot.innerHTML = '';
+                slot.classList.remove('selected');
+                slot.draggable = false;
+                slot.ondragstart = null;
+                slot.ondragover = null;
+                slot.ondrop = null;
+                
+                if (puzzleGrid[i]) {
+                    const img = document.createElement('img');
+                    img.src = 'assets/images/' + puzzleGrid[i] + '.png';
+                    img.draggable = true;
+                    img.ondragstart = (e) => {
+                        e.dataTransfer.setData('text/plain', i);
+                        draggedItem = i;
+                    };
+                    img.style.cursor = 'grab';
+                    slot.appendChild(img);
+                }
+                if (i === puzzleSelectedSlot) {
+                    slot.classList.add('selected');
+                }
+                slot.onclick = () => {
+                    puzzleSelectedSlot = i;
+                    renderPuzzleGrid();
+                };
+                slot.ondragover = (e) => {
+                    e.preventDefault();
+                };
+                slot.ondrop = (e) => {
+                    e.preventDefault();
+                    const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                    if (fromIndex !== i) {
+                        [puzzleGrid[fromIndex], puzzleGrid[i]] = [puzzleGrid[i], puzzleGrid[fromIndex]];
+                        renderPuzzleGrid();
+                        checkPuzzleWin();
+                    }
+                };
+            });
+            document.getElementById('puzzleItems').style.display = 'none';
+        }
+
+        function renderPuzzleItems() {
+            // Hide the bottom items row since we're using drag and drop in grid
+            const container = document.getElementById('puzzleItems');
+            container.style.display = 'none';
+        }
+
+        function checkPuzzleWin() {
+            let matches = 0;
+            // Check all adjacent pairs
+            for (let i = 0; i < puzzleGrid.length - 1; i++) {
+                if (puzzleGrid[i] && puzzleGrid[i+1] && puzzleGrid[i] === puzzleGrid[i+1]) {
+                    // Make sure it's an even index (left side of pair)
+                    if (i % 2 === 0) {
+                        matches++;
+                    }
+                }
+            }
+            if (matches >= 3) {
+                setTimeout(() => {
+                    closePuzzle();
+                    if (currentPuzzle) {
+                        currentPuzzle.solved = true;
+                        const mesh = puzzleMeshes.find(p => p.position.x === currentPuzzle.x && p.position.z === currentPuzzle.z);
+                        if (mesh) mesh.visible = false;
+                    }
+                    coins += 60;
+                    saveCoins(coins);
+                    document.getElementById('coins').textContent = coins;
+                    hudText.textContent = '+60 COINS!';
+                    setTimeout(() => hudText.textContent = isTraining ? 'TRAINING MODE' : 'RUN...', 2000);
+                }, 100);
+            }
+        }
+
+        function updatePuzzleUI() {
+            if (isPuzzleActive && figureMesh) {
+                const dist = Math.floor(camera.position.distanceTo(figureMesh.position));
+                document.getElementById('puzzleDistance').textContent = 'FIGURE: ' + dist + 'm';
+            }
+        }
+
+        puzzleCloseBtn.addEventListener('click', closePuzzle);
+        
+        document.getElementById('puzzleCheck').addEventListener('click', () => {
+            checkPuzzleWin();
+        });
 
         function flash() {
             flashEl.style.opacity = 0.6;
@@ -1061,8 +2109,18 @@ const FIG_H = 5;
         function updateInventoryUI() {
             const slot1 = document.getElementById('slot1');
             const slot2 = document.getElementById('slot2');
-            slot1.innerHTML = '';
-            slot2.innerHTML = '';
+            const slot3 = document.getElementById('slot3');
+            slot1.innerHTML = '<span class="key">1</span>';
+            slot2.innerHTML = '<span class="key">2</span>';
+            slot3.innerHTML = '<span class="key">3</span>';
+
+            slot1.classList.remove('selected');
+            slot2.classList.remove('selected');
+            slot3.classList.remove('selected');
+
+            if (selectedSlot === 0) slot1.classList.add('selected');
+            if (selectedSlot === 1) slot2.classList.add('selected');
+            if (selectedSlot === 2) slot3.classList.add('selected');
 
             if (inventory[0]) {
                 slot1.classList.add('filled');
@@ -1070,6 +2128,7 @@ const FIG_H = 5;
                 if (inventory[0] === 'bear') img.src = 'assets/images/bear.png';
                 else if (inventory[0] === 'gem') img.src = 'assets/images/gem.png';
                 else if (inventory[0] === 'flaregun') img.src = 'assets/images/flaregun.png';
+                else if (inventory[0] === 'firework') img.src = 'assets/images/firework.png';
                 slot1.appendChild(img);
             } else {
                 slot1.classList.remove('filled');
@@ -1080,9 +2139,21 @@ const FIG_H = 5;
                 if (inventory[1] === 'bear') img.src = 'assets/images/bear.png';
                 else if (inventory[1] === 'gem') img.src = 'assets/images/gem.png';
                 else if (inventory[1] === 'flaregun') img.src = 'assets/images/flaregun.png';
+                else if (inventory[1] === 'firework') img.src = 'assets/images/firework.png';
                 slot2.appendChild(img);
             } else {
                 slot2.classList.remove('filled');
+            }
+            if (inventory[2]) {
+                slot3.classList.add('filled');
+                const img = document.createElement('img');
+                if (inventory[2] === 'bear') img.src = 'assets/images/bear.png';
+                else if (inventory[2] === 'gem') img.src = 'assets/images/gem.png';
+                else if (inventory[2] === 'flaregun') img.src = 'assets/images/flaregun.png';
+                else if (inventory[2] === 'firework') img.src = 'assets/images/firework.png';
+                slot3.appendChild(img);
+            } else {
+                slot3.classList.remove('filled');
             }
         }
 
@@ -1100,10 +2171,12 @@ const FIG_H = 5;
             moveLeft = moveRight = false;
             sprint = false;
             isJumping = false;
-            jumpVel = 0;
-            jumpVelX = 0;
-            jumpVelZ = 0;
+            velX = 0;
+            velY = 0;
+            velZ = 0;
             isSliding = false;
+            jumpBuffered = false;
+            jumpBufferTimer = 0;
             if (figureMesh && figureTex[figureSelect.value]) {
                 const aspect = figureAspects[figureSelect.value] || 0.5;
                 figureMesh.geometry.dispose();
@@ -1121,8 +2194,31 @@ const FIG_H = 5;
             isTraining = figureSelect.value === 'training';
             figureActive = !isTraining;
             figureSpeedVar = 0;
+            playerPosHistory = [];
+            strategistWaitTimer = 0;
+            strategistState = 'chase';
             document.querySelectorAll('.game-ui').forEach(el => el.classList.remove('hidden'));
             document.getElementById('coins').textContent = 'COINS: ' + coins;
+            
+            // Update hands based on equipped
+            const { equipped } = loadShopData();
+            if (handsMesh && handsTextures) {
+                const handImage = equipped.hands && handsTextures[equipped.hands + '.png'] ? equipped.hands + '.png' : 'hands.png';
+                if (handsTextures[handImage]) {
+                    handsMesh.material.map = handsTextures[handImage];
+                    handsMesh.material.needsUpdate = true;
+                }
+                handsMesh.visible = true;
+            }
+            
+            // Reset puzzles
+            for (const p of puzzles) {
+                p.solved = false;
+            }
+            for (const m of puzzleMeshes) {
+                m.visible = true;
+            }
+            
             if (!isTraining && figureMesh && figureTex[figureSelect.value]) {
                 const aspect = figureAspects[figureSelect.value] || 0.5;
                 figureMesh.geometry.dispose();
@@ -1134,7 +2230,7 @@ const FIG_H = 5;
             } else if (figureMesh) {
                 figureMesh.visible = false;
             }
-            hud.textContent = isTraining ? 'TRAINING MODE' : 'RUN...';
+            hudText.textContent = isTraining ? 'TRAINING MODE' : 'RUN...';
             renderer.domElement.requestPointerLock();
         }
 
@@ -1147,8 +2243,9 @@ const FIG_H = 5;
             figureSpeedVar = 0;
             figureStuckTimer = 0;
             gameStarted = false;
-            inventory = [null, null];
+            inventory = [null, null, null];
             speedBoostTimer = 0;
+            gemStacks = 0;
             isWorking = false;
             workTimer = 0;
             nearMachine = null;
@@ -1184,17 +2281,27 @@ const FIG_H = 5;
             moveF = moveB = moveL = moveR = false;
             moveLeft = moveRight = false;
             sprint = false;
-            jumpVel = 0;
-            jumpVelX = 0;
-            jumpVelZ = 0;
+            isJumping = false;
+            velX = 0;
+            velY = 0;
+            velZ = 0;
             isSliding = false;
+            jumpBuffered = false;
+            jumpBufferTimer = 0;
             speedBoostTimer = 0;
+            gemStacks = 0;
             bearTrapPlaced = false;
             bearTrapPos = null;
             flareActive = false;
             flareTimer = 0;
             flarePos = null;
             figureTargetFlare = false;
+            isWorking = false;
+            workTimer = 0;
+            nearMachine = null;
+            if (bearTrapMesh) bearTrapMesh.visible = false;
+            if (flareMesh) flareMesh.visible = false;
+            updateInventoryUI();
             if (bearTrapMesh) bearTrapMesh.visible = false;
             if (flareMesh) flareMesh.visible = false;
             isWorking = false;
@@ -1208,11 +2315,61 @@ const FIG_H = 5;
             }
             if (figureMesh) figureMesh.visible = false;
             overlay.classList.remove('hidden');
-            hud.textContent = 'RUN...';
+            hudText.textContent = 'RUN...';
         });
 
         const homeBtn = document.getElementById('homeBtn');
         homeBtn.addEventListener('click', () => {
+            stopFigureSound();
+            goHome();
+        });
+
+        renderer.domElement.addEventListener('click', () => {
+            if (!locked) renderer.domElement.requestPointerLock();
+        });
+
+        document.addEventListener('pointerlockchange', () => {
+            locked = document.pointerLockElement === renderer.domElement;
+            if (locked) {
+                overlay.classList.add('hidden');
+                overlay.style.display = 'none';
+            } else if (!dead && gameStarted && countdown <= 0 && !isPaused && !isPuzzleActive) {
+                togglePause();
+            }
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && gameStarted && !dead && countdown <= 0 && !isPaused && !isPuzzleActive) {
+                togglePause();
+            }
+        });
+
+        function togglePause() {
+            if (dead) return;
+            isPaused = !isPaused;
+            if (isPaused) {
+                pauseEl.classList.add('active');
+                document.exitPointerLock();
+                stopFigureSound();
+            } else {
+                pauseEl.classList.remove('active');
+                renderer.domElement.requestPointerLock();
+            }
+        }
+
+        resumeBtn.addEventListener('click', () => {
+            isPaused = false;
+            pauseEl.classList.remove('active');
+            renderer.domElement.requestPointerLock();
+        });
+
+        pauseHomeBtn.addEventListener('click', () => {
+            isPaused = false;
+            pauseEl.classList.remove('active');
+            goHome();
+        });
+
+        function goHome() {
             dead = false;
             gameTime = 0;
             figureActive = false;
@@ -1221,13 +2378,15 @@ const FIG_H = 5;
             figureSpeedVar = 0;
             figureStuckTimer = 0;
             gameStarted = false;
-            inventory = [null, null];
+            inventory = [null, null, null];
             speedBoostTimer = 0;
+            gemStacks = 0;
             isWorking = false;
             workTimer = 0;
             nearMachine = null;
             bearTrapPlaced = false;
             bearTrapPos = null;
+            stopFigureSound();
             if (bearTrapMesh) bearTrapMesh.visible = false;
             updateInventoryUI();
 
@@ -1258,10 +2417,12 @@ const FIG_H = 5;
             moveLeft = moveRight = false;
             sprint = false;
             isJumping = false;
-            jumpVel = 0;
-            jumpVelX = 0;
-            jumpVelZ = 0;
+            velX = 0;
+            velY = 0;
+            velZ = 0;
             isSliding = false;
+            jumpBuffered = false;
+            jumpBufferTimer = 0;
             currentStaticOpacity = 0;
             setStaticOpacity(0);
 
@@ -1271,24 +2432,7 @@ const FIG_H = 5;
             updateHomeLeaderboard();
             document.querySelectorAll('.game-ui').forEach(el => el.classList.remove('hidden'));
             document.getElementById('timer').textContent = '0:00';
-        });
-
-        renderer.domElement.addEventListener('click', () => {
-            if (!locked) renderer.domElement.requestPointerLock();
-        });
-
-        document.addEventListener('pointerlockchange', () => {
-            locked = document.pointerLockElement === renderer.domElement;
-            if (locked) {
-                overlay.classList.add('hidden');
-                overlay.style.display = 'none';
-            } else if (!dead && gameStarted && countdown <= 0) {
-                overlay.setAttribute('data-visible', 'true');
-                overlay.style.display = 'flex';
-                updateHomeLeaderboard();
-                document.querySelectorAll('.game-ui').forEach(el => el.classList.remove('hidden'));
-            }
-        });
+        }
 
         document.addEventListener('mousemove', e => {
             if (dead) return;
@@ -1319,6 +2463,26 @@ const FIG_H = 5;
 
         document.addEventListener('keydown', e => {
             const code = e.code;
+            if (code === 'Escape' && gameStarted && !dead && countdown <= 0) {
+                if (isPuzzleActive) {
+                    closePuzzle();
+                } else {
+                    togglePause();
+                }
+                return;
+            }
+            if (code === 'KeyP') {
+                const timestamp = Date.now();
+                const link = document.createElement('a');
+                link.download = `screenshot_${timestamp}.png`;
+                renderer.render(scene, camera);
+                renderer.domElement.toBlob(blob => {
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                }, 'image/png');
+                return;
+            }
             if (code === 'KeyW' || code === 'ArrowUp') { moveF = true; setKeyActive('w', true); }
             if (code === 'KeyS' || code === 'ArrowDown') { moveB = true; setKeyActive('s', true); }
             if (code === 'KeyA') { moveL = true; setKeyActive('a', true); }
@@ -1326,34 +2490,31 @@ const FIG_H = 5;
             if (code === 'ArrowLeft') { moveLeft = true; }
             if (code === 'ArrowRight') { moveRight = true; }
             if (code === 'ShiftLeft' || code === 'ShiftRight' || code === 'KeyL') { sprint = true; setKeyActive('shift', true); }
-            if (code === 'Space' && !isJumping && !isSliding && locked) {
+            if (code === 'Digit1') { selectedSlot = 0; updateInventoryUI(); }
+            if (code === 'Digit2') { selectedSlot = 1; updateInventoryUI(); }
+            if (code === 'Digit3') { selectedSlot = 2; updateInventoryUI(); }
+            if (code === 'Space' && locked) {
                 setKeyActive('space', true);
-                const isMoving = moveF || moveB || moveL || moveR || sprint;
-                if (isMoving) {
+                if (isSliding) {
+                    // Jump from slide - preserve speed into air
+                    isSliding = false;
                     isJumping = true;
-                    wasInAir = true;
-                    jumpVel = 48;
-                    const cos = Math.cos(yaw), sin = Math.sin(yaw);
-                    let boostDirX = 0, boostDirZ = 0;
-                    if (moveF) { boostDirX -= sin; boostDirZ -= cos; }
-                    if (moveB) { boostDirX += sin; boostDirZ += cos; }
-                    if (moveL) { boostDirX -= cos; boostDirZ += sin; }
-                    if (moveR) { boostDirX += cos; boostDirZ -= sin; }
-                    const len = Math.sqrt(boostDirX * boostDirX + boostDirZ * boostDirZ);
-                    if (len > 0) {
-                        const boostSpeed = 25;
-                        jumpVelX = (boostDirX / len) * boostSpeed;
-                        jumpVelZ = (boostDirZ / len) * boostSpeed;
-                    }
+                    velX = slideVelX;
+                    velZ = slideVelZ;
+                    velY = JUMP_FORCE;
+                    camera.position.y += 0.9; // stand up
+                    jumpBuffered = false;
+                    jumpBufferTimer = 0;
+                } else if (!isJumping) {
+                    doJump();
                 } else {
-                    isJumping = true;
-                    wasInAir = true;
-                    jumpVel = 38;
+                    jumpBuffered = true;
+                    jumpBufferTimer = JUMP_BUFFER_WINDOW;
                 }
             }
             if (code === 'KeyC' && !isSliding && !isJumping && locked) {
-                const now = Date.now();
                 setKeyActive('c', true);
+                const now = Date.now();
                 if (dashCooldown <= 0 && now - lastSlideTime < 150) {
                     const dashDist = 15;
                     camera.position.x += Math.sin(yaw) * dashDist;
@@ -1361,10 +2522,26 @@ const FIG_H = 5;
                     dashCooldown = 0.8;
                 } else {
                     isSliding = true;
-                    slideTimer = 0.3;
-                    speedBoostTimer = 3;
+                    slideTimer = SLIDE_DURATION;
+                    // Use player velocity plus a base slide velocity
+                    const currentSpeed = Math.sqrt(velX * velX + velZ * velZ);
+                    const baseSlideSpeed = 12;
+                    const combinedSpeed = currentSpeed + baseSlideSpeed;
+                    
+                    // Normalize current direction or use facing direction
+                    let dirX = 0, dirZ = 0;
+                    if (currentSpeed > 0.1) {
+                        dirX = velX / currentSpeed;
+                        dirZ = velZ / currentSpeed;
+                    } else {
+                        dirX = Math.sin(yaw);
+                        dirZ = Math.cos(yaw);
+                    }
+                    
+                    slideVelX = dirX * combinedSpeed;
+                    slideVelZ = dirZ * combinedSpeed;
+                    camera.position.y -= 0.9;
                 }
-                wasInAir = false;
                 lastSlideTime = now;
             }
             if (code === 'KeyF' && locked) {
@@ -1376,15 +2553,11 @@ const FIG_H = 5;
                     nearMachine.active = false;
                     const mesh = machineMeshes.find(m => m.position.x === nearMachine.x && m.position.z === nearMachine.z);
                     if (mesh) mesh.visible = false;
+                } else if (nearPuzzle && !nearPuzzle.solved) {
+                    openPuzzle();
                 } else {
-                    let usedSlot = -1;
-                    if (inventory[0]) {
-                        usedSlot = 0;
-                    } else if (inventory[1]) {
-                        usedSlot = 1;
-                    }
-
-                    if (usedSlot !== -1) {
+                    const usedSlot = selectedSlot;
+                    if (inventory[usedSlot]) {
                         activeItem = inventory[usedSlot];
                         inventory[usedSlot] = null;
                         updateInventoryUI();
@@ -1404,6 +2577,13 @@ const FIG_H = 5;
                             }
                         } else if (activeItem === 'gem') {
                             speedBoostTimer += 10;
+                            gemStacks = Math.min(3, gemStacks + 1);
+                        } else if (activeItem === 'firework') {
+                            const boostAmount = 100;
+                            velX = -Math.sin(yaw) * boostAmount;
+                            velZ = -Math.cos(yaw) * boostAmount;
+                            isJumping = true;
+                            velY = 15;
                         } else if (activeItem === 'flaregun') {
                             if (!flareActive && flareMesh) {
                                 flareActive = true;
@@ -1501,13 +2681,20 @@ const FIG_H = 5;
         const figureAudioMap = {
             default: { audio: null, gainNode: null, file: 'assets/audio/flight.mp3' },
             kanye: { audio: null, gainNode: null, file: 'assets/audio/kanye.mp3' },
-            scaryguy: null,
+            scaryguy: { audio: null, gainNode: null, file: 'assets/audio/scary.mp3' },
             stalin: { audio: null, gainNode: null, file: 'assets/audio/stalin.mp3' },
             training: null
         };
 
+        function getFigureAudioConfig(value) {
+            if (value.startsWith('custom_')) {
+                return null;
+            }
+            return figureAudioMap[value] || null;
+        }
+
         function playFigureSound(distance) {
-            const audioConfig = figureAudioMap[figureSelect.value];
+            const audioConfig = getFigureAudioConfig(figureSelect.value);
             if (audioConfig) {
                 if (!audioConfig.audio) {
                     audioConfig.audio = new Audio(audioConfig.file);
@@ -1572,9 +2759,24 @@ const FIG_H = 5;
         }
 
         const BASE_Y = 1.7;
-        const SPEED = 22;
+        const WALK_SPEED = 14;
+        const SPRINT_SPEED = 60;
+        const GROUND_ACCEL = 12;
+        const GROUND_FRICTION_MOVING = 8;
+        const GROUND_FRICTION_STOP = 18;
+        const AIR_ACCEL = 2.5;
+        const AIR_WISHSPEED = 18;
+        const JUMP_FORCE = 9;
+        const GRAVITY = 24;
+
+        let velX = 0, velY = 0, velZ = 0;
 
         const figureSelect = document.getElementById('figureSelect');
+        const aiTypeSelect = document.getElementById('aiTypeSelect');
+
+        let playerPosHistory = [];
+        let strategistWaitTimer = 0;
+        let strategistState = 'chase';
 
         const clock = new THREE.Clock();
         const dir = new THREE.Vector3();
@@ -1592,6 +2794,86 @@ const FIG_H = 5;
         }
 
         let coins = loadCoins();
+
+        function doJump() {
+            isJumping = true;
+            velY = JUMP_FORCE;
+            jumpBuffered = false;
+            jumpBufferTimer = 0;
+        }
+
+        function saveCustomFigures(figures) {
+            localStorage.setItem('rngCustomFigures', JSON.stringify(figures));
+        }
+
+        function updateCustomFiguresList() {
+            const list = document.getElementById('customFiguresList');
+            list.innerHTML = '';
+            customFigures.forEach((fig, i) => {
+                const item = document.createElement('div');
+                item.className = 'custom-figure-item';
+                item.innerHTML = `<img src="${fig.image}"><span>${fig.name}</span>`;
+                item.onclick = () => {
+                    const select = document.getElementById('figureSelect');
+                    select.value = 'custom_' + i;
+                };
+                list.appendChild(item);
+            });
+            const select = document.getElementById('figureSelect');
+            customFigures.forEach((fig, i) => {
+                let opt = select.querySelector('option[value="custom_' + i + '"]');
+                if (!opt) {
+                    opt = document.createElement('option');
+                    opt.value = 'custom_' + i;
+                    select.appendChild(opt);
+                }
+                opt.textContent = fig.name;
+            });
+        }
+
+        document.getElementById('createFigureBtn').addEventListener('click', () => {
+            const nameInput = document.getElementById('customFigureName');
+            const fileInput = document.getElementById('customFigureUpload');
+            const name = nameInput.value.trim();
+            const file = fileInput.files[0];
+            if (!name || !file) {
+                alert('Please enter a name and upload an image');
+                return;
+            }
+            if (coins < 30) {
+                alert('Not enough coins (need 30)');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                coins -= 30;
+                saveCoins(coins);
+                document.getElementById('homeCoins').textContent = 'COINS: ' + coins;
+                customFigures.push({ name: name, image: e.target.result });
+                saveCustomFigures(customFigures);
+                updateCustomFiguresList();
+                alert('Figure created! Please refresh the page to use it.');
+                nameInput.value = '';
+                fileInput.value = '';
+            };
+            reader.readAsDataURL(file);
+        });
+
+        updateCustomFiguresList();
+
+        document.getElementById('customizeBtn').addEventListener('click', () => {
+            document.getElementById('customizePopup').classList.remove('hidden');
+        });
+
+        document.querySelector('.popup-close').addEventListener('click', () => {
+            document.getElementById('customizePopup').classList.add('hidden');
+        });
+
+        document.getElementById('customizePopup').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('customizePopup')) {
+                document.getElementById('customizePopup').classList.add('hidden');
+            }
+        });
 
         function loadLeaderboard() {
             const stored = localStorage.getItem('rngLeaderboard');
@@ -1625,6 +2907,102 @@ const FIG_H = 5;
         updateHomeLeaderboard();
         document.getElementById('homeCoins').textContent = 'COINS: ' + coins;
 
+        // Shop system
+        const shopItems = [
+            { id: 'hand2', name: 'Suit', price: 100, image: 'hand2.png', type: 'hands' },
+            { id: 'hand3', name: 'Cuty', price: 100, image: 'hand3.png', type: 'hands' },
+            { id: 'hardmode', name: 'Hard Mode', price: 500, image: 'hardy.png', type: 'mode' }
+        ];
+
+        function loadShopData() {
+            const owned = JSON.parse(localStorage.getItem('rngShopOwned') || '[]');
+            const equipped = JSON.parse(localStorage.getItem('rngShopEquipped') || '{"hands": "default", "mode": null}');
+            return { owned, equipped };
+        }
+
+        function saveShopData(owned, equipped) {
+            localStorage.setItem('rngShopOwned', JSON.stringify(owned));
+            localStorage.setItem('rngShopEquipped', JSON.stringify(equipped));
+        }
+
+        function updateShopUI() {
+            const { owned, equipped } = loadShopData();
+            const container = document.getElementById('shopItems');
+            container.innerHTML = '';
+            
+            shopItems.forEach(item => {
+                const isOwned = owned.includes(item.id);
+                const isEquipped = equipped[item.type] === item.id || (item.type === 'mode' && equipped.mode === item.id);
+                
+                const div = document.createElement('div');
+                div.className = 'shop-item' + (isOwned ? ' owned' : '') + (isEquipped ? ' equipped' : '');
+                
+                const img = document.createElement('img');
+                img.src = 'assets/images/' + item.image;
+                
+                const info = document.createElement('div');
+                info.className = 'shop-item-info';
+                info.innerHTML = `
+                    <div class="shop-item-name">${item.name}</div>
+                    <div class="shop-item-price">${isOwned ? (isEquipped ? 'EQUIPPED' : 'OWNED') : item.price + ' coins'}</div>
+                `;
+                
+                div.appendChild(img);
+                div.appendChild(info);
+                
+                div.onclick = () => buyOrEquip(item);
+                container.appendChild(div);
+            });
+        }
+
+        function buyOrEquip(item) {
+            const { owned, equipped } = loadShopData();
+            
+            if (item.type === 'mode') {
+                if (equipped.mode === item.id) {
+                    // Unequip
+                    equipped.mode = null;
+                    saveShopData(owned, equipped);
+                    updateShopUI();
+                    return;
+                }
+            } else {
+                if (equipped.hands === item.id) {
+                    // Already equipped
+                    return;
+                }
+            }
+            
+            if (owned.includes(item.id)) {
+                // Equip
+                if (item.type === 'mode') {
+                    equipped.mode = item.id;
+                } else {
+                    equipped.hands = item.id;
+                }
+                saveShopData(owned, equipped);
+                updateShopUI();
+            } else {
+                // Buy
+                if (coins >= item.price) {
+                    coins -= item.price;
+                    saveCoins(coins);
+                    owned.push(item.id);
+                    equipped.hands = item.id;
+                    saveShopData(owned, equipped);
+                    document.getElementById('homeCoins').textContent = 'COINS: ' + coins;
+                    updateShopUI();
+                }
+            }
+        }
+
+        function hasHardMode() {
+            const { equipped } = loadShopData();
+            return equipped.mode === 'hardmode';
+        }
+
+        updateShopUI();
+
         let figureActive = false;
         let figureTriggered = false;
         let figureGazeTime = 0;
@@ -1632,9 +3010,11 @@ const FIG_H = 5;
         let countdown = 0;
         let gameStarted = false;
 
-        let inventory = [null, null];
+        let inventory = [null, null, null];
+        let selectedSlot = 0;
         let activeItem = null;
         let speedBoostTimer = 0;
+        let gemStacks = 0;
         let figureStuckTimer = 0;
         let bearTrapPlaced = false;
         let bearTrapPos = null;
@@ -1663,8 +3043,9 @@ const FIG_H = 5;
             figureSpeedVar = 0;
             figureStuckTimer = 0;
             gameStarted = false;
-            inventory = [null, null];
+            inventory = [null, null, null];
             speedBoostTimer = 0;
+            gemStacks = 0;
             bearTrapPlaced = false;
             bearTrapPos = null;
             flareActive = false;
@@ -1694,10 +3075,12 @@ const FIG_H = 5;
             moveLeft = moveRight = false;
             sprint = false;
             isJumping = false;
-            jumpVel = 0;
-            jumpVelX = 0;
-            jumpVelZ = 0;
+            velX = 0;
+            velY = 0;
+            velZ = 0;
             isSliding = false;
+            jumpBuffered = false;
+            jumpBufferTimer = 0;
             currentStaticOpacity = 0;
             setStaticOpacity(0);
             deathEl.classList.remove('active');
@@ -1705,7 +3088,7 @@ const FIG_H = 5;
             countdown = 3;
             countdownEl.classList.add('active');
             countdownText.textContent = '3';
-            hud.textContent = 'RUN...';
+            hudText.textContent = 'RUN...';
             renderer.domElement.requestPointerLock();
         }
 
@@ -1747,7 +3130,7 @@ const FIG_H = 5;
                 }
             }
 
-            if (gameStarted && locked && !dead) {
+            if (gameStarted && (locked || isPuzzleActive) && !dead && !isPaused) {
                 gameTime += dt;
                 
                 if (flareActive) {
@@ -1770,12 +3153,9 @@ const FIG_H = 5;
                 const secs = Math.floor(gameTime % 60);
                 document.getElementById('timer').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
 
-                if (slideTimer > 0) {
-                    slideTimer -= dt;
-                    if (slideTimer <= 0) isSliding = false;
-                }
-
                 if (dashCooldown > 0) dashCooldown -= dt;
+
+                if (speedBoostTimer > 0) speedBoostTimer -= dt;
 
                 if (isWorking) {
                     workTimer -= dt;
@@ -1791,11 +3171,11 @@ const FIG_H = 5;
                             coins += 10;
                             saveCoins(coins);
                             document.getElementById('coins').textContent = coins;
-                            hud.textContent = '+10 COINS!';
-                            setTimeout(() => hud.textContent = isTraining ? 'TRAINING MODE' : 'RUN...', 2000);
+                            hudText.textContent = '+10 COINS!';
+                            setTimeout(() => hudText.textContent = isTraining ? 'TRAINING MODE' : 'RUN...', 2000);
                         } else {
-                            hud.textContent = '+10 COINS (NOT SAVED)';
-                            setTimeout(() => hud.textContent = 'TRAINING MODE', 2000);
+                            hudText.textContent = '+10 COINS (NOT SAVED)';
+                            setTimeout(() => hudText.textContent = 'TRAINING MODE', 2000);
                         }
                     }
                 }
@@ -1806,7 +3186,18 @@ const FIG_H = 5;
                     const dist = Math.sqrt(Math.pow(camera.position.x - m.x, 2) + Math.pow(camera.position.z - m.z, 2));
                     if (dist < 4) {
                         nearMachine = m;
-                        if (!isWorking) hud.textContent = 'Press F to work';
+                        if (!isWorking) hudText.textContent = 'Press F to work';
+                        break;
+                    }
+                }
+
+                nearPuzzle = null;
+                for (const p of puzzles) {
+                    if (p.solved) continue;
+                    const dist = Math.sqrt(Math.pow(camera.position.x - p.x, 2) + Math.pow(camera.position.z - p.z, 2));
+                    if (dist < 4) {
+                        nearPuzzle = p;
+                        hudText.textContent = 'Press F to solve puzzle';
                         break;
                     }
                 }
@@ -1815,83 +3206,183 @@ const FIG_H = 5;
                     camera.position.y = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y;
                 }
 
-                if (isJumping) {
-                    if (jumpVel > 0) {
-                        jumpVel -= 32 * dt;
-                    } else {
-                        jumpVel -= 65 * dt;
-                    }
-                    camera.position.y += jumpVel * dt;
-                    camera.position.x += jumpVelX * dt;
-                    camera.position.z += jumpVelZ * dt;
-                    jumpVelX *= 0.98;
-                    jumpVelZ *= 0.98;
-                    const groundY = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y;
-                    if (camera.position.y <= groundY) {
-                        camera.position.y = groundY;
-                        isJumping = false;
-                        jumpVel = 0;
-                        jumpVelX = 0;
-                        jumpVelZ = 0;
+                // Jump buffer timer tick
+                if (jumpBufferTimer > 0) {
+                    jumpBufferTimer -= dt;
+                    if (jumpBufferTimer <= 0) jumpBuffered = false;
+                }
+
+                // Landing momentum timer tick
+                if (landingMomentumTimer > 0) {
+                    landingMomentumTimer -= dt;
+                }
+
+                // Slide timer tick
+                if (slideTimer > 0) {
+                    slideTimer -= dt;
+                    if (slideTimer <= 0) {
+                        isSliding = false;
+                        camera.position.y += 0.9;
                     }
                 }
 
-                let speedMult = 1;
-                if (sprint) speedMult = 3.5;
-                let targetSpeed = SPEED * speedMult;
-                if (isWorking) targetSpeed = 0;
-                if (isSliding) {
-                    const h1 = getTerrainHeight(camera.position.x, camera.position.z);
-                    const nextX = camera.position.x + dir.x * 2;
-                    const nextZ = camera.position.z + dir.z * 2;
-                    const h2 = getTerrainHeight(nextX, nextZ);
-                    const slope = (h1 - h2) / 2;
-                    if (slope > 0.1) {
-                        targetSpeed *= 1.6;
-                    } else {
-                        targetSpeed *= 1.1;
-                    }
-                    wasInAir = false;
-                }
-                if (speedBoostTimer > 0) {
-                    targetSpeed *= 2;
-                    speedBoostTimer -= dt;
-                }
-
-                if (!('_curSpeed' in window)) window._curSpeed = SPEED;
-                window._curSpeed += (targetSpeed - window._curSpeed) * 0.15;
-                const currentSpeed = window._curSpeed;
-
-                const targetCamY = isSliding ? getTerrainHeight(camera.position.x, camera.position.z) + 0.6 : baseCameraY;
-                camera.position.y += (targetCamY - camera.position.y) * 0.2;
-
-                if (moveLeft) yaw += 2.5 * dt;
-                if (moveRight) yaw -= 2.5 * dt;
-
+                // Compute wish direction from input in camera-space
+                const cos = Math.cos(yaw), sin = Math.sin(yaw);
                 dir.set(0, 0, 0);
                 if (moveF) dir.z -= 1;
                 if (moveB) dir.z += 1;
                 if (moveL) dir.x -= 1;
                 if (moveR) dir.x += 1;
-                if (dir.length() > 0) dir.normalize();
 
+                const wishX = cos * dir.x + sin * dir.z;
+                const wishZ = -sin * dir.x + cos * dir.z;
+                const wishLen = Math.sqrt(wishX * wishX + wishZ * wishZ);
+
+                // Air strafing (Quake-style)
+                if (isJumping) {
+                    const wx = wishLen > 0 ? wishX / wishLen : 0;
+                    const wz = wishLen > 0 ? wishZ / wishLen : 0;
+
+                    const currentProj = velX * wx + velZ * wz;
+                    const addSpeed = Math.max(0, AIR_WISHSPEED - currentProj);
+                    const accelAmount = Math.min(addSpeed, AIR_ACCEL * AIR_WISHSPEED * dt);
+
+                    velX += wx * accelAmount;
+                    velZ += wz * accelAmount;
+
+                    velY -= GRAVITY * dt;
+                    camera.position.y += velY * dt;
+                    camera.position.x += velX * dt;
+                    camera.position.z += velZ * dt;
+
+                    const groundY = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y;
+                    if (camera.position.y <= groundY) {
+                        camera.position.y = groundY;
+                        isJumping = false;
+                        landingMomentumTimer = LANDING_MOMENTUM_TIME;
+                        if (jumpBuffered && jumpBufferTimer > 0) {
+                            doJump();
+                        }
+                    }
+                } else if (isSliding) {
+                    // Slide / boost - downhill gives speed boost
+                    const h1 = getTerrainHeight(camera.position.x, camera.position.z);
+                    const nx2 = camera.position.x + slideVelX * dt;
+                    const nz2 = camera.position.z + slideVelZ * dt;
+                    const h2 = getTerrainHeight(nx2, nz2);
+                    const slope = (h1 - h2) / (Math.sqrt(slideVelX * slideVelX + slideVelZ * slideVelZ) * dt + 0.001);
+
+                    // Downhill = positive slope, gives boost; uphill = negative, more friction
+                    const slideBoost = 1.0 + Math.max(0, slope) * 0.6;
+                    slideFriction = SLIDE_FRICTION_BASE / slideBoost;
+                    slideFriction = Math.max(2, slideFriction);
+
+                    const slideSpeed = Math.sqrt(slideVelX * slideVelX + slideVelZ * slideVelZ);
+                    if (slideSpeed < SLIDE_MIN_SPEED) {
+                        isSliding = false;
+                        velX = slideVelX;
+                        velZ = slideVelZ;
+                        camera.position.y += 0.9;
+                    } else {
+                        const drop = slideSpeed * slideFriction * dt;
+                        const newSlideSpeed = Math.max(0, slideSpeed - drop) * slideBoost;
+                        slideVelX *= newSlideSpeed / slideSpeed;
+                        slideVelZ *= newSlideSpeed / slideSpeed;
+                        velX = slideVelX;
+                        velZ = slideVelZ;
+                        camera.position.x += slideVelX * dt;
+                        camera.position.z += slideVelZ * dt;
+                        camera.position.y = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y - 0.9;
+                    }
+                } else {
+                    // Ground movement
+                    const maxSpeed = sprint ? SPRINT_SPEED : WALK_SPEED;
+
+                    // Apply speed boost from gem
+                    let effectiveMaxSpeed = maxSpeed;
+                    let currentFriction = GROUND_FRICTION_MOVING;
+                    
+                    if (speedBoostTimer > 0) {
+                        speedBoostTimer -= dt;
+                        
+                        // 2x for 1 stack, 3x for 2 stacks, 4x for 3 stacks
+                        effectiveMaxSpeed = maxSpeed * (1 + gemStacks);
+                        
+                        // Reduce friction when boosted
+                        currentFriction = GROUND_FRICTION_MOVING * 0.3;
+                    }
+                    
+                    if (speedBoostTimer <= 0) {
+                        gemStacks = 0;
+                    }
+
+                    if (wishLen > 0) {
+                        const wx = wishX / wishLen;
+                        const wz = wishZ / wishLen;
+
+                        const currentProj = velX * wx + velZ * wz;
+                        const addSpeed = Math.max(0, effectiveMaxSpeed - currentProj);
+                        const accelAmount = Math.min(addSpeed, GROUND_ACCEL * effectiveMaxSpeed * dt);
+
+                        velX += wx * accelAmount;
+                        velZ += wz * accelAmount;
+                    }
+
+                    const speed = Math.sqrt(velX * velX + velZ * velZ);
+                    if (speed > 0) {
+                        let frictionFactor = currentFriction;
+                        
+                        // Reduce friction during landing momentum (preserves speed)
+                        if (landingMomentumTimer > 0) {
+                            frictionFactor *= 0.2;
+                        }
+                        
+                        // When boosted above max speed, apply extra drag
+                        if (speed > effectiveMaxSpeed && speedBoostTimer <= 0) {
+                            frictionFactor += (speed - maxSpeed) * 4;
+                        }
+                        
+                        // Stop friction when not pressing keys
+                        if (wishLen === 0 && speedBoostTimer <= 0) {
+                            frictionFactor = GROUND_FRICTION_STOP;
+                        }
+                        
+                        const drop = speed * frictionFactor * dt;
+                        const newSpeed = Math.max(0, speed - drop);
+                        velX *= newSpeed / speed;
+                        velZ *= newSpeed / speed;
+                    }
+
+                    camera.position.x += velX * dt;
+                    camera.position.z += velZ * dt;
+                }
+
+                // Update speed display
+                const displaySpeed = Math.round(Math.sqrt(velX * velX + velZ * velZ) * 2.237);
+                document.getElementById('speedo').textContent = displaySpeed + ' mph';
+
+                if (moveLeft) yaw += 2.5 * dt;
+                if (moveRight) yaw -= 2.5 * dt;
+
+                // Camera bob
                 const isMovingOnGround = (moveF || moveB || moveL || moveR) && !isJumping && !isSliding;
                 if (isMovingOnGround) {
                     bobTime += dt * (sprint ? 18 : 12);
                     const bobAmount = sprint ? 0.08 : 0.05;
                     baseCameraY = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y + Math.sin(bobTime) * bobAmount;
-                } else {
-                    baseCameraY += (getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y - baseCameraY) * 0.1;
+                } else if (!isJumping) {
+                    baseCameraY = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y;
                 }
 
-                const cos = Math.cos(yaw), sin = Math.sin(yaw);
-                const dx = cos * dir.x + sin * dir.z;
-                const dz = -sin * dir.x + cos * dir.z;
+                // Snap Y position to ground when not jumping or sliding
+                if (!isJumping && !isWorking && !isSliding) {
+                    const groundY = getTerrainHeight(camera.position.x, camera.position.z) + BASE_Y;
+                    camera.position.y = groundY;
+                }
 
-                const nx = camera.position.x + dx * currentSpeed * dt;
-                const nz = camera.position.z + dz * currentSpeed * dt;
-
-                let newX = nx, newZ = nz;
+                // Collision detection
+                let newX = camera.position.x;
+                let newZ = camera.position.z;
                 const playerRadius = 0.5;
 
                 for (const tree of trees) {
@@ -1945,8 +3436,50 @@ const FIG_H = 5;
 
                     if (figureActive && !figureTriggered) {
                         let targetPos;
+                        const aiType = aiTypeSelect.value;
                         if (figureTargetFlare && flareActive && flarePos) {
                             targetPos = flarePos;
+                        } else if (aiType === 'strategist') {
+                            playerPosHistory.push({
+                                x: camera.position.x,
+                                z: camera.position.z,
+                                time: gameTime
+                            });
+                            if (playerPosHistory.length > 20) playerPosHistory.shift();
+                            
+                            const distToPlayer = figPos.distanceTo(camera.position);
+                            
+                            if (strategistState === 'chase') {
+                                if (distToPlayer < 25 && Math.random() < 0.006) {
+                                    strategistState = 'wait';
+                                    strategistWaitTimer = 2 + Math.random() * 2;
+                                } else if (playerPosHistory.length >= 8) {
+                                    let avgVelX = 0, avgVelZ = 0;
+                                    const recent = playerPosHistory.slice(-10);
+                                    for (let i = 1; i < recent.length; i++) {
+                                        avgVelX += recent[i].x - recent[i-1].x;
+                                        avgVelZ += recent[i].z - recent[i-1].z;
+                                    }
+                                    avgVelX /= recent.length - 1;
+                                    avgVelZ /= recent.length - 1;
+                                    
+                                    const predictTime = 1 + Math.random() * 1;
+                                    targetPos = new THREE.Vector3(
+                                        camera.position.x + avgVelX * predictTime,
+                                        0,
+                                        camera.position.z + avgVelZ * predictTime
+                                    );
+                                } else {
+                                    targetPos = camera.position;
+                                }
+                            } else {
+                                targetPos = figPos.clone();
+                                strategistWaitTimer -= dt;
+                                if (strategistWaitTimer <= 0 || distToPlayer > 60) {
+                                    strategistState = 'chase';
+                                }
+                            }
+                            figureTargetFlare = false;
                         } else {
                             const playerVel = new THREE.Vector3(moveF ? 1 : (moveB ? -1 : 0), 0, moveL ? -1 : (moveR ? 1 : 0));
                             if (playerVel.length() > 0) {
@@ -1985,11 +3518,17 @@ const FIG_H = 5;
 
                         if (figureStuckTimer > 0) {
                             figureStuckTimer -= dt;
-                        } else if (distToTarget > 2.0) {
+                        } else if (distToTarget > 0.5) {
                             toTarget.normalize();
                             figureSpeedVar += (Math.random() - 0.7) * 0.3;
                             figureSpeedVar = Math.max(-5, Math.min(5, figureSpeedVar));
                             let currentFigureSpeed = (FIGURE_CHASE_SPEED + figureSpeedVar) * speedIncrease;
+                            if (aiType === 'strategist') {
+                                currentFigureSpeed *= 0.75;
+                            }
+                            if (hasHardMode()) {
+                                currentFigureSpeed *= 1.3;
+                            }
                             if (avoidX !== 0 || avoidZ !== 0) {
                                 currentFigureSpeed *= 0.6;
                             }
@@ -2000,7 +3539,7 @@ const FIG_H = 5;
                             figPos.z += toTarget.z * currentFigureSpeed * dt;
                             figPos.y = getTerrainHeight(figPos.x, figPos.z) + 2.5;
 
-                            if (bearTrapPos && figPos.distanceTo(bearTrapPos) < 4) {
+                            if (bearTrapPos && figPos.distanceTo(bearTrapPos) < 8) {
                                 figureStuckTimer = 12;
                                 bearTrapPos = null;
                                 bearTrapPlaced = false;
@@ -2010,10 +3549,23 @@ const FIG_H = 5;
                         } else {
                             figureTriggered = true;
                             dead = true;
+                            if (isPuzzleActive) closePuzzle();
+                            stopFigureSound();
+                            if (handsMesh) handsMesh.visible = false;
                             document.exitPointerLock();
                             deathEl.classList.add('active');
                             currentStaticOpacity = 0.8;
                             setStaticOpacity(0.8);
+                            document.getElementById('workTimer').classList.remove('visible');
+
+                            const jumpscare = document.getElementById('jumpscare');
+                            if (figureTex[figureSelect.value] && figureTex[figureSelect.value].image) {
+                                jumpscare.style.backgroundImage = 'url(' + figureTex[figureSelect.value].image.src + ')';
+                                jumpscare.classList.add('flash');
+                                setTimeout(() => jumpscare.classList.remove('flash'), 150);
+                                setTimeout(() => jumpscare.classList.add('flash'), 200);
+                                setTimeout(() => jumpscare.classList.remove('flash'), 350);
+                            }
 
                             const finalTimeEl = document.getElementById('finalTime');
                             const minutes = Math.floor(gameTime / 60);
@@ -2037,10 +3589,10 @@ const FIG_H = 5;
                     if (chaseDist < soundRange) {
                         targetStatic = Math.max(0, Math.min(1, 1 - chaseDist / soundRange)) * 0.45;
                         const distStr = Math.floor(chaseDist);
-                        hud.textContent = `RUN... ${distStr}m`;
+                        hudText.textContent = `RUN... ${distStr}m`;
                         playFigureSound(chaseDist);
                     } else {
-                        hud.textContent = 'RUN...';
+                        hudText.textContent = 'RUN...';
                         stopFigureSound();
                     }
 
@@ -2060,6 +3612,30 @@ const FIG_H = 5;
             }
 
             renderer.render(scene, camera);
+            updatePuzzleUI();
+            if (handsMesh && gameStarted) {
+                const isMoving = moveF || moveB || moveL || moveR || moveLeft || moveRight;
+                const isSprinting = sprint;
+                const bob = Math.sin(bobTime) * (isMoving ? (isSprinting ? 0.15 : 0.1) : 0);
+                
+                let jumpOffset = 0;
+                if (isJumping && velY < 0) {
+                    jumpOffset = velY * 0.008;
+                }
+                
+                handsTargetX = 0;
+                handsTargetZ = -2.5;
+                
+                if (moveF) handsTargetZ = -2.7;
+                if (moveB) handsTargetZ = -2.3;
+                if (moveLeft || moveL) handsTargetX = -0.2;
+                if (moveRight || moveR) handsTargetX = 0.2;
+                
+                handsMesh.position.x += (handsTargetX - handsMesh.position.x) * 0.15;
+                handsMesh.position.z += (handsTargetZ - handsMesh.position.z) * 0.15;
+                handsMesh.position.y = -1.0 + bob + jumpOffset;
+            }
+            updateCelestialBodies();
         }
         loop();
     </script>
