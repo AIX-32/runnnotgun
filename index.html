@@ -112,6 +112,73 @@
             width: 100%;
         }
 
+        #homescreen .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            width: 100%;
+            justify-content: center;
+            align-items: stretch;
+        }
+
+        #homescreen .btn-group button,
+        #homescreen .btn-group select {
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #fff;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        #homescreen .btn-group button:hover,
+        #homescreen .btn-group select:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+        }
+
+        #homescreen .btn-group button {
+            flex: 3;
+            font-size: 14px;
+        }
+
+        #homescreen .btn-group select {
+            flex: 2;
+            font-size: 11px;
+            padding: 12px 14px;
+        }
+
+        #homescreen .btn-group button:nth-child(3) {
+            flex: 1;
+            font-size: 10px;
+            border-width: 1px;
+            border-color: #555;
+            color: #aaa;
+        }
+
+        #homescreen .btn-group select:nth-child(4) {
+            flex: 1;
+            font-size: 10px;
+            padding: 12px 10px;
+        }
+
+        #homescreen .btn-group select option {
+            background: #0a0a0a;
+            color: #ccc;
+            padding: 12px 16px;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            border: none;
+            outline: none;
+        }
+
+        #homescreen .btn-group select option:nth-child(odd) {
+            background: #151515;
+        }
+
         #homescreen .controls-row {
             display: flex;
             gap: 10px;
@@ -1189,9 +1256,8 @@
                     <h1>RUN-N-NOT GUN</h1>
                     <p class="subtitle">Escape the horror</p>
                     
-                    <button id="playBtn">START GAME</button>
-                    
-                    <div class="controls-row">
+                    <div class="btn-group">
+                        <button id="playBtn">START GAME</button>
                         <select id="figureSelect">
                             <option value="default">FLIGHT</option>
                             <option value="kanye">KANYE</option>
@@ -1199,8 +1265,11 @@
                             <option value="stalin">STALIN</option>
                             <option value="training">TRAINING</option>
                         </select>
-                        
-                        <button id="customizeBtn">Customize</button>
+                        <button id="customizeBtn">CUSTOMIZE</button>
+                        <select id="aiTypeSelect">
+                            <option value="chaser">Aggressive</option>
+                            <option value="strategist">Strategist</option>
+                        </select>
                     </div>
                     
                     <div class="coins-display" id="homeCoins">COINS: 0</div>
@@ -2092,6 +2161,9 @@ const FIG_H = 5;
             isTraining = figureSelect.value === 'training';
             figureActive = !isTraining;
             figureSpeedVar = 0;
+            playerPosHistory = [];
+            strategistWaitTimer = 0;
+            strategistState = 'chase';
             document.querySelectorAll('.game-ui').forEach(el => el.classList.remove('hidden'));
             document.getElementById('coins').textContent = 'COINS: ' + coins;
             
@@ -2655,6 +2727,11 @@ const FIG_H = 5;
         let velX = 0, velY = 0, velZ = 0;
 
         const figureSelect = document.getElementById('figureSelect');
+        const aiTypeSelect = document.getElementById('aiTypeSelect');
+
+        let playerPosHistory = [];
+        let strategistWaitTimer = 0;
+        let strategistState = 'chase';
 
         const clock = new THREE.Clock();
         const dir = new THREE.Vector3();
@@ -3314,8 +3391,50 @@ const FIG_H = 5;
 
                     if (figureActive && !figureTriggered) {
                         let targetPos;
+                        const aiType = aiTypeSelect.value;
                         if (figureTargetFlare && flareActive && flarePos) {
                             targetPos = flarePos;
+                        } else if (aiType === 'strategist') {
+                            playerPosHistory.push({
+                                x: camera.position.x,
+                                z: camera.position.z,
+                                time: gameTime
+                            });
+                            if (playerPosHistory.length > 20) playerPosHistory.shift();
+                            
+                            const distToPlayer = figPos.distanceTo(camera.position);
+                            
+                            if (strategistState === 'chase') {
+                                if (distToPlayer < 25 && Math.random() < 0.006) {
+                                    strategistState = 'wait';
+                                    strategistWaitTimer = 2 + Math.random() * 2;
+                                } else if (playerPosHistory.length >= 8) {
+                                    let avgVelX = 0, avgVelZ = 0;
+                                    const recent = playerPosHistory.slice(-10);
+                                    for (let i = 1; i < recent.length; i++) {
+                                        avgVelX += recent[i].x - recent[i-1].x;
+                                        avgVelZ += recent[i].z - recent[i-1].z;
+                                    }
+                                    avgVelX /= recent.length - 1;
+                                    avgVelZ /= recent.length - 1;
+                                    
+                                    const predictTime = 1 + Math.random() * 1;
+                                    targetPos = new THREE.Vector3(
+                                        camera.position.x + avgVelX * predictTime,
+                                        0,
+                                        camera.position.z + avgVelZ * predictTime
+                                    );
+                                } else {
+                                    targetPos = camera.position;
+                                }
+                            } else {
+                                targetPos = figPos.clone();
+                                strategistWaitTimer -= dt;
+                                if (strategistWaitTimer <= 0 || distToPlayer > 60) {
+                                    strategistState = 'chase';
+                                }
+                            }
+                            figureTargetFlare = false;
                         } else {
                             const playerVel = new THREE.Vector3(moveF ? 1 : (moveB ? -1 : 0), 0, moveL ? -1 : (moveR ? 1 : 0));
                             if (playerVel.length() > 0) {
@@ -3359,6 +3478,9 @@ const FIG_H = 5;
                             figureSpeedVar += (Math.random() - 0.7) * 0.3;
                             figureSpeedVar = Math.max(-5, Math.min(5, figureSpeedVar));
                             let currentFigureSpeed = (FIGURE_CHASE_SPEED + figureSpeedVar) * speedIncrease;
+                            if (aiType === 'strategist') {
+                                currentFigureSpeed *= 0.75;
+                            }
                             if (hasHardMode()) {
                                 currentFigureSpeed *= 1.3;
                             }
