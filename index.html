@@ -5,32 +5,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RUN-N-NOT GUN - Escape the Horror</title>
-    
-    <!-- SEO & Description -->
-    <meta name="description" content="A horror survival game. Run, hide, and survive. Choose your character and escape the figure chasing you.">
+
+    <meta name="description"
+        content="A horror survival game. Run, hide, and survive. Choose your character and escape the figure chasing you.">
     <meta name="keywords" content="horror game, survival, escape, scary, browser game, indie game">
     <meta name="author" content="Run-N-Not Gun">
     <meta name="theme-color" content="#000000">
-    
-    <!-- Open Graph / Discord -->
+
     <meta property="og:type" content="website">
     <meta property="og:title" content="RUN-N-NOT GUN">
     <meta property="og:description" content="Escape the horror. Run, hide, and survive.">
     <meta property="og:site_name" content="RUN-N-NOT GUN">
     <meta property="og:url" content="https://runnnotgun.github.io/">
     <meta property="og:image" content="https://runnnotgun.github.io/figureface.png">
-    
-    <!-- Twitter -->
+
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="RUN-N-NOT GUN">
     <meta name="twitter:description" content="Escape the horror. Run, hide, and survive.">
     <meta name="twitter:image" content="https://runnnotgun.github.io/figureface.png">
-    
-    <!-- Favicon -->
-    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==">
-    
-    <!-- Canonical -->
+
+    <link rel="icon"
+        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==">
+
     <link rel="canonical" href="https://runnnotgun.github.io/">
+
     <style>
         * {
             margin: 0;
@@ -41,6 +39,7 @@
         body {
             overflow: hidden;
             background: #000;
+            font-family: 'Arial', 'MS Sans Serif', sans-serif;
         }
 
         #game {
@@ -61,348 +60,402 @@
             mix-blend-mode: multiply;
         }
 
-        #overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.92);
+        /* ── WIN64 WINDOW CHROME ── */
+        .win-window {
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080;
+        }
+
+        .win-titlebar {
+            background: linear-gradient(90deg, #000080, #1084d0);
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 3px 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            user-select: none;
+        }
+
+        .win-titlebar .title-text {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .win-titlebar .title-icon {
+            width: 14px;
+            height: 14px;
+            image-rendering: pixelated;
+        }
+
+        .win-titlebar-buttons {
+            display: flex;
+            gap: 2px;
+        }
+
+        .win-btn {
+            width: 16px;
+            height: 14px;
+            background: #c0c0c0;
+            border-top: 1px solid #ffffff;
+            border-left: 1px solid #ffffff;
+            border-right: 1px solid #404040;
+            border-bottom: 1px solid #404040;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 9px;
+            font-weight: bold;
+            color: #000;
             cursor: pointer;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .win-btn:active {
+            border-top: 1px solid #404040;
+            border-left: 1px solid #404040;
+            border-right: 1px solid #ffffff;
+            border-bottom: 1px solid #ffffff;
+            padding-top: 1px;
+            padding-left: 1px;
+        }
+
+        .win-inset {
+            border-top: 2px solid #808080;
+            border-left: 2px solid #808080;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
+            background: #ffffff;
+        }
+
+        .win-button {
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            box-shadow: inset 1px 1px 0 #dfdfdf;
+            font-family: 'Arial', 'MS Sans Serif', sans-serif;
+            font-size: 11px;
+            color: #000000;
+            padding: 4px 16px;
+            cursor: pointer;
+            min-width: 75px;
+            text-align: center;
+        }
+
+        .win-button:active,
+        .win-button.pressed {
+            border-top: 2px solid #404040;
+            border-left: 2px solid #404040;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
+            box-shadow: none;
+            padding-top: 5px;
+            padding-left: 17px;
+        }
+
+        .win-button:focus {
+            outline: 1px dotted #000;
+            outline-offset: -4px;
+        }
+
+        select.win-select {
+            background: #ffffff;
+            border-top: 2px solid #808080;
+            border-left: 2px solid #808080;
+            border-right: 2px solid #dfdfdf;
+            border-bottom: 2px solid #dfdfdf;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            color: #000;
+            padding: 2px 20px 2px 4px;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='100%25'%3E%3Crect width='17' height='100%25' fill='%23c0c0c0'/%3E%3Crect x='0' y='0' width='1' height='100%25' fill='%23808080'/%3E%3Cpolygon points='4,6 13,6 8.5,12' fill='%23000'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0 center;
+            background-size: 17px 100%;
+        }
+
+        input[type="text"].win-input {
+            background: #ffffff;
+            border-top: 2px solid #808080;
+            border-left: 2px solid #808080;
+            border-right: 2px solid #dfdfdf;
+            border-bottom: 2px solid #dfdfdf;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            color: #000;
+            padding: 3px 4px;
+            outline: none;
+        }
+
+        /* ── OVERLAY / HOME SCREEN ── */
+        #overlay {
+            position: fixed;
+            inset: 0;
+            background: #008080;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             z-index: 10;
+        }
+
+        #overlay.hidden {
+            display: none;
+        }
+
+        /* Desktop icons background pattern */
+        #overlay::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.08) 1px, transparent 0);
+            background-size: 4px 4px;
+            pointer-events: none;
         }
 
         #homescreen {
             display: grid;
             grid-template-columns: 1fr 1.2fr 1fr;
-            gap: 30px;
+            gap: 8px;
             align-items: start;
-            padding: 40px;
-            max-width: 1200px;
+            padding: 8px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
-        #homescreen .left-column {
+        #homescreen .left-column,
+        #homescreen .right-column {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 8px;
         }
 
         #homescreen .center-column {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 25px;
-            padding: 40px 30px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid #444;
+            align-items: stretch;
+            gap: 0;
         }
 
-        #homescreen .right-column {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        #homescreen .main-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
+        /* Main game window */
+        #homescreen .center-column>.win-window {
             width: 100%;
+        }
+
+        .win-window-body {
+            padding: 12px;
+            background: #c0c0c0;
+        }
+
+        #homescreen h1 {
+            font-family: 'Arial', sans-serif;
+            font-size: 18px;
+            font-weight: bold;
+            color: #000080;
+            text-align: center;
+            margin: 0 0 4px 0;
+            text-shadow: 1px 1px 0 #ffffff;
+            letter-spacing: 0.05em;
+        }
+
+        #homescreen .subtitle {
+            font-family: 'Arial', sans-serif;
+            font-size: 10px;
+            color: #444;
+            text-align: center;
+            margin: 0 0 12px 0;
         }
 
         #homescreen .btn-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            width: 100%;
+            gap: 4px;
             justify-content: center;
-            align-items: stretch;
-        }
-
-        #homescreen .btn-group button,
-        #homescreen .btn-group select {
-            font-family: 'Courier New', monospace;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: #fff;
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid #fff;
-            padding: 12px 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        #homescreen .btn-group button:hover,
-        #homescreen .btn-group select:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.02);
+            margin-bottom: 8px;
         }
 
         #homescreen .btn-group button {
-            flex: 3;
-            font-size: 14px;
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            color: #000000;
+            padding: 4px 12px;
+            cursor: pointer;
+            min-width: 75px;
+        }
+
+        #homescreen .btn-group button:active {
+            border-top: 2px solid #404040;
+            border-left: 2px solid #404040;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
         }
 
         #homescreen .btn-group select {
-            flex: 2;
+            background: #ffffff;
+            border-top: 2px solid #808080;
+            border-left: 2px solid #808080;
+            border-right: 2px solid #dfdfdf;
+            border-bottom: 2px solid #dfdfdf;
+            font-family: 'Arial', sans-serif;
             font-size: 11px;
-            padding: 12px 14px;
-        }
-
-        #homescreen .btn-group button:nth-child(3) {
-            flex: 1;
-            font-size: 10px;
-            border-width: 1px;
-            border-color: #555;
-            color: #aaa;
-        }
-
-        #homescreen .btn-group select:nth-child(4) {
-            flex: 1;
-            font-size: 10px;
-            padding: 12px 10px;
-        }
-
-        #homescreen .btn-group select option {
-            background: #0a0a0a;
-            color: #ccc;
-            padding: 12px 16px;
-            font-size: 12px;
-            letter-spacing: 0.1em;
-            border: none;
-            outline: none;
-        }
-
-        #homescreen .btn-group select option:nth-child(odd) {
-            background: #151515;
+            color: #000;
+            padding: 3px 4px;
         }
 
         #homescreen .controls-row {
             display: flex;
-            gap: 10px;
-            align-items: stretch;
-            width: 100%;
+            gap: 4px;
+            align-items: center;
             justify-content: center;
+            margin-top: 4px;
+        }
+
+        #homescreen .controls-row button,
+        #homescreen #customizeBtn {
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            color: #000;
+            padding: 4px 12px;
+            cursor: pointer;
+            min-width: 75px;
+        }
+
+        #homescreen .controls-row button:active,
+        #homescreen #customizeBtn:active {
+            border-top: 2px solid #404040;
+            border-left: 2px solid #404040;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
         }
 
         #homescreen .controls-row select {
-            width: 140px;
+            background: #ffffff;
+            border-top: 2px solid #808080;
+            border-left: 2px solid #808080;
+            border-right: 2px solid #dfdfdf;
+            border-bottom: 2px solid #dfdfdf;
+            font-family: 'Arial', sans-serif;
             font-size: 11px;
-            padding: 10px 12px;
-            box-sizing: border-box;
-            height: auto;
-            min-height: 42px;
+            color: #000;
+            padding: 3px 4px;
+            min-width: 100px;
         }
 
-        #homescreen .controls-row button {
-            font-family: 'Courier New', monospace;
+        /* ── INFO PANELS as Win windows ── */
+        #homescreen .info-panel,
+        #homescreen .leaderboard-panel,
+        #homescreen .shop-panel {
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080;
+            padding: 0;
+            
+        }
+
+        .info-panel {
+                padding: 10px !important;
+
+        }
+
+        #homescreen .info-panel h3,
+        #homescreen .leaderboard-panel h3,
+        #homescreen .shop-panel h3 {
+            background: linear-gradient(90deg, #000080, #1084d0);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
             font-size: 11px;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: #fff;
-            background: none;
-            border: 2px solid #fff;
-            padding: 10px 12px;
-            cursor: pointer;
-            opacity: 0.9;
-            transition: all 0.3s;
-            width: 140px;
-            box-sizing: border-box;
-            height: auto;
-            min-height: 42px;
-        }
-
-        #homescreen .controls-row button:hover {
-            opacity: 1;
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.02);
-        }
-
-        #homescreen h1 {
-            font-family: 'Courier New', monospace;
-            font-size: 36px;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: #fff;
+            font-weight: bold;
+            padding: 3px 6px;
             margin: 0;
-            opacity: 0.95;
-            text-align: center;
+            letter-spacing: 0;
+            border: none;
+            text-transform: none;
         }
 
-        #homescreen .subtitle {
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            color: #666;
-            letter-spacing: 0.15em;
-            margin: 0;
-            text-align: center;
+        .panel-body {
+            padding: 8px;
         }
 
         #homescreen .section-label {
-            font-family: 'Courier New', monospace;
+            font-family: 'Arial', sans-serif;
             font-size: 10px;
-            color: #555;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-
-        #homescreen button {
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: #fff;
-            background: none;
-            border: 2px solid #fff;
-            padding: 14px 40px;
-            cursor: pointer;
-            opacity: 0.9;
-            transition: all 0.3s;
-            display: inline-block;
-            width: fit-content;
-        }
-
-        #homescreen button:hover {
-            opacity: 1;
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.02);
-        }
-
-        #homescreen select {
-            font-family: 'Courier New', monospace;
-            font-size: 11px;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: #fff;
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid #fff;
-            padding: 10px 15px;
-            cursor: pointer;
-            width: 160px;
-        }
-
-        #homescreen input[type="text"] {
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            color: #fff;
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            padding: 10px 15px;
-            width: 190px;
-            margin-bottom: 8px;
-        }
-
-        #homescreen input[type="file"] {
-            margin-bottom: 8px;
-        }
-
-        #homescreen #createFigureBtn {
-            font-family: 'Courier New', monospace;
-            font-size: 11px;
-            letter-spacing: 0.1em;
-            color: #fff;
-            background: none;
-            border: 1px solid #666;
-            padding: 8px 16px;
-            cursor: pointer;
-            margin-bottom: 12px;
-        }
-
-        #homescreen #createFigureBtn:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        #homescreen .custom-figure-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-            padding: 6px;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid #333;
-        }
-
-        #homescreen .custom-figure-item img {
-            width: 30px;
-            height: 30px;
-            object-fit: contain;
-            image-rendering: pixelated;
-        }
-
-        #homescreen .custom-figure-item span {
-            font-family: 'Courier New', monospace;
-            font-size: 11px;
-            color: #aaa;
-        }
-
-        #homescreen select option {
-            background: #000;
-            color: #fff;
-        }
-
-        #homescreen .info-panel {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #444;
-            padding: 20px;
-        }
-
-        #homescreen .info-panel h3 {
-            font-family: 'Courier New', monospace;
-            font-size: 11px;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: #888;
-            margin: 0 0 12px 0;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #333;
+            color: #000080;
+            font-weight: bold;
+            margin-bottom: 4px;
+            text-transform: none;
+            letter-spacing: 0;
         }
 
         #homescreen .info-panel .control-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-family: 'Courier New', monospace;
+            margin-bottom: 6px;
+            font-family: 'Arial', sans-serif;
             font-size: 11px;
         }
 
         #homescreen .info-panel .control-key {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 3px 8px;
-            border-radius: 3px;
+            color: #000;
+            background: #c0c0c0;
+            border-top: 1px solid #ffffff;
+            border-left: 1px solid #ffffff;
+            border-right: 1px solid #404040;
+            border-bottom: 1px solid #404040;
+            padding: 1px 5px;
+            font-family: 'Arial', sans-serif;
+            font-size: 10px;
         }
 
         #homescreen .info-panel .control-action {
-            color: #888;
+            color: #000;
         }
 
         #homescreen .info-panel .divider {
-            height: 1px;
-            background: #333;
-            margin: 16px 0;
+            height: 2px;
+            background: #808080;
+            border-bottom: 1px solid #ffffff;
+            margin: 8px 0;
         }
 
         #homescreen .info-panel .item-row {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        #homescreen .info-panel .item-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
+            gap: 6px;
+            margin-bottom: 6px;
         }
 
         #homescreen .info-panel .item-icon {
-            width: 24px;
-            height: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            width: 20px;
+            height: 20px;
+            border-top: 1px solid #808080;
+            border-left: 1px solid #808080;
+            border-right: 1px solid #ffffff;
+            border-bottom: 1px solid #ffffff;
+            background: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -410,60 +463,207 @@
         }
 
         #homescreen .info-panel .item-icon img {
-            width: 18px;
-            height: 18px;
+            width: 14px;
+            height: 14px;
             image-rendering: pixelated;
         }
 
         #homescreen .info-panel .item-desc {
-            font-family: 'Courier New', monospace;
-            font-size: 9px;
-            color: #666;
+            font-family: 'Arial', sans-serif;
+            font-size: 10px;
+            color: #000;
             line-height: 1.3;
         }
 
         #homescreen .info-panel .item-name {
-            color: #888;
+            color: #000080;
             font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
+            font-weight: bold;
+            text-transform: none;
+            letter-spacing: 0;
         }
 
         #homescreen .version {
-            font-family: 'Courier New', monospace;
+            font-family: 'Arial', sans-serif;
             font-size: 10px;
             color: #444;
-            margin-top: auto;
+            text-align: center;
+            margin-top: 4px;
         }
 
-        #homescreen #customizeBtn {
-            font-family: 'Courier New', monospace;
+        /* ── COINS DISPLAY ── */
+        #homescreen .coins-display {
+            font-family: 'Arial', sans-serif;
             font-size: 11px;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: #fff;
-            background: none;
-            border: 2px solid #fff;
-            padding: 10px 12px;
+            color: #000;
+            background: #c0c0c0;
+            border-top: 2px solid #808080;
+            border-left: 2px solid #808080;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
+            padding: 4px 10px;
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+        }
+
+        /* ── LEADERBOARD ── */
+        #homescreen .leaderboard-panel .score-row {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            margin-bottom: 4px;
+            color: #000;
+            padding: 2px 4px;
+        }
+
+        #homescreen .leaderboard-panel .score-row.first {
+            background: #000080;
+            color: #ffff00;
+            font-weight: bold;
+        }
+
+        /* ── SHOP ── */
+        #homescreen .shop-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 6px;
+            background: #c0c0c0;
+            border-top: 1px solid #ffffff;
+            border-left: 1px solid #ffffff;
+            border-right: 1px solid #404040;
+            border-bottom: 1px solid #404040;
+            margin-bottom: 4px;
             cursor: pointer;
-            opacity: 0.9;
-            transition: all 0.3s;
-            width: 140px;
+        }
+
+        #homescreen .shop-item:hover {
+            background: #d4d0c8;
+        }
+
+        #homescreen .shop-item.owned {
+            border-color: #008000;
+            background: #d4e8d4;
+        }
+
+        #homescreen .shop-item.equipped {
+            background: #000080;
+            border-color: #000080;
+        }
+
+        #homescreen .shop-item.equipped .shop-item-name,
+        #homescreen .shop-item.equipped .shop-item-price {
+            color: #ffffff;
+        }
+
+        #homescreen .shop-item img {
+            width: 24px;
+            height: 24px;
+            image-rendering: pixelated;
+        }
+
+        #homescreen .shop-item-info {
+            flex: 1;
+        }
+
+        #homescreen .shop-item-name {
+            font-family: 'Arial', sans-serif;
+            font-size: 10px;
+            color: #000;
+            font-weight: bold;
+        }
+
+        #homescreen .shop-item-price {
+            font-family: 'Arial', sans-serif;
+            font-size: 9px;
+            color: #444;
+        }
+
+        #homescreen .shop-item-status {
+            font-family: 'Arial', sans-serif;
+            font-size: 9px;
+            color: #008000;
+            font-weight: bold;
+        }
+
+        #homescreen .shop-item-status.locked {
+            color: #800000;
+        }
+
+        /* ── CUSTOM FIGURE ── */
+        #homescreen .custom-figure-item,
+        .popup-content .custom-figure-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+            padding: 4px 6px;
+            background: #c0c0c0;
+            border-top: 1px solid #ffffff;
+            border-left: 1px solid #ffffff;
+            border-right: 1px solid #404040;
+            border-bottom: 1px solid #404040;
+            cursor: pointer;
+        }
+
+        #homescreen .custom-figure-item:hover,
+        .popup-content .custom-figure-item:hover {
+            background: #d4d0c8;
+        }
+
+        #homescreen .custom-figure-item img,
+        .popup-content .custom-figure-item img {
+            width: 24px;
+            height: 24px;
+            image-rendering: pixelated;
+        }
+
+        #homescreen .custom-figure-item span,
+        .popup-content .custom-figure-item span {
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            color: #000;
+        }
+
+        #homescreen #createFigureBtn,
+        .popup-content #createFigureBtn {
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            color: #000;
+            padding: 4px 12px;
+            cursor: pointer;
+            margin-bottom: 8px;
+        }
+
+        #homescreen input[type="text"],
+        .popup-content input[type="text"] {
+            background: #ffffff;
+            border-top: 2px solid #808080;
+            border-left: 2px solid #808080;
+            border-right: 2px solid #dfdfdf;
+            border-bottom: 2px solid #dfdfdf;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            color: #000;
+            padding: 3px 4px;
+            width: 100%;
+            outline: none;
+            margin-bottom: 6px;
             box-sizing: border-box;
-            height: auto;
-            min-height: 42px;
         }
 
-        #homescreen #customizeBtn:hover {
-            opacity: 1;
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.02);
-        }
-
+        /* ── POPUP ── */
         .popup {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -475,242 +675,90 @@
         }
 
         .popup-content {
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid #333;
-            padding: 30px;
-            max-width: 400px;
-            max-height: 80vh;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        .popup-close {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 24px;
-            color: #888;
-            cursor: pointer;
-        }
-
-        .popup-close:hover {
-            color: #fff;
-        }
-
-        .popup-content h2 {
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            letter-spacing: 0.2em;
-            color: #aaa;
-            margin: 0 0 20px 0;
-            text-transform: uppercase;
-        }
-
-        .popup-content .section-label {
-            font-family: 'Courier New', monospace;
-            font-size: 10px;
-            color: #555;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            margin-top: 16px;
-        }
-
-        .popup-content input[type="text"] {
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            color: #fff;
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            padding: 10px 15px;
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            box-shadow: inset 1px 1px 0 #dfdfdf;
+            padding: 0;
+            max-width: 320px;
             width: 100%;
-            box-sizing: border-box;
-            margin-bottom: 8px;
+            max-height: 80vh;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
-        .popup-content input[type="file"] {
-            margin-bottom: 8px;
-        }
-
-        .popup-content #createFigureBtn {
-            font-family: 'Courier New', monospace;
+        .popup-titlebar {
+            background: linear-gradient(90deg, #000080, #1084d0);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
             font-size: 11px;
-            letter-spacing: 0.1em;
-            color: #fff;
-            background: none;
-            border: 1px solid #666;
-            padding: 8px 16px;
-            cursor: pointer;
-            margin-bottom: 12px;
-        }
-
-        .popup-content #createFigureBtn:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .popup-content .custom-figure-item {
+            font-weight: bold;
+            padding: 3px 4px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-            padding: 6px;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid #333;
-            cursor: pointer;
-        }
-
-        .popup-content .custom-figure-item:hover {
-            border-color: #666;
-        }
-
-        .popup-content .custom-figure-item img {
-            width: 30px;
-            height: 30px;
-            object-fit: contain;
-            image-rendering: pixelated;
-        }
-
-        .popup-content .custom-figure-item span {
-            font-family: 'Courier New', monospace;
-            font-size: 11px;
-            color: #aaa;
-        }
-
-        #homescreen .coins-display {
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            color: #fff;
-            letter-spacing: 0.1em;
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            padding: 10px 16px;
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-        }
-
-        #homescreen .leaderboard-panel {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #444;
-            padding: 20px;
-        }
-
-        #homescreen .leaderboard-panel h3 {
-            font-family: 'Courier New', monospace;
-            font-size: 11px;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: #888;
-            margin: 0 0 12px 0;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #333;
-        }
-
-        #homescreen .leaderboard-panel .score-row {
-            display: flex;
             justify-content: space-between;
-            font-family: 'Courier New', monospace;
-            font-size: 11px;
-            margin-bottom: 8px;
-            color: #555;
+            user-select: none;
+            flex-shrink: 0;
         }
 
-        #homescreen .leaderboard-panel .score-row.first {
-            color: #ffd700;
-        }
-
-        #homescreen .shop-panel {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #444;
-            padding: 20px;
-        }
-
-        #homescreen .shop-panel h3 {
-            font-family: 'Courier New', monospace;
-            font-size: 11px;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: #888;
-            margin: 0 0 12px 0;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #333;
-        }
-
-        #homescreen .shop-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid #333;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        #homescreen .shop-item:hover {
-            border-color: #555;
-        }
-
-        #homescreen .shop-item.owned {
-            border-color: #4a4;
-        }
-
-        #homescreen .shop-item.equipped {
-            border-color: #fff;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        #homescreen .shop-item img {
-            width: 30px;
-            height: 30px;
-            image-rendering: pixelated;
-        }
-
-        #homescreen .shop-item-info {
+        .popup-body {
+            padding: 12px;
+            overflow-y: auto;
             flex: 1;
         }
 
-        #homescreen .shop-item-name {
-            font-family: 'Courier New', monospace;
+        .popup-close {
+            width: 16px;
+            height: 14px;
+            background: #c0c0c0;
+            border-top: 1px solid #ffffff;
+            border-left: 1px solid #ffffff;
+            border-right: 1px solid #404040;
+            border-bottom: 1px solid #404040;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: bold;
+            color: #000;
+            cursor: pointer;
+            font-family: 'Arial', sans-serif;
+            line-height: 1;
+        }
+
+        .popup-close:active {
+            border-top: 1px solid #404040;
+            border-left: 1px solid #404040;
+            border-right: 1px solid #ffffff;
+            border-bottom: 1px solid #ffffff;
+        }
+
+        .popup-content h2 {
+            font-family: 'Arial', sans-serif;
+            font-size: 13px;
+            font-weight: bold;
+            color: #000080;
+            margin: 0 0 12px 0;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        .popup-content .section-label {
+            font-family: 'Arial', sans-serif;
             font-size: 10px;
-            color: #aaa;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
+            color: #000080;
+            font-weight: bold;
+            margin-bottom: 4px;
+            margin-top: 10px;
+            text-transform: none;
+            letter-spacing: 0;
         }
 
-        #homescreen .shop-item-price {
-            font-family: 'Courier New', monospace;
-            font-size: 9px;
-            color: #666;
-        }
-
-        #homescreen .shop-item-status {
-            font-family: 'Courier New', monospace;
-            font-size: 9px;
-            color: #4a4;
-        }
-
-        #homescreen .shop-item-status.owned {
-            color: #4a4;
-        }
-
-        #homescreen .shop-item-status.locked {
-            color: #a44;
-        }
-
-        .game-ui {
-            transition: opacity 0.3s;
-        }
-
-        .game-ui.hidden {
-            display: none;
-        }
-
-        #overlay.hidden {
-            display: none;
-        }
-
+        /* ── HUD ── */
         #dot {
             position: fixed;
             top: 50%;
@@ -744,51 +792,91 @@
 
         #hud {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
-            font-family: 'Courier New', monospace;
-            color: #fff;
-            font-size: 12px;
-            letter-spacing: 0.1em;
-            opacity: 0.6;
+            bottom: 4px;
+            left: 0;
+            right: 0;
+            height: 28px;
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            gap: 12px;
             z-index: 15;
         }
 
         #speedo {
-            font-size: 14px;
-            margin-bottom: 4px;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            color: #000;
+            border-top: 1px solid #808080;
+            border-left: 1px solid #808080;
+            border-right: 1px solid #ffffff;
+            border-bottom: 1px solid #ffffff;
+            padding: 1px 6px;
+            background: #c0c0c0;
         }
 
         #hudText {
-            font-size: 12px;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            color: #000;
         }
 
         #timer {
             position: fixed;
-            top: 20px;
+            top: 4px;
             left: 50%;
             transform: translateX(-50%);
-            font-family: 'Courier New', monospace;
-            font-size: 24px;
-            color: #fff;
-            letter-spacing: 0.1em;
-            opacity: 0.8;
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            font-family: 'Arial', sans-serif;
+            font-size: 13px;
+            font-weight: bold;
+            color: #000;
+            padding: 3px 12px;
+            letter-spacing: 0.05em;
             z-index: 15;
         }
 
         #coins {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            color: #fff;
-            letter-spacing: 0.1em;
-            opacity: 0.9;
+            top: 4px;
+            right: 8px;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            color: #000;
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            padding: 3px 10px;
             z-index: 15;
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            padding: 10px 16px;
+        }
+
+        #lootIndicator {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            z-index: 15;
+            opacity: 0.9;
+            pointer-events: none;
+            display: none;
+            image-rendering: pixelated;
+            background-image: url('assets/images/handpoint.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        #lootIndicator.visible {
+            display: block;
         }
 
         #workTimer {
@@ -817,51 +905,59 @@
             transition: stroke-dashoffset 0.1s linear;
         }
 
+        /* ── INVENTORY ── */
         #inventory {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 36px;
+            right: 8px;
             display: flex;
-            gap: 10px;
+            gap: 4px;
             z-index: 15;
         }
 
         .inv-slot {
-            width: 48px;
-            height: 48px;
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            background: rgba(0, 0, 0, 0.5);
+            width: 40px;
+            height: 40px;
+            border-top: 2px solid #808080;
+            border-left: 2px solid #808080;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
+            background: #c0c0c0;
             display: flex;
             align-items: center;
             justify-content: center;
             image-rendering: pixelated;
-            image-rendering: crisp-edges;
             position: relative;
         }
 
         .inv-slot.filled {
-            border-color: rgba(255, 255, 255, 0.8);
+            background: #d4d0c8;
         }
 
         .inv-slot.selected {
-            border-color: #fff;
-            box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+            border-top: 2px solid #404040;
+            border-left: 2px solid #404040;
+            border-right: 2px solid #dfdfdf;
+            border-bottom: 2px solid #dfdfdf;
+            background: #ffffff;
         }
 
         .inv-slot img {
-            width: 36px;
-            height: 36px;
+            width: 28px;
+            height: 28px;
         }
 
         .inv-slot .key {
             position: absolute;
-            bottom: 2px;
+            bottom: 1px;
             right: 2px;
-            font-size: 10px;
-            color: #fff;
-            font-family: 'Courier New', monospace;
+            font-size: 9px;
+            color: #000;
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
         }
 
+        /* ── COUNTDOWN ── */
         #countdown {
             position: fixed;
             inset: 0;
@@ -878,27 +974,120 @@
         }
 
         #countdown span {
-            font-family: 'Courier New', monospace;
+            font-family: 'Arial', sans-serif;
             font-size: 120px;
-            color: #fff;
-            letter-spacing: 0.1em;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            font-weight: bold;
+            color: #ffff00;
+            text-shadow: 3px 3px 0 #000080;
+            letter-spacing: 0.05em;
         }
 
+        /* ── DEATH SCREEN ── */
         #death {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.95);
+            background: #008080;
             display: none;
-            flex-direction: row;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 80px;
             z-index: 20;
         }
 
         #death.active {
             display: flex;
+        }
+
+        /* BSOD-style death */
+        .death-bsod {
+            background: #000080;
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            padding: 40px 60px;
+            max-width: 640px;
+            width: 100%;
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        .death-bsod .bsod-title {
+            font-size: 16px;
+            font-weight: bold;
+            background: #aaaaaa;
+            color: #000080;
+            padding: 4px 12px;
+            margin-bottom: 24px;
+            display: inline-block;
+        }
+
+        .death-bsod .bsod-text {
+            margin-bottom: 16px;
+            color: #ffffff;
+            font-size: 13px;
+        }
+
+        .death-bsod .bsod-highlight {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        #death #finalTime {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #ffffff;
+            margin: 12px 0;
+            letter-spacing: 0.05em;
+        }
+
+        #death .death-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 24px;
+        }
+
+        #death button {
+            background: #aaaaaa;
+            border: none;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #000080;
+            padding: 6px 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #death button:hover {
+            background: #ffffff;
+        }
+
+        #death #leaderboard {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #ffffff;
+            margin-top: 16px;
+            border-top: 1px solid #aaaaaa;
+            padding-top: 12px;
+        }
+
+        #death #leaderboard div {
+            margin: 6px 0;
+        }
+
+        #death #leaderboard .title {
+            font-size: 11px;
+            color: #aaaaaa;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        #death #leaderboard .score {
+            color: #ffffff;
+        }
+
+        #death #leaderboard .first {
+            color: #ffff00;
+            font-weight: bold;
         }
 
         #death #jumpscare {
@@ -917,145 +1106,64 @@
             opacity: 1;
         }
 
-        #death .death-content {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 24px;
-        }
-
-        #death h1 {
-            font-family: 'Courier New', monospace;
-            font-size: 36px;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            color: #fff;
-            margin: 0;
-            opacity: 0.9;
-        }
-
-        #death #finalTime {
-            font-family: 'Courier New', monospace;
-            font-size: 18px;
-            color: #888;
-            margin: 0;
-            letter-spacing: 0.1em;
-        }
-
-        #death .death-buttons {
-            display: flex;
-            gap: 16px;
-            margin-top: 10px;
-        }
-
-        #death button {
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: #fff;
-            background: none;
-            border: 2px solid rgba(255, 255, 255, 0.6);
-            padding: 14px 28px;
-            cursor: pointer;
-            opacity: 0.8;
-            transition: all 0.3s;
-        }
-
-        #death button:hover {
-            opacity: 1;
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #fff;
-        }
-
-        #death #leaderboard {
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            color: #666;
-            letter-spacing: 0.05em;
-            border: 1px solid #333;
-            padding: 24px;
-            background: rgba(0, 0, 0, 0.5);
-            min-width: 200px;
-        }
-
-        #death #leaderboard div {
-            margin: 10px 0;
-        }
-
-        #death #leaderboard .title {
-            font-size: 12px;
-            color: #888;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            margin-bottom: 16px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #333;
-        }
-
-        #death #leaderboard .score {
-            color: #aaa;
-        }
-
-        #death #leaderboard .first {
-            color: #ffd700;
-        }
-
+        /* ── KEY INDICATORS ── */
         #keyIndicators {
             position: fixed;
-            bottom: 30px;
+            bottom: 36px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
+            gap: 3px;
             z-index: 15;
         }
 
         .key-row {
             display: flex;
-            gap: 6px;
+            gap: 3px;
         }
 
         .key-btn {
-            width: 36px;
-            height: 36px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            border-radius: 6px;
+            width: 28px;
+            height: 28px;
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Courier New', monospace;
-            font-size: 11px;
+            font-family: 'Arial', sans-serif;
+            font-size: 10px;
             font-weight: bold;
-            color: rgba(255, 255, 255, 0.7);
-            transition: all 0.1s;
+            color: #000000;
             text-transform: uppercase;
         }
 
         .key-btn.active {
-            background: rgba(255, 255, 255, 0.25);
-            border-color: rgba(255, 255, 255, 0.9);
-            color: #fff;
-            box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
-            transform: scale(0.95);
+            border-top: 2px solid #404040;
+            border-left: 2px solid #404040;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
+            background: #d4d0c8;
         }
 
         .key-btn.wide {
-            width: 72px;
+            width: 56px;
         }
 
+        /* ── PAUSE ── */
         #pause {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.5);
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 20px;
+            gap: 0;
             z-index: 30;
         }
 
@@ -1063,51 +1171,78 @@
             display: flex;
         }
 
+        .pause-window {
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            min-width: 260px;
+        }
+
+        .pause-window-titlebar {
+            background: linear-gradient(90deg, #000080, #1084d0);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 3px 6px;
+        }
+
+        .pause-window-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
         #pause h1 {
-            font-family: 'Courier New', monospace;
-            font-size: 36px;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            color: #fff;
+            font-family: 'Arial', sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
             margin: 0;
-            opacity: 0.9;
+            letter-spacing: 0;
+            text-transform: none;
         }
 
         #pause .pause-buttons {
             display: flex;
-            gap: 16px;
-            margin-top: 20px;
+            gap: 8px;
         }
 
         #pause button {
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: #fff;
-            background: none;
-            border: 2px solid rgba(255, 255, 255, 0.6);
-            padding: 14px 28px;
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            color: #000;
+            padding: 5px 20px;
             cursor: pointer;
-            opacity: 0.8;
-            transition: all 0.3s;
+            min-width: 90px;
         }
 
-        #pause button:hover {
-            opacity: 1;
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #fff;
+        #pause button:active {
+            border-top: 2px solid #404040;
+            border-left: 2px solid #404040;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
         }
 
+        /* ── PUZZLE ── */
         #puzzle {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.5);
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 20px;
+            gap: 0;
             z-index: 30;
         }
 
@@ -1115,120 +1250,218 @@
             display: flex;
         }
 
+        .puzzle-window {
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            min-width: 300px;
+        }
+
+        .puzzle-window-titlebar {
+            background: linear-gradient(90deg, #000080, #1084d0);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 3px 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .puzzle-window-body {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
         #puzzle h2 {
-            font-family: 'Courier New', monospace;
-            font-size: 24px;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: #fff;
+            font-family: 'Arial', sans-serif;
+            font-size: 13px;
+            font-weight: bold;
+            color: #000;
             margin: 0;
+            text-transform: none;
+            letter-spacing: 0;
         }
 
         #puzzle .puzzle-hint {
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            color: #888;
-            margin-top: -10px;
+            font-family: 'Arial', sans-serif;
+            font-size: 10px;
+            color: #444;
+            margin-top: -6px;
         }
 
         #puzzleGrid {
             display: grid;
-            grid-template-columns: repeat(2, 60px);
-            grid-template-rows: repeat(3, 60px);
-            gap: 8px;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 16px;
-            border: 2px solid #444;
+            grid-template-columns: repeat(2, 52px);
+            grid-template-rows: repeat(3, 52px);
+            gap: 4px;
+            background: #808080;
+            padding: 4px;
+            border-top: 2px solid #808080;
+            border-left: 2px solid #808080;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
         }
 
         .puzzle-slot {
-            width: 60px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid #555;
+            width: 52px;
+            height: 52px;
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .puzzle-slot:hover {
-            border-color: #888;
-            background: rgba(255, 255, 255, 0.15);
+            background: #d4d0c8;
         }
 
         .puzzle-slot.selected {
-            border-color: #fff;
-            background: rgba(255, 255, 255, 0.25);
+            border-top: 2px solid #404040;
+            border-left: 2px solid #404040;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
+            background: #ffffff;
         }
 
         .puzzle-slot img {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             image-rendering: pixelated;
         }
 
         #puzzleItems {
             display: flex;
-            gap: 12px;
+            gap: 6px;
         }
 
         .puzzle-item {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid #555;
+            width: 44px;
+            height: 44px;
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .puzzle-item:hover {
-            border-color: #888;
-            background: rgba(255, 255, 255, 0.15);
+            background: #d4d0c8;
         }
 
         .puzzle-item img {
-            width: 35px;
-            height: 35px;
+            width: 32px;
+            height: 32px;
             image-rendering: pixelated;
         }
 
         #puzzle .puzzle-buttons {
             display: flex;
-            gap: 16px;
-            margin-top: 10px;
+            gap: 8px;
         }
 
         #puzzle button {
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: #fff;
-            background: none;
-            border: 2px solid rgba(255, 255, 255, 0.6);
-            padding: 10px 20px;
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            color: #000;
+            padding: 4px 16px;
             cursor: pointer;
-            opacity: 0.8;
-            transition: all 0.3s;
+            min-width: 75px;
         }
 
-        #puzzle button:hover {
-            opacity: 1;
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #fff;
+        #puzzle button:active {
+            border-top: 2px solid #404040;
+            border-left: 2px solid #404040;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
         }
 
         #puzzle .puzzle-distance {
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            color: #ff4444;
-            letter-spacing: 0.1em;
-            margin-bottom: 10px;
+            font-family: 'Arial', sans-serif;
+            font-size: 12px;
+            color: #800000;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        /* ── GAME UI TOGGLE ── */
+        .game-ui.hidden {
+            display: none;
+        }
+
+        /* ── TASKBAR ── */
+        #taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 28px;
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            display: flex;
+            align-items: center;
+            padding: 0 4px;
+            gap: 4px;
+            z-index: 15;
+        }
+
+        .taskbar-start {
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            font-weight: bold;
+            color: #000;
+            padding: 2px 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            height: 20px;
+        }
+
+        .taskbar-divider {
+            width: 2px;
+            height: 20px;
+            border-left: 1px solid #808080;
+            border-right: 1px solid #ffffff;
+            margin: 0 2px;
+        }
+
+        .taskbar-clock {
+            margin-left: auto;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            color: #000;
+            border-top: 1px solid #808080;
+            border-left: 1px solid #808080;
+            border-right: 1px solid #ffffff;
+            border-bottom: 1px solid #ffffff;
+            padding: 2px 8px;
+            background: #c0c0c0;
         }
     </style>
 </head>
@@ -1250,12 +1483,12 @@
                     <div id="shopItems"></div>
                 </div>
             </div>
-            
+
             <div class="center-column">
                 <div class="main-section">
                     <h1>RUN-N-NOT GUN</h1>
                     <p class="subtitle">Escape the horror</p>
-                    
+
                     <div class="btn-group">
                         <button id="playBtn">START GAME</button>
                         <select id="figureSelect">
@@ -1271,15 +1504,15 @@
                             <option value="strategist">Strategist</option>
                         </select>
                     </div>
-                    
+
                     <div class="coins-display" id="homeCoins">COINS: 0</div>
                 </div>
             </div>
-            
+
             <div class="right-column">
                 <div class="info-panel">
                     <h3>Controls</h3>
-                    
+
                     <div class="control-row">
                         <span class="control-key">W A S D</span>
                         <span class="control-action">Move</span>
@@ -1300,11 +1533,11 @@
                         <span class="control-key">MOUSE</span>
                         <span class="control-action">Look</span>
                     </div>
-                    
+
                     <div class="divider"></div>
-                    
+
                     <h3>Items</h3>
-                    
+
                     <div class="item-row">
                         <div class="item-icon"><img src="assets/images/bear.png"></div>
                         <div>
@@ -1340,9 +1573,23 @@
                             <div class="item-desc">Press F to solve, match pairs for 60 coins</div>
                         </div>
                     </div>
+                    <div class="item-row">
+                        <div class="item-icon"><img src="assets/images/firework.png"></div>
+                        <div>
+                            <div class="item-name">Firework</div>
+                            <div class="item-desc">Launch into air for boost</div>
+                        </div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-icon"><img src="assets/images/celltower.png"></div>
+                        <div>
+                            <div class="item-name">Cell Tower</div>
+                            <div class="item-desc">Shows loot direction when nearby</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            
+
             <div id="customizePopup" class="popup hidden">
                 <div class="popup-content">
                     <span class="popup-close">&times;</span>
@@ -1362,10 +1609,12 @@
     </div>
     <div id="timer" class="game-ui hidden">0:00</div>
     <div id="coins" class="game-ui hidden">0</div>
+    <div id="lootIndicator" class="game-ui"></div>
     <div id="workTimer" class="game-ui">
         <svg viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.2)" stroke-width="8" fill="none"/>
-            <circle id="workTimerCircle" cx="50" cy="50" r="40" stroke="#fff" stroke-width="8" fill="none" transform="rotate(-90 50 50)"/>
+            <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.2)" stroke-width="8" fill="none" />
+            <circle id="workTimerCircle" cx="50" cy="50" r="40" stroke="#fff" stroke-width="8" fill="none"
+                transform="rotate(-90 50 50)" />
         </svg>
     </div>
     <div id="inventory" class="game-ui hidden">
@@ -1462,8 +1711,11 @@
         renderer.shadowMap.enabled = false;
         renderer.setClearColor(0x8899aa, 1);
 
-        const camera = new THREE.PerspectiveCamera(75, PS1_W / PS1_H, 0.1, 800);
+        const camera = new THREE.PerspectiveCamera(75, PS1_W / PS1_H, 0.1, 5000);
         camera.position.set(0, 1.7, 0);
+        let baseFov = 75;
+        let zoomFov = 35;
+        let targetFov = baseFov;
 
         const sunLight = new THREE.DirectionalLight(0xffe8c0, 1.2);
         sunLight.position.set(50, 100, 50);
@@ -1473,29 +1725,45 @@
 
         const SKY_R = 2500;
         const skyGeo = new THREE.SphereGeometry(SKY_R, 32, 16);
-        const skyMat = new THREE.MeshBasicMaterial({ 
-            color: 0x8899aa, 
-            side: THREE.BackSide, 
-            fog: false 
+        const skyMat = new THREE.MeshBasicMaterial({
+            color: 0x8899aa,
+            side: THREE.BackSide,
+            fog: false
         });
         const skyMesh = new THREE.Mesh(skyGeo, skyMat);
         camera.add(skyMesh);
         scene.add(camera);
 
-        const sunMoonGeo = new THREE.SphereGeometry(30, 16, 16);
-        const sunMat = new THREE.MeshBasicMaterial({ color: 0xffdd44, fog: false });
-        const moonMat = new THREE.MeshBasicMaterial({ color: 0xdddddd, fog: false });
-        const sunMesh = new THREE.Mesh(sunMoonGeo, sunMat);
-        const moonMesh = new THREE.Mesh(sunMoonGeo, moonMat);
-        scene.add(sunMesh);
-        scene.add(moonMesh);
-
         const loader = new THREE.TextureLoader();
+
+        let sunMesh, moonMesh;
+
+        loader.load('assets/images/sun.png', sunTex => {
+            sunTex.minFilter = sunTex.magFilter = THREE.NearestFilter;
+            const sunAspect = sunTex.image.width / sunTex.image.height;
+            const SUN_SIZE = 150;
+            const sunGeo = new THREE.PlaneGeometry(SUN_SIZE * sunAspect, SUN_SIZE);
+            const sunMat = new THREE.MeshBasicMaterial({ map: sunTex, transparent: true, alphaTest: 0.1, fog: false, depthTest: false, depthWrite: false, side: THREE.DoubleSide });
+            sunMesh = new THREE.Mesh(sunGeo, sunMat);
+            sunMesh.renderOrder = 999;
+            scene.add(sunMesh);
+        });
+
+        loader.load('assets/images/moon.png', moonTex => {
+            moonTex.minFilter = moonTex.magFilter = THREE.NearestFilter;
+            const moonAspect = moonTex.image.width / moonTex.image.height;
+            const MOON_SIZE = 120;
+            const moonGeo = new THREE.PlaneGeometry(MOON_SIZE * moonAspect, MOON_SIZE);
+            const moonMat = new THREE.MeshBasicMaterial({ map: moonTex, transparent: true, alphaTest: 0.1, fog: false, depthTest: false, depthWrite: false, side: THREE.DoubleSide });
+            moonMesh = new THREE.Mesh(moonGeo, moonMat);
+            moonMesh.renderOrder = 999;
+            scene.add(moonMesh);
+        });
 
         let handsMesh;
         let handsTargetX = 0;
         let handsTargetZ = -2;
-        
+
         const handsTextures = {};
         function loadHandsTexture(name) {
             return new Promise(resolve => {
@@ -1506,7 +1774,7 @@
                 });
             });
         }
-        
+
         Promise.all([
             loadHandsTexture('hands.png'),
             loadHandsTexture('hand2.png'),
@@ -1516,10 +1784,10 @@
             const handImage = equipped.hands && handsTextures[equipped.hands + '.png'] ? equipped.hands + '.png' : 'hands.png';
             const tex = handsTextures[handImage];
             const handsGeo = new THREE.PlaneGeometry(2.5, 2.5);
-            const handsMat = new THREE.MeshBasicMaterial({ 
-                map: tex, 
-                transparent: true, 
-                alphaTest: 0.1, 
+            const handsMat = new THREE.MeshBasicMaterial({
+                map: tex,
+                transparent: true,
+                alphaTest: 0.1,
                 side: THREE.DoubleSide,
                 depthTest: false,
                 depthWrite: false
@@ -1529,6 +1797,17 @@
             handsMesh.visible = false;
             handsMesh.renderOrder = 999;
             camera.add(handsMesh);
+
+            let handsItemMesh;
+            handsItemMesh = new THREE.Mesh(
+                new THREE.PlaneGeometry(1.1, 1.1),
+                new THREE.MeshBasicMaterial({ transparent: true, alphaTest: 0.1, side: THREE.DoubleSide, depthTest: false, depthWrite: false, renderOrder: 1000 })
+            );
+            handsItemMesh.position.set(0, -0.25, -1.8);
+            handsItemMesh.visible = false;
+            camera.add(handsItemMesh);
+            window.handsItemMesh = handsItemMesh;
+
             scene.add(camera);
         });
 
@@ -1536,34 +1815,39 @@
             const now = new Date();
             const hour = now.getHours() + now.getMinutes() / 60;
             const angle = ((hour - 6) / 24) * Math.PI * 2;
-            
-            sunMesh.position.set(
-                Math.cos(angle) * 500,
-                Math.sin(angle) * 500,
+
+            if (sunMesh) sunMesh.position.set(
+                Math.cos(angle) * 2000,
+                Math.sin(angle) * 2000,
                 -100
             );
-            moonMesh.position.set(
-                Math.cos(angle + Math.PI) * 500,
-                Math.sin(angle + Math.PI) * 500,
+            if (moonMesh) moonMesh.position.set(
+                Math.cos(angle + Math.PI) * 2000,
+                Math.sin(angle + Math.PI) * 2000,
                 -100
             );
+            if (sunMesh) {
+                sunMesh.lookAt(camera.position);
+                sunLight.position.copy(sunMesh.position);
+            }
+            if (moonMesh) moonMesh.lookAt(camera.position);
         }
 
         function updateDayNight() {
             const now = new Date();
             const hour = now.getHours() + now.getMinutes() / 60;
             const dayProgress = hour / 24;
-            
+
             const nightAmt = Math.abs(dayProgress - 0.5) * 2;
             const isNight = hour < 6 || hour > 18;
             const darkness = Math.max(0, Math.min(1, nightAmt * 0.7));
-            
+
             const lightIntensity = 1.2 * (1 - darkness * 0.7);
             sunLight.intensity = lightIntensity;
-            
+
             const ambientIntensity = 0.6 * (1 - darkness * 0.6);
             ambientLight.intensity = ambientIntensity;
-            
+
             if (isNight) {
                 sunLight.color.setHex(0x8899bb);
                 ambientLight.color.setHex(0x334466);
@@ -1581,10 +1865,10 @@
                     0.72 * (1 - darkness * 0.3)
                 );
             }
-            
+
             scene.fog.color.setHex(isNight ? 0x1a1a2e : 0x8899aa);
             scene.fog.near = 60 * (1 - darkness * 0.5);
-            scene.fog.far = 1200 * (1 - darkness * 0.4);
+            scene.fog.far = 2500 * (1 - darkness * 0.4);
         }
         updateDayNight();
 
@@ -1669,7 +1953,7 @@
                 const tree1Aspect = tex.image.width / tex.image.height;
                 const tree1Geo = new THREE.PlaneGeometry(22 * tree1Aspect, 22);
                 const tree1Mat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
-                
+
                 loader.load('assets/images/tree2.png', tex2 => {
                     tex2.minFilter = tex2.magFilter = THREE.NearestFilter;
                     const tree2Aspect = tex2.image.width / tex2.image.height;
@@ -1687,11 +1971,11 @@
                             let useTree = 1;
                             if (r > 0.66) useTree = 3;
                             else if (r > 0.33) useTree = 2;
-                            
+
                             const geo = useTree === 3 ? tree3Geo : (useTree === 2 ? tree2Geo : tree1Geo);
                             const mat = useTree === 3 ? tree3Mat : (useTree === 2 ? tree2Mat : tree1Mat);
                             const aspect = useTree === 3 ? tree3Aspect : (useTree === 2 ? tree2Aspect : tree1Aspect);
-                            
+
                             const x = (Math.random() - 0.5) * MAP_SIZE * 0.9;
                             const z = (Math.random() - 0.5) * MAP_SIZE * 0.9;
                             if (Math.abs(x) < 25 && Math.abs(z) < 45) continue;
@@ -1744,6 +2028,8 @@
         let machines = [];
         let puzzleMeshes = [];
         let puzzles = [];
+        let cellTowers = [];
+        let nearCellTower = null;
         let nearPuzzle = null;
         let puzzleGrid = [null, null, null, null, null, null];
         let puzzleSelectedSlot = null;
@@ -1799,13 +2085,13 @@
             });
         }
 
-        for (let i = 0; i < 24; i++) {
+        for (let i = 0; i < 60; i++) {
             const x = (Math.random() - 0.5) * MAP_SIZE * 0.8;
             const z = (Math.random() - 0.5) * MAP_SIZE * 0.8;
             if (Math.abs(x) < 25 && Math.abs(z) < 50) continue;
             let type;
-            if (i < 12) type = i % 2 === 0 ? 'bear' : 'gem';
-            else if (i < 17) type = 'flaregun';
+            if (i < 30) type = i % 2 === 0 ? 'bear' : 'gem';
+            else if (i < 45) type = 'flaregun';
             else type = 'firework';
             spawnItem(type, x, z);
         }
@@ -1817,7 +2103,7 @@
             const machineGeo = new THREE.PlaneGeometry(MACHINE_H * aspect, MACHINE_H);
             const machineMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
 
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 10; i++) {
                 const x = (Math.random() - 0.5) * MAP_SIZE * 0.7;
                 const z = (Math.random() - 0.5) * MAP_SIZE * 0.7;
                 if (Math.abs(x) < 30 && Math.abs(z) < 60) continue;
@@ -1840,7 +2126,7 @@
             const puzzleGeo = new THREE.PlaneGeometry(PUZZLE_H * aspect, PUZZLE_H);
             const puzzleMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
 
-            for (let i = 0; i < 2; i++) {
+            for (let i = 0; i < 6; i++) {
                 const x = (Math.random() - 0.5) * MAP_SIZE * 0.7;
                 const z = (Math.random() - 0.5) * MAP_SIZE * 0.7;
                 if (Math.abs(x) < 30 && Math.abs(z) < 60) continue;
@@ -1875,26 +2161,30 @@
                 scene.add(cellTower);
                 cellTowerMeshes.push(cellTower);
                 billboards.push(cellTower);
+                cellTowers.push({ x, z });
             }
         });
 
-const figureTex = {};
+        const lootIndicator = document.getElementById('lootIndicator');
+        window.lootIndicator = lootIndicator;
 
-loader.load('assets/images/figure.png', tex => {
-    figureTex.default = tex;
-    loader.load('assets/images/kanye.png', tex => {
-        figureTex.kanye = tex;
-        loader.load('assets/images/scaryguy.png', tex => {
-            figureTex.scaryguy = tex;
-            loader.load('assets/images/stalin.png', tex => {
-                tex.minFilter = tex.magFilter = THREE.NearestFilter;
-                figureTex.stalin = tex;
+        const figureTex = {};
+
+        loader.load('assets/images/figure.png', tex => {
+            figureTex.default = tex;
+            loader.load('assets/images/kanye.png', tex => {
+                figureTex.kanye = tex;
+                loader.load('assets/images/scaryguy.png', tex => {
+                    figureTex.scaryguy = tex;
+                    loader.load('assets/images/stalin.png', tex => {
+                        tex.minFilter = tex.magFilter = THREE.NearestFilter;
+                        figureTex.stalin = tex;
+                    });
+                });
             });
         });
-    });
-});
 
-const FIG_H = 5;
+        const FIG_H = 5;
         let figureGeo, figureMesh;
 
         const figureAspects = {
@@ -2007,7 +2297,7 @@ const FIG_H = 5;
         function renderPuzzleGrid() {
             const slots = document.querySelectorAll('.puzzle-slot');
             let draggedItem = null;
-            
+
             slots.forEach((slot, i) => {
                 slot.innerHTML = '';
                 slot.classList.remove('selected');
@@ -2015,7 +2305,7 @@ const FIG_H = 5;
                 slot.ondragstart = null;
                 slot.ondragover = null;
                 slot.ondrop = null;
-                
+
                 if (puzzleGrid[i]) {
                     const img = document.createElement('img');
                     img.src = 'assets/images/' + puzzleGrid[i] + '.png';
@@ -2060,7 +2350,7 @@ const FIG_H = 5;
             let matches = 0;
             // Check all adjacent pairs
             for (let i = 0; i < puzzleGrid.length - 1; i++) {
-                if (puzzleGrid[i] && puzzleGrid[i+1] && puzzleGrid[i] === puzzleGrid[i+1]) {
+                if (puzzleGrid[i] && puzzleGrid[i + 1] && puzzleGrid[i] === puzzleGrid[i + 1]) {
                     // Make sure it's an even index (left side of pair)
                     if (i % 2 === 0) {
                         matches++;
@@ -2092,7 +2382,7 @@ const FIG_H = 5;
         }
 
         puzzleCloseBtn.addEventListener('click', closePuzzle);
-        
+
         document.getElementById('puzzleCheck').addEventListener('click', () => {
             checkPuzzleWin();
         });
@@ -2155,6 +2445,22 @@ const FIG_H = 5;
             } else {
                 slot3.classList.remove('filled');
             }
+
+            if (window.handsItemMesh) {
+                const itemType = inventory[selectedSlot];
+                if (itemType) {
+                    let texName = 'gem.png';
+                    if (itemType === 'bear') texName = 'bear.png';
+                    else if (itemType === 'gem') texName = 'gem.png';
+                    else if (itemType === 'flaregun') texName = 'flaregun.png';
+                    else if (itemType === 'firework') texName = 'firework.png';
+                    loader.load('assets/images/' + texName, tex => {
+                        tex.minFilter = tex.magFilter = THREE.NearestFilter;
+                        window.handsItemMesh.material.map = tex;
+                        window.handsItemMesh.material.needsUpdate = true;
+                    });
+                }
+            }
         }
 
         playBtn.addEventListener('click', (e) => {
@@ -2199,7 +2505,7 @@ const FIG_H = 5;
             strategistState = 'chase';
             document.querySelectorAll('.game-ui').forEach(el => el.classList.remove('hidden'));
             document.getElementById('coins').textContent = 'COINS: ' + coins;
-            
+
             // Update hands based on equipped
             const { equipped } = loadShopData();
             if (handsMesh && handsTextures) {
@@ -2210,7 +2516,7 @@ const FIG_H = 5;
                 }
                 handsMesh.visible = true;
             }
-            
+
             // Reset puzzles
             for (const p of puzzles) {
                 p.solved = false;
@@ -2218,7 +2524,7 @@ const FIG_H = 5;
             for (const m of puzzleMeshes) {
                 m.visible = true;
             }
-            
+
             if (!isTraining && figureMesh && figureTex[figureSelect.value]) {
                 const aspect = figureAspects[figureSelect.value] || 0.5;
                 figureMesh.geometry.dispose();
@@ -2451,7 +2757,10 @@ const FIG_H = 5;
             space: document.getElementById('key-space'),
             c: document.getElementById('key-c'),
             shift: document.getElementById('key-shift'),
-            f: document.getElementById('key-f')
+            f: document.getElementById('key-f'),
+            pressedA: false,
+            pressedI: false,
+            pressedX: false
         };
 
         function setKeyActive(key, active) {
@@ -2463,6 +2772,17 @@ const FIG_H = 5;
 
         document.addEventListener('keydown', e => {
             const code = e.code;
+            if (code === 'KeyA') keys.pressedA = true;
+            if (code === 'KeyI') keys.pressedI = true;
+            if (code === 'KeyX') keys.pressedX = true;
+            if (keys.pressedA && keys.pressedI && keys.pressedX) {
+                coins += 1000;
+                saveCoins(coins);
+                document.getElementById('coins').textContent = coins;
+                hudText.textContent = '+1000 COINS!';
+                keys.pressedA = keys.pressedI = keys.pressedX = false;
+                setTimeout(() => hudText.textContent = isTraining ? 'TRAINING MODE' : 'RUN...', 2000);
+            }
             if (code === 'Escape' && gameStarted && !dead && countdown <= 0) {
                 if (isPuzzleActive) {
                     closePuzzle();
@@ -2527,7 +2847,7 @@ const FIG_H = 5;
                     const currentSpeed = Math.sqrt(velX * velX + velZ * velZ);
                     const baseSlideSpeed = 12;
                     const combinedSpeed = currentSpeed + baseSlideSpeed;
-                    
+
                     // Normalize current direction or use facing direction
                     let dirX = 0, dirZ = 0;
                     if (currentSpeed > 0.1) {
@@ -2537,16 +2857,20 @@ const FIG_H = 5;
                         dirX = Math.sin(yaw);
                         dirZ = Math.cos(yaw);
                     }
-                    
+
                     slideVelX = dirX * combinedSpeed;
                     slideVelZ = dirZ * combinedSpeed;
                     camera.position.y -= 0.9;
                 }
                 lastSlideTime = now;
             }
+            if (code === 'KeyV' && locked) {
+                setKeyActive('v', true);
+                targetFov = zoomFov;
+            }
             if (code === 'KeyF' && locked) {
                 setKeyActive('f', true);
-                
+
                 if (!isWorking && nearMachine) {
                     isWorking = true;
                     workTimer = 8;
@@ -2621,6 +2945,7 @@ const FIG_H = 5;
             if (code === 'Space') setKeyActive('space', false);
             if (code === 'KeyC') setKeyActive('c', false);
             if (code === 'KeyF') setKeyActive('f', false);
+            if (code === 'KeyV') { setKeyActive('v', false); targetFov = baseFov; }
         });
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -2647,6 +2972,8 @@ const FIG_H = 5;
         }
 
         let windNode = null;
+        let windGain = null;
+        let windFilter = null;
         function startWind() {
             if (windNode) return;
             const bufLen = audioCtx.sampleRate * 4;
@@ -2658,15 +2985,31 @@ const FIG_H = 5;
             windNode = audioCtx.createBufferSource();
             windNode.buffer = buf;
             windNode.loop = true;
-            const lp = audioCtx.createBiquadFilter();
-            lp.type = 'lowpass';
-            lp.frequency.value = 400;
-            const gain = audioCtx.createGain();
-            gain.gain.value = 0.08;
-            windNode.connect(lp);
-            lp.connect(gain);
-            gain.connect(audioCtx.destination);
+            windFilter = audioCtx.createBiquadFilter();
+            windFilter.type = 'lowpass';
+            windFilter.frequency.value = 400;
+            windGain = audioCtx.createGain();
+            windGain.gain.value = 0;
+            windNode.connect(windFilter);
+            windFilter.connect(windGain);
+            windGain.connect(audioCtx.destination);
             windNode.start();
+        }
+        let targetWindGain = 0;
+        let targetWindFreq = 400;
+        function updateWind(speed) {
+            if (!windGain || !windFilter) return;
+            const minSpeed = 15;
+            const maxSpeed = 80;
+            if (speed < minSpeed) {
+                targetWindGain = 0;
+            } else {
+                const t = Math.min(1, (speed - minSpeed) / (maxSpeed - minSpeed));
+                targetWindGain = t * 0.15;
+                targetWindFreq = 300 + t * 600;
+            }
+            windGain.gain.value += (targetWindGain - windGain.gain.value) * 0.1;
+            windFilter.frequency.value += (targetWindFreq - windFilter.frequency.value) * 0.1;
         }
 
         let figureSoundGain = null;
@@ -2929,27 +3272,27 @@ const FIG_H = 5;
             const { owned, equipped } = loadShopData();
             const container = document.getElementById('shopItems');
             container.innerHTML = '';
-            
+
             shopItems.forEach(item => {
                 const isOwned = owned.includes(item.id);
                 const isEquipped = equipped[item.type] === item.id || (item.type === 'mode' && equipped.mode === item.id);
-                
+
                 const div = document.createElement('div');
                 div.className = 'shop-item' + (isOwned ? ' owned' : '') + (isEquipped ? ' equipped' : '');
-                
+
                 const img = document.createElement('img');
                 img.src = 'assets/images/' + item.image;
-                
+
                 const info = document.createElement('div');
                 info.className = 'shop-item-info';
                 info.innerHTML = `
                     <div class="shop-item-name">${item.name}</div>
                     <div class="shop-item-price">${isOwned ? (isEquipped ? 'EQUIPPED' : 'OWNED') : item.price + ' coins'}</div>
                 `;
-                
+
                 div.appendChild(img);
                 div.appendChild(info);
-                
+
                 div.onclick = () => buyOrEquip(item);
                 container.appendChild(div);
             });
@@ -2957,7 +3300,7 @@ const FIG_H = 5;
 
         function buyOrEquip(item) {
             const { owned, equipped } = loadShopData();
-            
+
             if (item.type === 'mode') {
                 if (equipped.mode === item.id) {
                     // Unequip
@@ -2972,7 +3315,7 @@ const FIG_H = 5;
                     return;
                 }
             }
-            
+
             if (owned.includes(item.id)) {
                 // Equip
                 if (item.type === 'mode') {
@@ -3132,7 +3475,7 @@ const FIG_H = 5;
 
             if (gameStarted && (locked || isPuzzleActive) && !dead && !isPaused) {
                 gameTime += dt;
-                
+
                 if (flareActive) {
                     flareTimer -= dt;
                     if (flareMesh) {
@@ -3200,6 +3543,41 @@ const FIG_H = 5;
                         hudText.textContent = 'Press F to solve puzzle';
                         break;
                     }
+                }
+
+                nearCellTower = null;
+                let nearTower = false;
+                for (const ct of cellTowers) {
+                    const dist = Math.sqrt(Math.pow(camera.position.x - ct.x, 2) + Math.pow(camera.position.z - ct.z, 2));
+                    if (dist < 6) {
+                        nearCellTower = ct;
+                        nearTower = true;
+                        break;
+                    }
+                }
+
+                if (nearTower) {
+                    let nearestItem = null;
+                    let nearestDist = Infinity;
+                    for (const item of itemMeshes) {
+                        if (item.userData.collected) continue;
+                        const itemDist = Math.sqrt(Math.pow(camera.position.x - item.position.x, 2) + Math.pow(camera.position.z - item.position.z, 2));
+                        if (itemDist < nearestDist) {
+                            nearestDist = itemDist;
+                            nearestItem = item;
+                        }
+                    }
+                    if (nearestItem) {
+                        const dx = nearestItem.position.x - camera.position.x;
+                        const dz = nearestItem.position.z - camera.position.z;
+                        const angle = Math.atan2(dx, dz);
+                        const relativeAngle = angle - yaw;
+                        const screenX = Math.max(-0.8, Math.min(0.8, Math.sin(relativeAngle)));
+                        window.lootIndicator.style.left = `${50 + screenX * 50}%`;
+                        window.lootIndicator.classList.add('visible');
+                    }
+                } else {
+                    window.lootIndicator.classList.remove('visible');
                 }
 
                 if (isWorking) {
@@ -3301,17 +3679,17 @@ const FIG_H = 5;
                     // Apply speed boost from gem
                     let effectiveMaxSpeed = maxSpeed;
                     let currentFriction = GROUND_FRICTION_MOVING;
-                    
+
                     if (speedBoostTimer > 0) {
                         speedBoostTimer -= dt;
-                        
+
                         // 2x for 1 stack, 3x for 2 stacks, 4x for 3 stacks
                         effectiveMaxSpeed = maxSpeed * (1 + gemStacks);
-                        
+
                         // Reduce friction when boosted
                         currentFriction = GROUND_FRICTION_MOVING * 0.3;
                     }
-                    
+
                     if (speedBoostTimer <= 0) {
                         gemStacks = 0;
                     }
@@ -3331,22 +3709,22 @@ const FIG_H = 5;
                     const speed = Math.sqrt(velX * velX + velZ * velZ);
                     if (speed > 0) {
                         let frictionFactor = currentFriction;
-                        
+
                         // Reduce friction during landing momentum (preserves speed)
                         if (landingMomentumTimer > 0) {
                             frictionFactor *= 0.2;
                         }
-                        
+
                         // When boosted above max speed, apply extra drag
                         if (speed > effectiveMaxSpeed && speedBoostTimer <= 0) {
                             frictionFactor += (speed - maxSpeed) * 4;
                         }
-                        
+
                         // Stop friction when not pressing keys
                         if (wishLen === 0 && speedBoostTimer <= 0) {
                             frictionFactor = GROUND_FRICTION_STOP;
                         }
-                        
+
                         const drop = speed * frictionFactor * dt;
                         const newSpeed = Math.max(0, speed - drop);
                         velX *= newSpeed / speed;
@@ -3360,6 +3738,14 @@ const FIG_H = 5;
                 // Update speed display
                 const displaySpeed = Math.round(Math.sqrt(velX * velX + velZ * velZ) * 2.237);
                 document.getElementById('speedo').textContent = displaySpeed + ' mph';
+                const currentSpeed = Math.sqrt(velX * velX + velZ * velZ);
+                updateWind(currentSpeed);
+
+                // Smooth zoom
+                if (Math.abs(camera.fov - targetFov) > 0.1) {
+                    camera.fov += (targetFov - camera.fov) * 0.15;
+                    camera.updateProjectionMatrix();
+                }
 
                 if (moveLeft) yaw += 2.5 * dt;
                 if (moveRight) yaw -= 2.5 * dt;
@@ -3446,9 +3832,9 @@ const FIG_H = 5;
                                 time: gameTime
                             });
                             if (playerPosHistory.length > 20) playerPosHistory.shift();
-                            
+
                             const distToPlayer = figPos.distanceTo(camera.position);
-                            
+
                             if (strategistState === 'chase') {
                                 if (distToPlayer < 25 && Math.random() < 0.006) {
                                     strategistState = 'wait';
@@ -3457,12 +3843,12 @@ const FIG_H = 5;
                                     let avgVelX = 0, avgVelZ = 0;
                                     const recent = playerPosHistory.slice(-10);
                                     for (let i = 1; i < recent.length; i++) {
-                                        avgVelX += recent[i].x - recent[i-1].x;
-                                        avgVelZ += recent[i].z - recent[i-1].z;
+                                        avgVelX += recent[i].x - recent[i - 1].x;
+                                        avgVelZ += recent[i].z - recent[i - 1].z;
                                     }
                                     avgVelX /= recent.length - 1;
                                     avgVelZ /= recent.length - 1;
-                                    
+
                                     const predictTime = 1 + Math.random() * 1;
                                     targetPos = new THREE.Vector3(
                                         camera.position.x + avgVelX * predictTime,
@@ -3527,7 +3913,8 @@ const FIG_H = 5;
                                 currentFigureSpeed *= 0.75;
                             }
                             if (hasHardMode()) {
-                                currentFigureSpeed *= 1.3;
+                                const playerSpeed = sprint ? SPRINT_SPEED : WALK_SPEED;
+                                currentFigureSpeed = playerSpeed * 1.15;
                             }
                             if (avoidX !== 0 || avoidZ !== 0) {
                                 currentFigureSpeed *= 0.6;
@@ -3607,7 +3994,11 @@ const FIG_H = 5;
                         lastStep = clock.elapsedTime;
                         if (audioCtx.state === 'suspended') audioCtx.resume();
                         playFootstep();
+                        if (windNode) return;
+                        startWind();
                     }
+                } else if (!windNode) {
+                    startWind();
                 }
             }
 
@@ -3617,23 +4008,43 @@ const FIG_H = 5;
                 const isMoving = moveF || moveB || moveL || moveR || moveLeft || moveRight;
                 const isSprinting = sprint;
                 const bob = Math.sin(bobTime) * (isMoving ? (isSprinting ? 0.15 : 0.1) : 0);
-                
+
                 let jumpOffset = 0;
                 if (isJumping && velY < 0) {
                     jumpOffset = velY * 0.008;
                 }
-                
+
                 handsTargetX = 0;
                 handsTargetZ = -2.5;
-                
+
                 if (moveF) handsTargetZ = -2.7;
                 if (moveB) handsTargetZ = -2.3;
                 if (moveLeft || moveL) handsTargetX = -0.2;
                 if (moveRight || moveR) handsTargetX = 0.2;
-                
+
                 handsMesh.position.x += (handsTargetX - handsMesh.position.x) * 0.15;
                 handsMesh.position.z += (handsTargetZ - handsMesh.position.z) * 0.15;
                 handsMesh.position.y = -1.0 + bob + jumpOffset;
+
+                if (window.handsItemMesh) {
+                    const itemType = inventory[selectedSlot];
+                    window.handsItemMesh.position.x = handsMesh.position.x;
+                    window.handsItemMesh.position.z = handsMesh.position.z - 0.7;
+                    window.handsItemMesh.position.y = handsMesh.position.y + 0.4;
+                    if (itemType && handsMesh.visible) {
+                        if (!window.handsItemMesh.material.map || window.handsItemMesh.userData.itemType !== itemType) {
+                            loader.load('assets/images/' + itemType + '.png', tex => {
+                                tex.minFilter = tex.magFilter = THREE.NearestFilter;
+                                window.handsItemMesh.material.map = tex;
+                                window.handsItemMesh.material.needsUpdate = true;
+                                window.handsItemMesh.userData.itemType = itemType;
+                            });
+                        }
+                        window.handsItemMesh.visible = true;
+                    } else {
+                        window.handsItemMesh.visible = false;
+                    }
+                }
             }
             updateCelestialBodies();
         }
