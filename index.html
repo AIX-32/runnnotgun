@@ -22,8 +22,7 @@
     <meta name="twitter:title" content="RUN-N-NOT GUN">
     <meta name="twitter:description" content="Escape the horror. Run, hide, and survive.">
 
-    <link rel="icon"
-        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==">
+    <link rel="icon" href="favicon.png">
 
     <link rel="canonical" href="https://runnnotgun.github.io/">
 
@@ -785,8 +784,15 @@
             cursor: pointer;
         }
 
-        #customTimeInput {
-            width: 80px;
+        .time-slider {
+            width: 100px;
+            cursor: pointer;
+        }
+
+        .time-icon {
+            width: 16px;
+            height: 16px;
+            image-rendering: pixelated;
         }
 
         /* ── HUD ── */
@@ -1017,9 +1023,8 @@
         #death {
             position: fixed;
             inset: 0;
-            background: #008080;
+            background: rgba(0, 0, 0, 0.5);
             display: none;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 20;
@@ -1027,6 +1032,24 @@
 
         #death.active {
             display: flex;
+        }
+
+        #death .win-window {
+            max-width: 400px;
+            width: 90%;
+        }
+
+        #death .death-content {
+            padding: 16px;
+            text-align: center;
+        }
+
+        #death .death-content h1 {
+            font-family: 'Arial', sans-serif;
+            font-size: 18px;
+            font-weight: bold;
+            color: #000080;
+            margin: 0 0 8px 0;
         }
 
         /* BSOD-style death */
@@ -1064,60 +1087,67 @@
         }
 
         #death #finalTime {
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            color: #ffffff;
-            margin: 12px 0;
-            letter-spacing: 0.05em;
+            font-family: 'Arial', sans-serif;
+            font-size: 12px;
+            color: #000;
+            margin: 8px 0;
         }
 
         #death .death-buttons {
             display: flex;
             gap: 8px;
-            margin-top: 24px;
+            margin-top: 16px;
+            justify-content: center;
         }
 
         #death button {
-            background: #aaaaaa;
-            border: none;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            color: #000080;
-            padding: 6px 20px;
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            color: #000;
+            padding: 4px 16px;
             cursor: pointer;
-            font-weight: bold;
+            min-width: 75px;
         }
 
-        #death button:hover {
-            background: #ffffff;
+        #death button:active {
+            border-top: 2px solid #404040;
+            border-left: 2px solid #404040;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
         }
 
         #death #leaderboard {
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            color: #ffffff;
-            margin-top: 16px;
-            border-top: 1px solid #aaaaaa;
-            padding-top: 12px;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            color: #000;
+            margin-top: 12px;
+            border-top: 1px solid #808080;
+            padding-top: 8px;
         }
 
         #death #leaderboard div {
-            margin: 6px 0;
+            margin: 4px 0;
         }
 
         #death #leaderboard .title {
-            font-size: 11px;
-            color: #aaaaaa;
-            text-transform: uppercase;
-            margin-bottom: 10px;
+            font-size: 10px;
+            color: #000080;
+            font-weight: bold;
+            text-transform: none;
+            margin-bottom: 6px;
         }
 
         #death #leaderboard .score {
-            color: #ffffff;
+            color: #000;
         }
 
         #death #leaderboard .first {
-            color: #ffff00;
+            color: #000080;
             font-weight: bold;
         }
 
@@ -1649,8 +1679,9 @@
                     </div>
                     <div class="popup-body">
                         <div class="settings-row">
-                            <span class="settings-label">Time:</span>
-                            <input type="time" id="customTimeInput" class="win-input">
+                            <img src="assets/images/moon.png" class="time-icon">
+                            <input type="range" id="customTimeInput" min="0" max="1439" value="720" class="time-slider">
+                            <img src="assets/images/sun.png" class="time-icon">
                             <label class="settings-toggle">
                                 <input type="checkbox" id="useLocalTimeToggle">
                                 <span>Use Local Time</span>
@@ -1700,15 +1731,25 @@
     </div>
     <div id="death">
         <div id="jumpscare"></div>
-        <div class="death-content">
-            <h1>It caught you</h1>
-            <div id="finalTime">You survived 0:00</div>
-            <div class="death-buttons">
-                <button id="retryBtn">Try Again</button>
-                <button id="homeBtn">Home</button>
+        <div class="win-window">
+            <div class="win-titlebar">
+                <div class="title-text">
+                    <img class="title-icon" src="assets/images/figureface.png">
+                    <span>GAME OVER</span>
+                </div>
+            </div>
+            <div class="win-window-body">
+                <div class="death-content">
+                    <h1>It caught you</h1>
+                    <div id="finalTime">You survived 0:00</div>
+                    <div class="death-buttons">
+                        <button id="retryBtn">Try Again</button>
+                        <button id="homeBtn">Home</button>
+                    </div>
+                </div>
+                <div id="leaderboard"></div>
             </div>
         </div>
-        <div id="leaderboard"></div>
     </div>
 
     <div id="pause">
@@ -2317,7 +2358,7 @@
 
         function createFigureMesh() {
             figureGeo = new THREE.PlaneGeometry(FIG_H * 0.5, FIG_H);
-            figureMaterial = new THREE.MeshLambertMaterial({
+            figureMaterial = new THREE.MeshBasicMaterial({
                 map: figureTex.default,
                 transparent: true,
                 alphaTest: 0.1,
@@ -3340,13 +3381,16 @@
         });
 
         useCustomTime = localStorage.getItem('rngUseCustomTime') === 'true';
-        customTimeValue = localStorage.getItem('rngCustomTime') || '12:00';
+        const storedTime = localStorage.getItem('rngCustomTime') || '12:00';
+        const [storedHour, storedMin] = storedTime.split(':');
+        customTimeValue = storedTime;
+        const storedMinutes = parseInt(storedHour) * 60 + parseInt(storedMin);
 
         const customTimeInput = document.getElementById('customTimeInput');
         const useLocalTimeToggle = document.getElementById('useLocalTimeToggle');
         const settingsPopup = document.getElementById('settingsPopup');
 
-        customTimeInput.value = customTimeValue;
+        customTimeInput.value = storedMinutes;
         useLocalTimeToggle.checked = !useCustomTime;
         customTimeInput.disabled = !useCustomTime;
 
@@ -3357,12 +3401,14 @@
             updateDayNight();
         });
 
-        customTimeInput.addEventListener('change', () => {
-            customTimeValue = customTimeInput.value;
+        customTimeInput.addEventListener('input', () => {
+            const minutes = parseInt(customTimeInput.value);
+            const hour = Math.floor(minutes / 60);
+            const min = minutes % 60;
+            customTimeValue = `${hour}:${min.toString().padStart(2, '0')}`;
             localStorage.setItem('rngCustomTime', customTimeValue);
-            if (!useCustomTime) {
-                updateDayNight();
-            }
+            updateDayNight();
+            updateCelestialBodies();
         });
 
         document.getElementById('settingsBtn').addEventListener('click', () => {
