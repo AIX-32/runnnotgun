@@ -303,6 +303,67 @@
             border-bottom: 2px solid #ffffff;
         }
 
+        .main-section .section-label {
+            font-family: 'Arial', sans-serif;
+            font-size: 10px;
+            color: #000080;
+            font-weight: bold;
+            margin-top: 8px;
+            margin-bottom: 2px;
+        }
+
+        .main-section .full-width {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .main-section button {
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            color: #000;
+            padding: 8px 8px;
+            cursor: pointer;
+            margin-bottom: 4px;
+        }
+
+        .main-section button:active {
+            border-top: 2px solid #404040;
+            border-left: 2px solid #404040;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
+        }
+
+        .main-section select {
+            background: #ffffff;
+            border-top: 2px solid #808080;
+            border-left: 2px solid #808080;
+            border-right: 2px solid #dfdfdf;
+            border-bottom: 2px solid #dfdfdf;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            color: #000;
+            padding: 2px 4px;
+            width: 100%;
+            margin-bottom: 4px;
+        }
+
+        .main-section .coins-display {
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            color: #000;
+            background: #c0c0c0;
+            border-top: 2px solid #808080;
+            border-left: 2px solid #808080;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
+            padding: 4px 8px;
+        }
+
         #homescreen .btn-group select {
             background: #ffffff;
             border-top: 2px solid #808080;
@@ -370,12 +431,17 @@
             border-bottom: 2px solid #404040;
             box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080;
             padding: 0;
-            
+
         }
 
-        .info-panel {
-                padding: 10px !important;
+        #homescreen .shop-panel {
+            padding: 0;
+        }
 
+        #homescreen .shop-panel .panel-content,
+        #homescreen .info-panel .panel-content,
+        #homescreen .leaderboard-panel .panel-content {
+            padding: 8px;
         }
 
         #homescreen .info-panel h3,
@@ -489,20 +555,6 @@
         }
 
         /* ── COINS DISPLAY ── */
-        #homescreen .coins-display {
-            font-family: 'Arial', sans-serif;
-            font-size: 11px;
-            color: #000;
-            background: #c0c0c0;
-            border-top: 2px solid #808080;
-            border-left: 2px solid #808080;
-            border-right: 2px solid #ffffff;
-            border-bottom: 2px solid #ffffff;
-            padding: 4px 10px;
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-        }
 
         /* ── LEADERBOARD ── */
         #homescreen .leaderboard-panel .score-row {
@@ -526,13 +578,13 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            padding: 4px 6px;
+            padding: 6px 8px;
             background: #c0c0c0;
             border-top: 1px solid #ffffff;
             border-left: 1px solid #ffffff;
             border-right: 1px solid #404040;
             border-bottom: 1px solid #404040;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             cursor: pointer;
         }
 
@@ -1311,6 +1363,75 @@
             display: flex;
         }
 
+        #sandboxWindow {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            min-width: 200px;
+            max-width: 280px;
+            z-index: 35;
+            display: none;
+        }
+
+        #sandboxWindow.active {
+            display: block;
+        }
+
+        #sandboxWindow .sandbox-titlebar {
+            background: linear-gradient(90deg, #000080, #1084d0);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 3px 6px;
+        }
+
+        #sandboxWindow .sandbox-body {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        #sandboxWindow .spawn-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+        }
+
+        #sandboxWindow .spawn-grid button {
+            font-size: 10px;
+            padding: 6px 2px;
+            cursor: pointer;
+            font-family: 'Arial', sans-serif;
+        }
+
+        #sandboxWindow .spawn-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        #sandboxWindow .spawn-toggle input {
+            margin: 0;
+        }
+
+        #sandboxWindow .spawn-footer {
+            font-size: 10px;
+            font-family: 'Arial', sans-serif;
+            color: #000;
+            text-align: center;
+            padding-top: 6px;
+            border-top: 1px solid #808080;
+        }
+
         .puzzle-window {
             background: #c0c0c0;
             border-top: 2px solid #ffffff;
@@ -1541,7 +1662,7 @@
                 </div>
                 <div class="shop-panel" id="shopPanel">
                     <h3>Shop</h3>
-                    <div id="shopItems"></div>
+                    <div id="shopItems" class="panel-content"></div>
                 </div>
             </div>
 
@@ -1555,24 +1676,31 @@
                     </div>
                     <div class="win-window-body">
                         <div class="main-section">
+                            <div class="section-label">Play</div>
+                            <button id="playBtn" class="full-width">START GAME</button>
+                            <button id="sandboxBtn" class="full-width">SANDBOX MODE</button>
+
+                            <div class="section-label">Figure</div>
+                            <select id="figureSelect" class="full-width">
+                                <option value="default">FLIGHT</option>
+                                <option value="kanye">KANYE</option>
+                                <option value="scaryguy">SCARY GUY</option>
+                                <option value="stalin">STALIN</option>
+                                <option value="training">TRAINING</option>
+                            </select>
+                            <select id="aiTypeSelect" class="full-width">
+                                <option value="chaser">Aggressive</option>
+                                <option value="strategist">Strategist</option>
+                            </select>
+
+                            <div class="section-label">Options</div>
                             <div class="btn-group">
-                                <button id="playBtn">START GAME</button>
-                                <select id="figureSelect">
-                                    <option value="default">FLIGHT</option>
-                                    <option value="kanye">KANYE</option>
-                                    <option value="scaryguy">SCARY GUY</option>
-                                    <option value="stalin">STALIN</option>
-                                    <option value="training">TRAINING</option>
-                                </select>
                                 <button id="customizeBtn">CUSTOMIZE</button>
                                 <button id="settingsBtn">SETTINGS</button>
-                                <select id="aiTypeSelect">
-                                    <option value="chaser">Aggressive</option>
-                                    <option value="strategist">Strategist</option>
-                                </select>
                             </div>
 
-                            <div class="coins-display" id="homeCoins">COINS: 0</div>
+                            <div class="section-label">Coins</div>
+                            <div class="coins-display" id="homeCoins">0</div>
                         </div>
                     </div>
                 </div>
@@ -1581,79 +1709,79 @@
             <div class="right-column">
                 <div class="info-panel">
                     <h3>Controls</h3>
-
-                    <div class="control-row">
-                        <span class="control-key">W A S D</span>
-                        <span class="control-action">Move</span>
+                    <div class="panel-content">
+                        <div class="control-row">
+                            <span class="control-key">W A S D</span>
+                            <span class="control-action">Move</span>
+                        </div>
+                        <div class="control-row">
+                            <span class="control-key">SPACE</span>
+                            <span class="control-action">Jump</span>
+                        </div>
+                        <div class="control-row">
+                            <span class="control-key">SHIFT</span>
+                            <span class="control-action">Sprint</span>
+                        </div>
+                        <div class="control-row">
+                            <span class="control-key">F</span>
+                            <span class="control-action">Use Item / Puzzle</span>
+                        </div>
+                        <div class="control-row">
+                            <span class="control-key">MOUSE</span>
+                            <span class="control-action">Look</span>
+                        </div>
                     </div>
-                    <div class="control-row">
-                        <span class="control-key">SPACE</span>
-                        <span class="control-action">Jump</span>
-                    </div>
-                    <div class="control-row">
-                        <span class="control-key">SHIFT</span>
-                        <span class="control-action">Sprint</span>
-                    </div>
-                    <div class="control-row">
-                        <span class="control-key">F</span>
-                        <span class="control-action">Use Item / Puzzle</span>
-                    </div>
-                    <div class="control-row">
-                        <span class="control-key">MOUSE</span>
-                        <span class="control-action">Look</span>
-                    </div>
-
-                    <div class="divider"></div>
 
                     <h3>Items</h3>
-
-                    <div class="item-row">
-                        <div class="item-icon"><img src="assets/images/bear.png"></div>
-                        <div>
-                            <div class="item-name">Bear Trap</div>
-                            <div class="item-desc">Stops the figure temporarily</div>
+                    <div class="panel-content">
+                        <div class="item-row">
+                            <div class="item-icon"><img src="assets/images/bear.png"></div>
+                            <div>
+                                <div class="item-name">Bear Trap</div>
+                                <div class="item-desc">Stops the figure temporarily</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="item-row">
-                        <div class="item-icon"><img src="assets/images/gem.png"></div>
-                        <div>
-                            <div class="item-name">Speed Gem</div>
-                            <div class="item-desc">Temporary speed boost</div>
+                        <div class="item-row">
+                            <div class="item-icon"><img src="assets/images/gem.png"></div>
+                            <div>
+                                <div class="item-name">Speed Gem</div>
+                                <div class="item-desc">Temporary speed boost</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="item-row">
-                        <div class="item-icon"><img src="assets/images/flaregun.png"></div>
-                        <div>
-                            <div class="item-name">Flare Gun</div>
-                            <div class="item-desc">Distracts the figure for 8s</div>
+                        <div class="item-row">
+                            <div class="item-icon"><img src="assets/images/flaregun.png"></div>
+                            <div>
+                                <div class="item-name">Flare Gun</div>
+                                <div class="item-desc">Distracts the figure for 8s</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="item-row">
-                        <div class="item-icon"><img src="assets/images/machine.png"></div>
-                        <div>
-                            <div class="item-name">Generator</div>
-                            <div class="item-desc">Press F to work for 8s, earn 10 coins</div>
+                        <div class="item-row">
+                            <div class="item-icon"><img src="assets/images/machine.png"></div>
+                            <div>
+                                <div class="item-name">Generator</div>
+                                <div class="item-desc">Press F to work for 8s, earn 10 coins</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="item-row">
-                        <div class="item-icon"><img src="assets/images/puzzle.png"></div>
-                        <div>
-                            <div class="item-name">Puzzle</div>
-                            <div class="item-desc">Press F to solve, match pairs for 60 coins</div>
+                        <div class="item-row">
+                            <div class="item-icon"><img src="assets/images/puzzle.png"></div>
+                            <div>
+                                <div class="item-name">Puzzle</div>
+                                <div class="item-desc">Press F to solve, match pairs for 60 coins</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="item-row">
-                        <div class="item-icon"><img src="assets/images/firework.png"></div>
-                        <div>
-                            <div class="item-name">Firework</div>
-                            <div class="item-desc">Launch into air for boost</div>
+                        <div class="item-row">
+                            <div class="item-icon"><img src="assets/images/firework.png"></div>
+                            <div>
+                                <div class="item-name">Firework</div>
+                                <div class="item-desc">Launch into air for boost</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="item-row">
-                        <div class="item-icon"><img src="assets/images/celltower.png"></div>
-                        <div>
-                            <div class="item-name">Cell Tower</div>
-                            <div class="item-desc">Shows loot direction when nearby</div>
+                        <div class="item-row">
+                            <div class="item-icon"><img src="assets/images/celltower.png"></div>
+                            <div>
+                                <div class="item-name">Cell Tower</div>
+                                <div class="item-desc">Shows loot direction when nearby</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1783,6 +1911,26 @@
         </div>
     </div>
 
+    <div id="sandboxWindow">
+        <div class="sandbox-titlebar">Sandbox</div>
+        <div class="sandbox-body">
+            <div class="spawn-grid">
+                <button id="spawnTree1">Tree 1</button>
+                <button id="spawnTree2">Tree 2</button>
+                <button id="spawnTree3">Tree 3</button>
+                <button id="spawnRock">Rock</button>
+                <button id="spawnBush">Bush</button>
+                <button id="spawnFigure">Figure</button>
+                <button id="spawnCellTower">Cell Tower</button>
+            </div>
+            <label class="spawn-toggle">
+                <input type="checkbox" id="sandboxBillboardToggle">
+                Billboard Figures
+            </label>
+            <div class="spawn-footer">Press ESC to pause & click</div>
+        </div>
+    </div>
+
     <script type="importmap">
     {
       "imports": {
@@ -1807,7 +1955,7 @@
         canvas.height = PS1_H;
 
         const scene = new THREE.Scene();
-        scene.fog = new THREE.Fog(0x8899aa, 60, 2500);
+        scene.fog = new THREE.Fog(0x8899aa, 30, 800);
 
         const renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
         renderer.setPixelRatio(1);
@@ -1856,7 +2004,7 @@
         loader.load('assets/images/moon.png', moonTex => {
             moonTex.minFilter = moonTex.magFilter = THREE.NearestFilter;
             const moonAspect = moonTex.image.width / moonTex.image.height;
-            const MOON_SIZE = 120;
+            const MOON_SIZE = 100;
             const moonGeo = new THREE.PlaneGeometry(MOON_SIZE * moonAspect, MOON_SIZE);
             const moonMat = new THREE.MeshBasicMaterial({ map: moonTex, transparent: true, alphaTest: 0.1, fog: false, depthTest: true, depthWrite: false, side: THREE.DoubleSide });
             moonMesh = new THREE.Mesh(moonGeo, moonMat);
@@ -1927,14 +2075,14 @@
             const angle = ((hour - 6) / 24) * Math.PI * 2;
 
             if (sunMesh) sunMesh.position.set(
-                Math.cos(angle) * 2000,
-                Math.sin(angle) * 2000,
-                -100
+                Math.cos(angle) * 800,
+                Math.sin(angle) * 800,
+                -200
             );
             if (moonMesh) moonMesh.position.set(
-                Math.cos(angle + Math.PI) * 2000,
-                Math.sin(angle + Math.PI) * 2000,
-                -100
+                Math.cos(angle + Math.PI) * 800,
+                Math.sin(angle + Math.PI) * 800,
+                -200
             );
             if (sunMesh) {
                 sunMesh.lookAt(camera.position);
@@ -1986,8 +2134,8 @@
             }
 
             scene.fog.color.setHex(isNight ? 0x1a1a2e : 0x8899aa);
-            scene.fog.near = 60 * (1 - darkness * 0.5);
-            scene.fog.far = 2500 * (1 - darkness * 0.4);
+            scene.fog.near = 30 * (1 - darkness * 0.5);
+            scene.fog.far = 800 * (1 - darkness * 0.4);
         }
         updateDayNight();
 
@@ -2013,12 +2161,27 @@
             return tex;
         }
 
-        const MAP_SIZE = 1600;
+        const MAP_SIZE = 3200;
         const TERRAIN_SEGMENTS = 128;
-        const MOUNTAIN_X = 250;
-        const MOUNTAIN_Z = -250;
-        const MOUNTAIN_RADIUS = 250;
-        const MOUNTAIN_HEIGHT = 90;
+
+        const mountains = [
+            { x: 250, z: -250, radius: 300, height: 100 },
+            { x: -400, z: 350, radius: 250, height: 80 },
+            { x: 600, z: 200, radius: 200, height: 70 },
+            { x: -200, z: -500, radius: 180, height: 60 },
+            { x: 800, z: -300, radius: 150, height: 50 },
+            { x: -600, z: -100, radius: 200, height: 65 },
+            { x: 100, z: 600, radius: 180, height: 55 },
+            { x: -800, z: 100, radius: 120, height: 45 },
+        ];
+
+        const BIOME_SCALE = 0.004;
+
+        function getBiome(x, z) {
+            const n = Math.sin(x * BIOME_SCALE) * Math.cos(z * BIOME_SCALE * 0.7) +
+                Math.sin(x * BIOME_SCALE * 1.5 + 2.1) * Math.cos(z * BIOME_SCALE * 1.3) * 0.5;
+            return n > 0.3;
+        }
 
         function baseNoise(x, z) {
             return Math.sin(x * 0.05) * Math.cos(z * 0.05) * 2 +
@@ -2027,13 +2190,18 @@
         }
 
         function getMountainAmount(x, z) {
-            const dx = x - MOUNTAIN_X;
-            const dz = z - MOUNTAIN_Z;
-            const dist = Math.sqrt(dx * dx + dz * dz);
-            if (dist > MOUNTAIN_RADIUS) return 0;
-            const t = 1 - dist / MOUNTAIN_RADIUS;
-            const smooth = t * t * (3 - 2 * t);
-            return MOUNTAIN_HEIGHT * smooth * smooth;
+            let totalHeight = 0;
+            for (const m of mountains) {
+                const dx = x - m.x;
+                const dz = z - m.z;
+                const dist = Math.sqrt(dx * dx + dz * dz);
+                if (dist < m.radius) {
+                    const t = 1 - dist / m.radius;
+                    const smooth = t * t * (3 - 2 * t);
+                    totalHeight += m.height * smooth * smooth;
+                }
+            }
+            return totalHeight;
         }
 
         function getWorldHeight(x, z) {
@@ -2056,6 +2224,42 @@
         const ground = new THREE.Mesh(groundGeo, groundMat);
         ground.rotation.x = -Math.PI / 2;
         scene.add(ground);
+
+let wallMat;
+        loader.load('assets/images/otherwall.png', tex => {
+            tex.minFilter = tex.magFilter = THREE.NearestFilter;
+            tex.wrapS = THREE.RepeatWrapping;
+            tex.repeat.set(20, 1);
+            const wallHeight = tex.image.height * 0.2;
+            const wallLen = MAP_SIZE + 200;
+            const wallGeo = new THREE.PlaneGeometry(wallLen, wallHeight);
+            wallMat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, alphaTest: 0.1 });
+
+            const halfMap = MAP_SIZE / 2;
+
+            const wallN = new THREE.Mesh(wallGeo, wallMat);
+            wallN.position.set(0, wallHeight / 2, -halfMap);
+            wallN.renderOrder = 998;
+            scene.add(wallN);
+
+            const wallS = new THREE.Mesh(wallGeo.clone(), wallMat);
+            wallS.position.set(0, wallHeight / 2, halfMap);
+            wallS.rotation.y = Math.PI;
+            wallS.renderOrder = 998;
+            scene.add(wallS);
+
+            const wallW = new THREE.Mesh(wallGeo.clone(), wallMat);
+            wallW.position.set(-halfMap, wallHeight / 2, 0);
+            wallW.rotation.y = Math.PI / 2;
+            wallW.renderOrder = 998;
+            scene.add(wallW);
+
+            const wallE = new THREE.Mesh(wallGeo.clone(), wallMat);
+            wallE.position.set(halfMap, wallHeight / 2, 0);
+            wallE.rotation.y = -Math.PI / 2;
+            wallE.renderOrder = 998;
+            scene.add(wallE);
+        });
 
         function getTerrainHeight(x, z) {
             return getWorldHeight(x, z);
@@ -2085,7 +2289,28 @@
                         const tree3Geo = new THREE.PlaneGeometry(22 * tree3Aspect, 22);
                         const tree3Mat = new THREE.MeshLambertMaterial({ map: tex3, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
 
-                        for (let i = 0; i < 300; i++) {
+                        window.treeTextures = {
+                            'tree.png': tex,
+                            'tree2.png': tex2,
+                            'tree3.png': tex3
+                        };
+                        window.treeAspects = {
+                            'tree.png': tree1Aspect,
+                            'tree2.png': tree2Aspect,
+                            'tree3.png': tree3Aspect
+                        };
+
+                        const FOREST_TREE_COUNT = 800;
+                        const PLAINS_TREE_COUNT = 20;
+
+                        function trySpawnTree() {
+                            const x = (Math.random() - 0.5) * MAP_SIZE * 0.9;
+                            const z = (Math.random() - 0.5) * MAP_SIZE * 0.9;
+                            if (Math.abs(x) < 25 && Math.abs(z) < 45) return false;
+
+                            const isForest = getBiome(x, z);
+                            if (!isForest && Math.random() > 0.15) return false;
+
                             const r = Math.random();
                             let useTree = 1;
                             if (r > 0.66) useTree = 3;
@@ -2095,9 +2320,6 @@
                             const mat = useTree === 3 ? tree3Mat : (useTree === 2 ? tree2Mat : tree1Mat);
                             const aspect = useTree === 3 ? tree3Aspect : (useTree === 2 ? tree2Aspect : tree1Aspect);
 
-                            const x = (Math.random() - 0.5) * MAP_SIZE * 0.9;
-                            const z = (Math.random() - 0.5) * MAP_SIZE * 0.9;
-                            if (Math.abs(x) < 25 && Math.abs(z) < 45) continue;
                             const scale = 0.8 + Math.random() * 0.8;
                             const tree = new THREE.Mesh(geo, mat);
                             const terrainH = getTerrainHeight(x, z);
@@ -2108,6 +2330,15 @@
                             scene.add(tree);
                             billboards.push(tree);
                             trees.push(tree);
+                            return true;
+                        }
+
+                        let treeAttempts = 0;
+                        while (trees.length < FOREST_TREE_COUNT + PLAINS_TREE_COUNT && treeAttempts < 15000) {
+                            if (trySpawnTree()) {
+                                treeAttempts++;
+                            }
+                            treeAttempts++;
                         }
                     });
                 });
@@ -2119,49 +2350,75 @@
             tex.minFilter = tex.magFilter = THREE.NearestFilter;
             const aspect = tex.image.width / tex.image.height;
             const ROCK_H = 2;
-            const rockGeo = new THREE.PlaneGeometry(ROCK_H * aspect, ROCK_H);
-            rockMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
+const rockGeo = new THREE.PlaneGeometry(ROCK_H * aspect, ROCK_H);
+        rockMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
 
-            for (let i = 0; i < 150; i++) {
-                const x = (Math.random() - 0.5) * MAP_SIZE * 0.85;
-                const z = (Math.random() - 0.5) * MAP_SIZE * 0.85;
-                if (Math.abs(x) < 20 && Math.abs(z) < 40) continue;
-                const scale = 1.0 + Math.random() * 1.0;
-                const rock = new THREE.Mesh(rockGeo, rockMat);
-                const rockTerrainH = getTerrainHeight(x, z);
-                rock.position.set(x, rockTerrainH + ROCK_H / 2 * scale, z);
-                rock.scale.setScalar(scale);
-                rock.userData.baseY = rockTerrainH + ROCK_H / 2 * scale;
-                rock.userData.isTree = false;
-                scene.add(rock);
-                billboards.push(rock);
-                rocks.push(rock);
+const FOREST_ROCK_COUNT = 300;
+        const PLAINS_ROCK_COUNT = 30;
+
+        let rockAttempts = 0;
+        while (rocks.length < FOREST_ROCK_COUNT + PLAINS_ROCK_COUNT && rockAttempts < 5000) {
+            const x = (Math.random() - 0.5) * MAP_SIZE * 0.85;
+            const z = (Math.random() - 0.5) * MAP_SIZE * 0.85;
+            if (Math.abs(x) < 20 && Math.abs(z) < 40) {
+                rockAttempts++;
+                continue;
             }
-        });
+            const isForest = getBiome(x, z);
+            if (!isForest && Math.random() > 0.12) {
+                rockAttempts++;
+                continue;
+            }
+            const scale = 1.0 + Math.random() * 1.0;
+            const rock = new THREE.Mesh(rockGeo, rockMat);
+            const rockTerrainH = getTerrainHeight(x, z);
+            rock.position.set(x, rockTerrainH + ROCK_H / 2 * scale, z);
+            rock.scale.setScalar(scale);
+            rock.userData.baseY = rockTerrainH + ROCK_H / 2 * scale;
+            rock.userData.isTree = false;
+            scene.add(rock);
+            billboards.push(rock);
+            rocks.push(rock);
+            rockAttempts++;
+        }
+    });
 
         let bushMesh = null;
         loader.load('assets/images/bush.png', tex => {
             tex.minFilter = tex.magFilter = THREE.NearestFilter;
             const aspect = tex.image.width / tex.image.height;
             const BUSH_H = 4;
-            const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
-            bushMesh = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
+const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
+        bushMesh = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
 
-            for (let i = 0; i < 100; i++) {
-                const x = (Math.random() - 0.5) * MAP_SIZE * 0.85;
-                const z = (Math.random() - 0.5) * MAP_SIZE * 0.85;
-                if (Math.abs(x) < 20 && Math.abs(z) < 40) continue;
-                const scale = 1.0 + Math.random() * 1.0;
-                const bush = new THREE.Mesh(bushGeo, bushMesh);
-                const bushTerrainH = getTerrainHeight(x, z);
-                bush.position.set(x, bushTerrainH + BUSH_H / 2 * scale, z);
-                bush.scale.setScalar(scale);
-                bush.userData.baseY = bushTerrainH + BUSH_H / 2 * scale;
-                bush.userData.isBush = true;
-                scene.add(bush);
-                billboards.push(bush);
+        const FOREST_BUSH_COUNT = 250;
+        const PLAINS_BUSH_COUNT = 30;
+
+        let bushAttempts = 0;
+        while (billboards.filter(b => b.userData.isBush).length < FOREST_BUSH_COUNT + PLAINS_BUSH_COUNT && bushAttempts < 5000) {
+            const x = (Math.random() - 0.5) * MAP_SIZE * 0.85;
+            const z = (Math.random() - 0.5) * MAP_SIZE * 0.85;
+            if (Math.abs(x) < 20 && Math.abs(z) < 40) {
+                bushAttempts++;
+                continue;
             }
-        });
+            const isForest = getBiome(x, z);
+            if (!isForest && Math.random() > 0.1) {
+                bushAttempts++;
+                continue;
+            }
+            const scale = 1.0 + Math.random() * 1.0;
+            const bush = new THREE.Mesh(bushGeo, bushMesh);
+            const bushTerrainH = getTerrainHeight(x, z);
+            bush.position.set(x, bushTerrainH + BUSH_H / 2 * scale, z);
+            bush.scale.setScalar(scale);
+            bush.userData.baseY = bushTerrainH + BUSH_H / 2 * scale;
+            bush.userData.isBush = true;
+            scene.add(bush);
+            billboards.push(bush);
+            bushAttempts++;
+        }
+    });
 
         let figureMaterial;
         let itemMeshes = [];
@@ -2293,18 +2550,36 @@
             const cellTowerGeo = new THREE.PlaneGeometry(CELLTOWER_H * aspect, CELLTOWER_H);
             const cellTowerMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
 
-            for (let i = 0; i < 3; i++) {
-                const x = (Math.random() - 0.5) * MAP_SIZE * 0.8;
-                const z = (Math.random() - 0.5) * MAP_SIZE * 0.8;
-                if (Math.abs(x) < 50 && Math.abs(z) < 80) continue;
-                const cellTower = new THREE.Mesh(cellTowerGeo, cellTowerMat);
-                const terrainH = getTerrainHeight(x, z);
-                cellTower.position.set(x, terrainH + CELLTOWER_H / 2, z);
-                cellTower.userData.isCellTower = true;
-                scene.add(cellTower);
-                cellTowerMeshes.push(cellTower);
-                billboards.push(cellTower);
-                cellTowers.push({ x, z });
+            const CELL_TOWER_MIN_DIST = 300;
+            for (let i = 0; i < 5; i++) {
+                let attempts = 0;
+                let placed = false;
+                while (!placed && attempts < 50) {
+                    const x = (Math.random() - 0.5) * MAP_SIZE * 0.8;
+                    const z = (Math.random() - 0.5) * MAP_SIZE * 0.8;
+                    if (Math.abs(x) < 50 && Math.abs(z) < 80) { attempts++; continue; }
+
+                    let tooClose = false;
+                    for (const ct of cellTowers) {
+                        const dx = x - ct.x;
+                        const dz = z - ct.z;
+                        if (Math.sqrt(dx * dx + dz * dz) < CELL_TOWER_MIN_DIST) {
+                            tooClose = true;
+                            break;
+                        }
+                    }
+                    if (tooClose) { attempts++; continue; }
+
+                    const cellTower = new THREE.Mesh(cellTowerGeo, cellTowerMat);
+                    const terrainH = getTerrainHeight(x, z);
+                    cellTower.position.set(x, terrainH + CELLTOWER_H / 2, z);
+                    cellTower.userData.isCellTower = true;
+                    scene.add(cellTower);
+                    cellTowerMeshes.push(cellTower);
+                    billboards.push(cellTower);
+                    cellTowers.push({ x, z });
+                    placed = true;
+                }
             }
         });
 
@@ -2636,6 +2911,106 @@
                 figureMesh.position.set(0, getTerrainHeight(0, camera.position.z - 60) + 2.5, camera.position.z - 60);
             }
         });
+
+        let sandboxMode = false;
+        let sandboxFigures = [];
+        let sandboxBillboard = true;
+        let mouseUnlocked = false;
+
+        sandboxBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sandboxMode = true;
+            overlay.setAttribute('data-visible', 'false');
+            overlay.style.display = 'none';
+            document.querySelectorAll('.game-ui').forEach(el => el.classList.add('hidden'));
+            countdown = 3;
+            countdownEl.classList.add('active');
+            countdownText.textContent = '3';
+            gameStarted = false;
+            camera.position.set(0, getTerrainHeight(0, 0) + BASE_Y, 0);
+            moveF = moveB = moveL = moveR = false;
+            moveLeft = moveRight = false;
+            sprint = false;
+            isJumping = false;
+            velX = 0;
+            velY = 0;
+            velZ = 0;
+            isSliding = false;
+            jumpBuffered = false;
+            jumpBufferTimer = 0;
+            jumpCombo = 0;
+            if (figureMesh) figureMesh.visible = false;
+        });
+
+        document.getElementById('spawnTree1').addEventListener('click', () => spawnSandboxItem('tree1'));
+        document.getElementById('spawnTree2').addEventListener('click', () => spawnSandboxItem('tree2'));
+        document.getElementById('spawnTree3').addEventListener('click', () => spawnSandboxItem('tree3'));
+        document.getElementById('spawnRock').addEventListener('click', () => spawnSandboxItem('rock'));
+        document.getElementById('spawnBush').addEventListener('click', () => spawnSandboxItem('bush'));
+        document.getElementById('spawnFigure').addEventListener('click', () => spawnSandboxItem('figure'));
+        document.getElementById('spawnCellTower').addEventListener('click', () => spawnSandboxItem('celltower'));
+        document.getElementById('sandboxBillboardToggle').addEventListener('change', (e) => {
+            sandboxBillboard = e.target.checked;
+        });
+
+        function spawnSandboxItem(type) {
+            const x = camera.position.x;
+            const z = camera.position.z;
+            const terrainH = getTerrainHeight(x, z);
+
+            if (type === 'tree1' || type === 'tree2' || type === 'tree3') {
+                const texKey = type === 'tree1' ? 'tree.png' : (type === 'tree2' ? 'tree2.png' : 'tree3.png');
+                const tex = window.treeTextures && window.treeTextures[texKey];
+                if (tex) {
+                    const aspect = window.treeAspects[texKey];
+                    const geo = new THREE.PlaneGeometry(22 * aspect, 22);
+                    const mat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1 });
+                    const mesh = new THREE.Mesh(geo, mat);
+                    mesh.position.set(x, terrainH + 11, z);
+                    mesh.scale.setScalar(0.8 + Math.random() * 0.8);
+                    scene.add(mesh);
+                    billboards.push(mesh);
+                }
+            } else if (type === 'rock') {
+                if (rockMat) {
+                    const geo = new THREE.PlaneGeometry(2, 2);
+                    const mesh = new THREE.Mesh(geo, rockMat);
+                    mesh.position.set(x, terrainH + 1, z);
+                    mesh.scale.setScalar(1.0 + Math.random());
+                    scene.add(mesh);
+                    billboards.push(mesh);
+                }
+            } else if (type === 'bush') {
+                if (bushMesh) {
+                    const geo = new THREE.PlaneGeometry(4, 4);
+                    const mesh = new THREE.Mesh(geo, bushMesh);
+                    mesh.position.set(x, terrainH + 2, z);
+                    mesh.scale.setScalar(1.0 + Math.random());
+                    scene.add(mesh);
+                    billboards.push(mesh);
+                }
+            } else if (type === 'celltower') {
+                if (cellTowerMeshes && cellTowerMeshes[0]) {
+                    const geo = cellTowerMeshes[0].geometry.clone();
+                    const mat = new THREE.MeshLambertMaterial({ map: cellTowerMeshes[0].material.map, transparent: true, alphaTest: 0.1 });
+                    const mesh = new THREE.Mesh(geo, mat);
+                    mesh.position.set(x, terrainH + 10, z);
+                    mesh.scale.setScalar(2);
+                    scene.add(mesh);
+                    billboards.push(mesh);
+                }
+            } else if (type === 'figure') {
+                const figTex = figureTex['default'];
+                if (figTex) {
+                    const geo = new THREE.PlaneGeometry(10, 10);
+                    const mat = new THREE.MeshLambertMaterial({ map: figTex, transparent: true, alphaTest: 0.1 });
+                    const mesh = new THREE.Mesh(geo, mat);
+                    mesh.position.set(x, terrainH + 5, z);
+                    scene.add(mesh);
+                    sandboxFigures.push(mesh);
+                }
+            }
+        }
 
         function startGame() {
             gameStarted = true;
@@ -3271,7 +3646,7 @@
         const GROUND_FRICTION_STOP = 18;
         const AIR_ACCEL = 2.5;
         const AIR_WISHSPEED = 18;
-        const JUMP_FORCE = 9;
+        const JUMP_FORCE = 12;
         const GRAVITY = 24;
 
         let velX = 0, velY = 0, velZ = 0;
@@ -3300,9 +3675,20 @@
 
         let coins = loadCoins();
 
+        let jumpCombo = 0;
+
         function doJump() {
             isJumping = true;
             velY = JUMP_FORCE;
+            if (landingMomentumTimer > 0) {
+                jumpCombo++;
+                const boostFactor = 1.0 + 0.15 * Math.pow(1.25, jumpCombo - 1);
+                velX *= boostFactor;
+                velZ *= boostFactor;
+                landingMomentumTimer = 0;
+            } else {
+                jumpCombo = 0;
+            }
             jumpBuffered = false;
             jumpBufferTimer = 0;
         }
@@ -3659,7 +4045,14 @@
                 else if (countdown > 0) countdownText.textContent = '1';
                 if (countdown <= 0) {
                     countdownEl.classList.remove('active');
-                    startGame();
+                    if (sandboxMode) {
+                        gameStarted = true;
+                        document.querySelectorAll('.game-ui').forEach(el => el.classList.remove('hidden'));
+                        document.getElementById('sandboxWindow').classList.add('active');
+                        renderer.domElement.requestPointerLock();
+                    } else {
+                        startGame();
+                    }
                 }
             }
 
@@ -3667,7 +4060,15 @@
                 const dx = camera.position.x - bb.position.x;
                 const dz = camera.position.z - bb.position.z;
                 const angle = Math.atan2(dx, dz);
-                bb.rotation.set(0, angle, 0);
+                if (sandboxBillboard) {
+                    bb.rotation.set(0, angle, 0);
+                }
+            }
+
+            if (sandboxMode && sandboxFigures.length > 0) {
+                for (const fig of sandboxFigures) {
+                    fig.rotation.y = sandboxBillboard ? Math.atan2(camera.position.x - fig.position.x, camera.position.z - fig.position.z) : 0;
+                }
             }
 
             for (const item of itemMeshes) {
@@ -3860,11 +4261,18 @@
                     const slope = (h1 - h2) / (Math.sqrt(slideVelX * slideVelX + slideVelZ * slideVelZ) * dt + 0.001);
 
                     // Downhill = positive slope, gives boost; uphill = negative, more friction
-                    const slideBoost = 1.0 + Math.max(0, slope) * 0.6;
+                    const slideBoost = 1.0 + Math.min(2.0, Math.max(0, slope) * 1.5);
                     slideFriction = SLIDE_FRICTION_BASE / slideBoost;
-                    slideFriction = Math.max(2, slideFriction);
+                    slideFriction = Math.max(1.2, slideFriction);
 
-                    const slideSpeed = Math.sqrt(slideVelX * slideVelX + slideVelZ * slideVelZ);
+                    const MAX_SLIDE_SPEED = 80;
+                    let slideSpeed = Math.sqrt(slideVelX * slideVelX + slideVelZ * slideVelZ);
+                    if (slideSpeed > MAX_SLIDE_SPEED) {
+                        const scale = MAX_SLIDE_SPEED / slideSpeed;
+                        slideVelX *= scale;
+                        slideVelZ *= scale;
+                        slideSpeed = MAX_SLIDE_SPEED;
+                    }
                     if (slideSpeed < SLIDE_MIN_SPEED) {
                         isSliding = false;
                         velX = slideVelX;
@@ -3884,9 +4292,13 @@
                 } else {
                     // Ground movement
                     const maxSpeed = sprint ? SPRINT_SPEED : WALK_SPEED;
+                    let diagonalBoost = 1.0;
+                    if (wishLen > 1.1) {
+                        diagonalBoost = 1.2;
+                    }
 
-                    // Apply speed boost from gem
-                    let effectiveMaxSpeed = maxSpeed;
+                    // Apply speed boost from gem and diagonal movement
+                    let effectiveMaxSpeed = maxSpeed * diagonalBoost;
                     let currentFriction = GROUND_FRICTION_MOVING;
 
                     if (speedBoostTimer > 0) {
