@@ -1697,6 +1697,7 @@
                             <div class="btn-group">
                                 <button id="customizeBtn">CUSTOMIZE</button>
                                 <button id="settingsBtn">SETTINGS</button>
+                                <button id="discordBtn">DISCORD</button>
                             </div>
 
                             <div class="section-label">Coins</div>
@@ -1825,6 +1826,7 @@
         <div id="hudText">RUN...</div>
     </div>
     <div id="timer" class="game-ui hidden">0:00</div>
+        <div id="recordingIndicator" class="game-ui hidden" style="position:fixed;top:4px;left:8px;font-family:Arial,sans-serif;font-size:11px;color:red;font-weight:bold;background:#c0c0c0;border:2px solid #fff;padding:3px 8px;z-index:15;">● REC</div>
     <div id="coins" class="game-ui hidden">0</div>
     <div id="lootIndicator" class="game-ui"></div>
     <div id="workTimer" class="game-ui">
@@ -1886,6 +1888,7 @@
             <div class="pause-window-body">
                 <h1>Paused</h1>
                 <div class="pause-buttons">
+                    <button id="recordBtn">Record</button>
                     <button id="resumeBtn">Resume</button>
                     <button id="pauseHomeBtn">Quit to Home</button>
                 </div>
@@ -1955,7 +1958,7 @@
         canvas.height = PS1_H;
 
         const scene = new THREE.Scene();
-        scene.fog = new THREE.Fog(0x8899aa, 30, 800);
+        scene.fog = new THREE.Fog(0x8899aa, 30, 2500);
 
         const renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
         renderer.setPixelRatio(1);
@@ -1993,11 +1996,10 @@
         loader.load('assets/images/sun.png', sunTex => {
             sunTex.minFilter = sunTex.magFilter = THREE.NearestFilter;
             const sunAspect = sunTex.image.width / sunTex.image.height;
-            const SUN_SIZE = 150;
+            const SUN_SIZE = 400;
             const sunGeo = new THREE.PlaneGeometry(SUN_SIZE * sunAspect, SUN_SIZE);
             const sunMat = new THREE.MeshBasicMaterial({ map: sunTex, transparent: true, alphaTest: 0.1, fog: false, depthTest: true, depthWrite: false, side: THREE.DoubleSide });
             sunMesh = new THREE.Mesh(sunGeo, sunMat);
-            sunMesh.renderOrder = 999;
             scene.add(sunMesh);
         });
 
@@ -2075,15 +2077,17 @@
             const angle = ((hour - 6) / 24) * Math.PI * 2;
 
             if (sunMesh) sunMesh.position.set(
-                Math.cos(angle) * 800,
-                Math.sin(angle) * 800,
-                -200
+                Math.cos(angle) * 1800,
+                Math.sin(angle) * 1800,
+                -1500
             );
+            if (sunMesh) sunMesh.visible = Math.sin(angle) > 0;
             if (moonMesh) moonMesh.position.set(
-                Math.cos(angle + Math.PI) * 800,
-                Math.sin(angle + Math.PI) * 800,
-                -200
+                Math.cos(angle + Math.PI) * 1800,
+                Math.sin(angle + Math.PI) * 1800,
+                -1500
             );
+            if (moonMesh) moonMesh.visible = Math.sin(angle) < 0;
             if (sunMesh) {
                 sunMesh.lookAt(camera.position);
                 sunLight.position.copy(sunMesh.position);
@@ -2684,6 +2688,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
         const pauseEl = document.getElementById('pause');
         const resumeBtn = document.getElementById('resumeBtn');
         const pauseHomeBtn = document.getElementById('pauseHomeBtn');
+        const recordBtn = document.getElementById('recordBtn');
         const puzzleEl = document.getElementById('puzzle');
         const puzzleCloseBtn = document.getElementById('puzzleClose');
 
@@ -3193,7 +3198,47 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             goHome();
         });
 
+        let mediaRecorder, recordedChunks = [];
+        let isRecording = false;
+
+        document.getElementById('recordBtn').addEventListener('click', async () => {
+            if (isRecording) {
+                mediaRecorder.stop();
+                document.getElementById('recordBtn').textContent = 'Record';
+                document.getElementById('recordingIndicator').classList.add('hidden');
+                isRecording = false;
+                return;
+            }
+            try {
+                const stream = renderer.domElement.captureStream(30);
+                mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+                recordedChunks = [];
+                mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'runnnotgun-' + Date.now() + '.webm';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                };
+                mediaRecorder.start();
+                document.getElementById('recordBtn').textContent = 'Stop';
+                document.getElementById('recordingIndicator').classList.remove('hidden');
+                isRecording = true;
+            } catch (e) {
+                alert('Recording not supported');
+            }
+        });
+
         function goHome() {
+            if (isRecording && mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                document.getElementById('recordBtn').textContent = 'Record';
+                document.getElementById('recordingIndicator').classList.add('hidden');
+                isRecording = false;
+            }
             dead = false;
             gameTime = 0;
             figureActive = false;
@@ -3801,6 +3846,10 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             settingsPopup.classList.remove('hidden');
         });
 
+        document.getElementById('discordBtn').addEventListener('click', () => {
+            window.open('https://discord.gg/QR99DCgWys', '_blank');
+        });
+
         settingsPopup.querySelectorAll('.popup-close').forEach(btn => {
             btn.addEventListener('click', () => {
                 settingsPopup.classList.add('hidden');
@@ -3900,6 +3949,13 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
                 if (equipped.mode === item.id) {
                     // Unequip
                     equipped.mode = null;
+                    saveShopData(owned, equipped);
+                    updateShopUI();
+                    return;
+                }
+            } else if (item.type === 'hands') {
+                if (equipped.hands === item.id) {
+                    equipped.hands = 'default';
                     saveShopData(owned, equipped);
                     updateShopUI();
                     return;
@@ -4557,6 +4613,12 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
                         } else {
                             figureTriggered = true;
                             dead = true;
+                            if (isRecording && mediaRecorder && mediaRecorder.state === 'recording') {
+                                mediaRecorder.stop();
+                                document.getElementById('recordBtn').textContent = 'Record';
+                                document.getElementById('recordingIndicator').classList.add('hidden');
+                                isRecording = false;
+                            }
                             if (isPuzzleActive) closePuzzle();
                             stopFigureSound();
                             if (handsMesh) handsMesh.visible = false;
