@@ -1716,17 +1716,11 @@
         }
 
         .look-slider-container {
+            display: block;
             position: relative;
             width: 100px;
             height: 80px;
-        }
-
-        #lookSliderContainer {
-            display: flex;
-            position: relative;
-            width: 100px;
-            height: 80px;
-            flex-shrink: 0;
+            z-index: 15;
         }
 
         .look-slider-track {
@@ -1769,14 +1763,17 @@
             border-radius: 50%;
         }
 
-        @media (pointer: coarse), (max-width: 768px) {
+@media (pointer: coarse), (max-width: 768px) {
             #mobileControls {
                 display: flex !important;
             }
             #lookSliderContainer {
-                display: block !important;
+                display: flex !important;
             }
             #mobileControls.hidden {
+                display: none !important;
+            }
+            #lookSliderContainer.hidden {
                 display: none !important;
             }
             .look-slider-container.hidden {
@@ -2089,7 +2086,7 @@
             <div class="key-btn" id="key-f">F</div>
         </div>
     </div>
-    <div id="lookSliderContainer" class="look-slider-container">
+    <div id="lookSliderContainer" class="look-slider-container" style="display:flex;width:100px;height:80px">
         <div class="look-slider-track"></div>
         <div class="look-slider-handle" id="lookSliderHandle"></div>
     </div>
@@ -3039,8 +3036,8 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
 
             addTouchEvents(mobUp, () => moveF = true, () => moveF = false);
             addTouchEvents(mobDown, () => moveB = true, () => moveB = false);
-            addTouchEvents(mobLeft, () => moveL = true, () => moveL = false);
-            addTouchEvents(mobRight, () => moveR = true, () => moveR = false);
+            addTouchEvents(mobLeft, () => { moveL = true; if (isMobile) yaw += 0.03; }, () => { moveL = false; });
+            addTouchEvents(mobRight, () => { moveR = true; if (isMobile) yaw -= 0.03; }, () => { moveR = false; });
             addTouchEvents(mobJump, () => { 
                 if (!isJumping && !jumpBuffered) { 
                     jumpBuffered = true; 
