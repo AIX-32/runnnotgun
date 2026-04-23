@@ -2961,21 +2961,26 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             const mobAction = document.getElementById('mob-action');
 
             const addTouchEvents = (el, onStart, onEnd) => {
+                el.onclick = () => onStart();
                 el.ontouchstart = (e) => { e.preventDefault(); onStart(); };
                 el.ontouchend = (e) => { e.preventDefault(); onEnd(); };
-                el.addEventListener('touchstart', (e) => { e.preventDefault(); onStart(); }, { passive: false });
-                el.addEventListener('touchend', (e) => { e.preventDefault(); onEnd(); }, { passive: false });
             };
 
             addTouchEvents(mobUp, () => moveF = true, () => moveF = false);
             addTouchEvents(mobDown, () => moveB = true, () => moveB = false);
             addTouchEvents(mobLeft, () => moveL = true, () => moveL = false);
             addTouchEvents(mobRight, () => moveR = true, () => moveR = false);
-            addTouchEvents(mobJump, () => { if (!jumpBuffered) { jumpBuffered = true; jumpBufferTimer = 0; } }, () => {});
+            addTouchEvents(mobJump, () => { 
+                if (!isJumping && !jumpBuffered) { 
+                    jumpBuffered = true; 
+                    jumpBufferTimer = 0; 
+                } 
+            }, () => {});
             addTouchEvents(mobSprint, () => {
                 sprint = !sprint;
                 mobSprint.classList.toggle('toggled', sprint);
-                document.getElementById('key-shift').classList.toggle('active', sprint);
+                const kshift = document.getElementById('key-shift');
+                if (kshift) kshift.classList.toggle('active', sprint);
             }, () => {});
             addTouchEvents(mobAction, () => useItem(), () => {});
             
@@ -3656,7 +3661,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             const touch = e.touches[0];
             const mobileControls = document.getElementById('mobileControls');
             const ctrlRect = mobileControls ? mobileControls.getBoundingClientRect() : null;
-            if (ctrlRect && touch.clientX >= ctrlRect.left && touch.clientX <= ctrlRect.right && touch.clientY >= ctrlRect.top - 60) {
+            if (ctrlRect && touch.clientX >= ctrlRect.left - 20 && touch.clientX <= ctrlRect.right + 20 && touch.clientY >= ctrlRect.top - 80) {
                 wasButtonTouched = true;
                 return;
             }
@@ -3672,10 +3677,10 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             const touch = e.touches[0];
             const deltaX = touch.clientX - touchStartX;
             const deltaY = touch.clientY - touchStartY;
-            if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) touchMoved = true;
+            if (Math.abs(deltaX) > 3 || Math.abs(deltaY) > 3) touchMoved = true;
             if (touchMoved && !wasButtonTouched) {
-                yaw -= deltaX * 0.004;
-                pitch -= deltaY * 0.004;
+                yaw += deltaX * 0.003;
+                pitch += deltaY * 0.003;
                 pitch = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, pitch));
             }
             touchStartX = touch.clientX;
