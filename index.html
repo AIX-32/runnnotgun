@@ -2952,7 +2952,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
         let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768;
 
         function useItem() {
-            if (!locked) return;
+            if (!locked && !isMobile) return;
 
             if (!isWorking && nearMachine) {
                 isWorking = true;
@@ -3029,15 +3029,15 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             const mobAction = document.getElementById('mob-action');
 
             const addTouchEvents = (el, onStart, onEnd) => {
-                el.onclick = () => onStart();
-                el.ontouchstart = (e) => { e.preventDefault(); onStart(); };
-                el.ontouchend = (e) => { e.preventDefault(); onEnd(); };
+                el.onclick = onStart;
+                el.onmousedown = onStart;
+                el.onmouseup = onEnd;
             };
 
             addTouchEvents(mobUp, () => moveF = true, () => moveF = false);
             addTouchEvents(mobDown, () => moveB = true, () => moveB = false);
-            addTouchEvents(mobLeft, () => { moveL = true; if (isMobile) yaw += 0.03; }, () => { moveL = false; });
-            addTouchEvents(mobRight, () => { moveR = true; if (isMobile) yaw -= 0.03; }, () => { moveR = false; });
+            addTouchEvents(mobLeft, function(){ moveL = true; if(isMobile){yaw+=0.03;} }, function(){ moveL = false; });
+            addTouchEvents(mobRight, function(){ moveR = true; if(isMobile){yaw-=0.03;} }, function(){ moveR = false; });
             addTouchEvents(mobJump, () => { 
                 if (!isJumping && !jumpBuffered) { 
                     jumpBuffered = true; 
@@ -3711,7 +3711,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
 
         document.addEventListener('mousemove', e => {
             if (dead) return;
-            if (locked) {
+            if (locked || isMobile) {
                 yaw -= e.movementX * 0.0025;
                 pitch -= e.movementY * 0.0025;
                 pitch = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, pitch));
@@ -3838,7 +3838,8 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             if (code === 'Digit1') { selectedSlot = 0; updateInventoryUI(); }
             if (code === 'Digit2') { selectedSlot = 1; updateInventoryUI(); }
             if (code === 'Digit3') { selectedSlot = 2; updateInventoryUI(); }
-            if (code === 'Space' && locked) {
+            if (code === 'Space') {
+                if (locked || isMobile) {
                 setKeyActive('space', true);
                 if (isSliding) {
                     // Jump from slide - preserve speed into air
@@ -3857,7 +3858,8 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
                     jumpBufferTimer = JUMP_BUFFER_WINDOW;
                 }
             }
-            if (code === 'KeyC' && !isSliding && !isJumping && locked) {
+            if (code === 'KeyC' && !isSliding && !isJumping) {
+                if (locked || isMobile) {
                 setKeyActive('c', true);
                 const now = Date.now();
                 if (dashCooldown <= 0 && now - lastSlideTime < 150) {
@@ -3889,11 +3891,13 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
                 }
                 lastSlideTime = now;
             }
-            if (code === 'KeyV' && locked) {
+            if (code === 'KeyV') {
+                if (locked || isMobile) {
                 setKeyActive('v', true);
                 targetFov = zoomFov;
             }
-            if (code === 'KeyF' && locked) {
+            if (code === 'KeyF') {
+                if (locked || isMobile) {
                 setKeyActive('f', true);
                 useItem();
                 activeItem = null;
@@ -4552,7 +4556,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
                 }
             }
 
-            if (gameStarted && (locked || isPuzzleActive) && !dead && !isPaused) {
+            if (gameStarted && (locked || isMobile || isPuzzleActive) && !dead && !isPaused) {
                 gameTime += dt;
 
                 if (flareActive) {
