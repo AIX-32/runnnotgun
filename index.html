@@ -2963,6 +2963,8 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             const addTouchEvents = (el, onStart, onEnd) => {
                 el.ontouchstart = (e) => { e.preventDefault(); onStart(); };
                 el.ontouchend = (e) => { e.preventDefault(); onEnd(); };
+                el.addEventListener('touchstart', (e) => { e.preventDefault(); onStart(); }, { passive: false });
+                el.addEventListener('touchend', (e) => { e.preventDefault(); onEnd(); }, { passive: false });
             };
 
             addTouchEvents(mobUp, () => moveF = true, () => moveF = false);
@@ -2996,7 +2998,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             }
         }
 
-        if (isMobile && !sessionStorage.getItem('rngMobileWelcomeDone')) {
+        if (isMobile) {
             const welcomePopup = document.getElementById('mobileWelcomePopup');
             if (welcomePopup) {
                 welcomePopup.classList.remove('hidden');
@@ -3005,7 +3007,6 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             const skipWelcomeBtn = document.getElementById('skipWelcomeBtn');
             const hideWelcome = () => {
                 if (welcomePopup) welcomePopup.classList.add('hidden');
-                sessionStorage.setItem('rngMobileWelcomeDone', 'true');
             };
             if (fullscreenBtn) {
                 fullscreenBtn.addEventListener('click', () => {
@@ -3648,17 +3649,22 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
         let touchStartY = 0;
         let isTouchLooking = false;
         let touchMoved = false;
+        let wasButtonTouched = false;
 
         document.addEventListener('touchstart', e => {
             if (dead || !gameStarted || isPaused || !isMobile) return;
             const touch = e.touches[0];
             const mobileControls = document.getElementById('mobileControls');
             const ctrlRect = mobileControls ? mobileControls.getBoundingClientRect() : null;
-            if (ctrlRect && touch.clientX >= ctrlRect.left && touch.clientX <= ctrlRect.right && touch.clientY >= ctrlRect.top - 60) return;
+            if (ctrlRect && touch.clientX >= ctrlRect.left && touch.clientX <= ctrlRect.right && touch.clientY >= ctrlRect.top - 60) {
+                wasButtonTouched = true;
+                return;
+            }
             touchStartX = touch.clientX;
             touchStartY = touch.clientY;
             isTouchLooking = true;
             touchMoved = false;
+            wasButtonTouched = false;
         }, { passive: true });
 
         document.addEventListener('touchmove', e => {
@@ -3667,7 +3673,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             const deltaX = touch.clientX - touchStartX;
             const deltaY = touch.clientY - touchStartY;
             if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) touchMoved = true;
-            if (touchMoved) {
+            if (touchMoved && !wasButtonTouched) {
                 yaw -= deltaX * 0.004;
                 pitch -= deltaY * 0.004;
                 pitch = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, pitch));
@@ -3679,6 +3685,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
         document.addEventListener('touchend', () => {
             isTouchLooking = false;
             touchMoved = false;
+            wasButtonTouched = false;
         }, { passive: true });
 
         const keys = {
