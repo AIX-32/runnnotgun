@@ -1708,11 +1708,78 @@
             background: #d4d0c8;
         }
 
+        #mobileControls .look-slider-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            flex-shrink: 0;
+        }
+
+        .look-slider-container {
+            position: relative;
+            width: 100px;
+            height: 80px;
+        }
+
+        #lookSliderContainer {
+            display: flex;
+            position: relative;
+            width: 100px;
+            height: 80px;
+            flex-shrink: 0;
+        }
+
+        .look-slider-track {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 24px;
+            background: #808080;
+            border-top: 2px solid #404040;
+            border-bottom: 2px solid #ffffff;
+            transform: translateY(-50%);
+            border-radius: 2px;
+        }
+
+        .look-slider-handle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 32px;
+            height: 50px;
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+        }
+
+        .look-slider-handle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            background: #000080;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+        }
+
         @media (pointer: coarse), (max-width: 768px) {
             #mobileControls {
                 display: flex !important;
             }
+            #lookSliderContainer {
+                display: block !important;
+            }
             #mobileControls.hidden {
+                display: none !important;
+            }
+            .look-slider-container.hidden {
                 display: none !important;
             }
             #mobileControls.show {
@@ -1989,7 +2056,7 @@
         <div id="hudText">RUN...</div>
     </div>
     <div id="timer" class="game-ui hidden">0:00</div>
-        <div id="recordingIndicator" class="game-ui hidden" style="position:fixed;top:4px;left:8px;font-family:Arial,sans-serif;font-size:11px;color:red;font-weight:bold;background:#c0c0c0;border:2px solid #fff;padding:3px 8px;z-index:15;">● REC</div>
+    <div id="recordingIndicator" style="position:fixed;top:4px;left:8px;font-family:Arial,sans-serif;font-size:11px;color:red;font-weight:bold;background:#c0c0c0;border:2px solid #fff;padding:3px 8px;z-index:15;display:none">● REC</div>
     <div id="coins" class="game-ui hidden">0</div>
     <div id="lootIndicator" class="game-ui"></div>
     <div id="workTimer" class="game-ui">
@@ -2021,6 +2088,10 @@
             <div class="key-btn" id="key-shift">⇧</div>
             <div class="key-btn" id="key-f">F</div>
         </div>
+    </div>
+    <div id="lookSliderContainer" class="look-slider-container">
+        <div class="look-slider-track"></div>
+        <div class="look-slider-handle" id="lookSliderHandle"></div>
     </div>
     <div id="mobileControls" class="game-ui hidden">
         <div class="dpad">
@@ -3047,7 +3118,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
         function closePuzzle() {
             isPuzzleActive = false;
             puzzleEl.classList.remove('active');
-            renderer.domElement.requestPointerLock();
+            if (!isMobile) renderer.domElement.requestPointerLock();
         }
 
         function renderPuzzleGrid() {
@@ -3398,7 +3469,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
                 figureMesh.visible = false;
             }
             hudText.textContent = isTraining ? 'TRAINING MODE' : 'RUN...';
-            renderer.domElement.requestPointerLock();
+            if (!isMobile) renderer.domElement.requestPointerLock();
         }
 
         retryBtn.addEventListener('click', () => {
@@ -3492,7 +3563,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
         });
 
         renderer.domElement.addEventListener('click', () => {
-            if (!locked) renderer.domElement.requestPointerLock();
+            if (!locked && !isMobile) renderer.domElement.requestPointerLock();
         });
 
         document.addEventListener('pointerlockchange', () => {
@@ -3516,18 +3587,18 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             isPaused = !isPaused;
             if (isPaused) {
                 pauseEl.classList.add('active');
-                document.exitPointerLock();
+                if (!isMobile) document.exitPointerLock();
                 stopFigureSound();
             } else {
                 pauseEl.classList.remove('active');
-                renderer.domElement.requestPointerLock();
+                if (!isMobile) renderer.domElement.requestPointerLock();
             }
         }
 
         resumeBtn.addEventListener('click', () => {
             isPaused = false;
             pauseEl.classList.remove('active');
-            renderer.domElement.requestPointerLock();
+            if (!isMobile) renderer.domElement.requestPointerLock();
         });
 
         pauseHomeBtn.addEventListener('click', () => {
@@ -3655,43 +3726,51 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
         let isTouchLooking = false;
         let touchMoved = false;
         let wasButtonTouched = false;
+        let lookSliderActive = false;
+        let sliderCenterX = 0;
+        let sliderHandleEl = null;
 
-        document.addEventListener('touchstart', e => {
-            if (dead || !gameStarted || isPaused || !isMobile) return;
-            const touch = e.touches[0];
-            const mobileControls = document.getElementById('mobileControls');
-            const ctrlRect = mobileControls ? mobileControls.getBoundingClientRect() : null;
-            if (ctrlRect && touch.clientX >= ctrlRect.left - 20 && touch.clientX <= ctrlRect.right + 20 && touch.clientY >= ctrlRect.top - 80) {
-                wasButtonTouched = true;
-                return;
-            }
-            touchStartX = touch.clientX;
-            touchStartY = touch.clientY;
-            isTouchLooking = true;
-            touchMoved = false;
-            wasButtonTouched = false;
-        }, { passive: true });
+        function setupLookSlider() {
+            if (!isMobile) return;
+            const container = document.getElementById('lookSliderContainer');
+            sliderHandleEl = document.getElementById('lookSliderHandle');
+            if (!container || !sliderHandleEl) return;
 
-        document.addEventListener('touchmove', e => {
-            if (dead || !gameStarted || isPaused || !isTouchLooking || !isMobile) return;
-            const touch = e.touches[0];
-            const deltaX = touch.clientX - touchStartX;
-            const deltaY = touch.clientY - touchStartY;
-            if (Math.abs(deltaX) > 3 || Math.abs(deltaY) > 3) touchMoved = true;
-            if (touchMoved && !wasButtonTouched) {
-                yaw += deltaX * 0.003;
-                pitch += deltaY * 0.003;
-                pitch = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, pitch));
-            }
-            touchStartX = touch.clientX;
-            touchStartY = touch.clientY;
-        }, { passive: true });
+            container.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                lookSliderActive = true;
+                const touch = e.touches[0];
+                const rect = container.getBoundingClientRect();
+                sliderCenterX = rect.left + rect.width / 2;
+            }, { passive: false });
 
-        document.addEventListener('touchend', () => {
-            isTouchLooking = false;
-            touchMoved = false;
-            wasButtonTouched = false;
-        }, { passive: true });
+            container.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!lookSliderActive) return;
+                const touch = e.touches[0];
+                const rect = container.getBoundingClientRect();
+                const containerCenterX = rect.left + rect.width / 2;
+                const maxDelta = rect.width / 2 - 20;
+                let deltaX = touch.clientX - containerCenterX;
+                deltaX = Math.max(-maxDelta, Math.min(maxDelta, deltaX));
+                const pct = deltaX / maxDelta;
+                sliderHandleEl.style.left = (50 + pct * 40) + '%';
+                yaw += pct * 0.05;
+            }, { passive: false });
+
+            const endSlide = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                lookSliderActive = false;
+                if (sliderHandleEl) sliderHandleEl.style.left = '50%';
+            };
+
+            container.addEventListener('touchend', endSlide, { passive: false });
+            container.addEventListener('touchcancel', endSlide, { passive: false });
+        }
+        setupLookSlider();
 
         const keys = {
             w: document.getElementById('key-w'),
@@ -4419,7 +4498,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             countdownEl.classList.add('active');
             countdownText.textContent = '3';
             hudText.textContent = 'RUN...';
-            renderer.domElement.requestPointerLock();
+            if (!isMobile) renderer.domElement.requestPointerLock();
         }
 
         let lastStep = 0;
@@ -4442,7 +4521,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
                         gameStarted = true;
                         document.querySelectorAll('.game-ui').forEach(el => el.classList.remove('hidden'));
                         document.getElementById('sandboxWindow').classList.add('active');
-                        renderer.domElement.requestPointerLock();
+                        if (!isMobile) renderer.domElement.requestPointerLock();
                     } else {
                         startGame();
                     }
