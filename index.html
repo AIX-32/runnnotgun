@@ -3790,8 +3790,8 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             }
         }
 
-        document.addEventListener('keydown', e => {
-            const code = e.code;
+document.addEventListener('keydown', function(e) {
+            var code = e.code;
             if (code === 'KeyA') keys.pressedA = true;
             if (code === 'KeyI') keys.pressedI = true;
             if (code === 'KeyX') keys.pressedX = true;
@@ -3801,7 +3801,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
                 document.getElementById('coins').textContent = coins;
                 hudText.textContent = '+1000 COINS!';
                 keys.pressedA = keys.pressedI = keys.pressedX = false;
-                setTimeout(() => hudText.textContent = isTraining ? 'TRAINING MODE' : 'RUN...', 2000);
+                setTimeout(function(){ hudText.textContent = isTraining ? 'TRAINING MODE' : 'RUN...'; }, 2000);
             }
             if (code === 'Escape' && gameStarted && !dead && countdown <= 0) {
                 if (isPuzzleActive) {
@@ -3812,11 +3812,11 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
                 return;
             }
             if (code === 'KeyP') {
-                const timestamp = Date.now();
-                const link = document.createElement('a');
-                link.download = `screenshot_${timestamp}.png`;
+                var timestamp = Date.now();
+                var link = document.createElement('a');
+                link.download = 'screenshot_' + timestamp + '.png';
                 renderer.render(scene, camera);
-                renderer.domElement.toBlob(blob => {
+                renderer.domElement.toBlob(function(blob) {
                     link.href = URL.createObjectURL(blob);
                     link.click();
                     URL.revokeObjectURL(link.href);
@@ -3829,86 +3829,67 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             if (code === 'KeyD') { moveR = true; setKeyActive('d', true); }
             if (code === 'ArrowLeft') { moveLeft = true; }
             if (code === 'ArrowRight') { moveRight = true; }
-            if (code === 'ShiftLeft' || code === 'ShiftRight' || code === 'KeyL') { 
-                sprint = true; 
-                setKeyActive('shift', true); 
-                const mobSprint = document.getElementById('mob-sprint');
-                if (mobSprint) mobSprint.classList.add('toggled');
-            }
+            if (code === 'ShiftLeft' || code === 'ShiftRight' || code === 'KeyL') { sprint = true; setKeyActive('shift', true); }
             if (code === 'Digit1') { selectedSlot = 0; updateInventoryUI(); }
             if (code === 'Digit2') { selectedSlot = 1; updateInventoryUI(); }
             if (code === 'Digit3') { selectedSlot = 2; updateInventoryUI(); }
             if (code === 'Space') {
                 if (locked || isMobile) {
-                setKeyActive('space', true);
-                if (isSliding) {
-                    // Jump from slide - preserve speed into air
-                    isSliding = false;
-                    isJumping = true;
-                    velX = slideVelX;
-                    velZ = slideVelZ;
-                    velY = JUMP_FORCE;
-                    camera.position.y += 0.9; // stand up
-                    jumpBuffered = false;
-                    jumpBufferTimer = 0;
-                } else if (!isJumping) {
-                    doJump();
-                } else {
-                    jumpBuffered = true;
-                    jumpBufferTimer = JUMP_BUFFER_WINDOW;
+                    setKeyActive('space', true);
+                    if (isSliding) {
+                        isSliding = false;
+                        isJumping = true;
+                        velX = slideVelX;
+                        velZ = slideVelZ;
+                        velY = JUMP_FORCE;
+                        camera.position.y += 0.9;
+                        jumpBuffered = false;
+                        jumpBufferTimer = 0;
+                    } else if (!isJumping) {
+                        doJump();
+                    } else {
+                        jumpBuffered = true;
+                        jumpBufferTimer = JUMP_BUFFER_WINDOW;
+                    }
                 }
             }
             if (code === 'KeyC' && !isSliding && !isJumping) {
                 if (locked || isMobile) {
-                setKeyActive('c', true);
-                const now = Date.now();
-                if (dashCooldown <= 0 && now - lastSlideTime < 150) {
-                    const dashDist = 15;
-                    camera.position.x += Math.sin(yaw) * dashDist;
-                    camera.position.z += Math.cos(yaw) * dashDist;
-                    dashCooldown = 0.8;
-                } else {
-                    isSliding = true;
-                    slideTimer = SLIDE_DURATION;
-                    // Use player velocity plus a base slide velocity
-                    const currentSpeed = Math.sqrt(velX * velX + velZ * velZ);
-                    const baseSlideSpeed = 12;
-                    const combinedSpeed = currentSpeed + baseSlideSpeed;
-
-                    // Normalize current direction or use facing direction
-                    let dirX = 0, dirZ = 0;
-                    if (currentSpeed > 0.1) {
-                        dirX = velX / currentSpeed;
-                        dirZ = velZ / currentSpeed;
+                    setKeyActive('c', true);
+                    var now = Date.now();
+                    if (dashCooldown <= 0 && now - lastSlideTime < 150) {
+                        var dashDist = 15;
+                        camera.position.x += Math.sin(yaw) * dashDist;
+                        camera.position.z += Math.cos(yaw) * dashDist;
+                        dashCooldown = 0.8;
                     } else {
-                        dirX = Math.sin(yaw);
-                        dirZ = Math.cos(yaw);
+                        isSliding = true;
+                        slideTimer = SLIDE_DURATION;
+                        slideVelX = 0;
+                        slideVelZ = 0;
                     }
-
-                    slideVelX = dirX * combinedSpeed;
-                    slideVelZ = dirZ * combinedSpeed;
-                    camera.position.y -= 0.9;
                 }
-                lastSlideTime = now;
             }
             if (code === 'KeyV') {
                 if (locked || isMobile) {
-                setKeyActive('v', true);
-                targetFov = zoomFov;
+                    setKeyActive('v', true);
+                    targetFov = zoomFov;
+                }
             }
             if (code === 'KeyF') {
                 if (locked || isMobile) {
-                setKeyActive('f', true);
-                useItem();
-                activeItem = null;
+                    setKeyActive('f', true);
+                    useItem();
+                    activeItem = null;
+                }
             }
-            if (['Space', 'KeyC'].includes(code)) {
+            if (code === 'Space' || code === 'KeyC') {
                 e.preventDefault();
             }
         });
 
-        document.addEventListener('keyup', e => {
-            const code = e.code;
+        document.addEventListener('keyup', function(e) {
+            var code = e.code;
             if (code === 'KeyW' || code === 'ArrowUp') { moveF = false; setKeyActive('w', false); }
             if (code === 'KeyS' || code === 'ArrowDown') { moveB = false; setKeyActive('s', false); }
             if (code === 'KeyA') { moveL = false; setKeyActive('a', false); }
@@ -3918,7 +3899,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             if (code === 'ShiftLeft' || code === 'ShiftRight' || code === 'KeyL') { 
                 sprint = false; 
                 setKeyActive('shift', false); 
-                const mobSprint = document.getElementById('mob-sprint');
+                var mobSprint = document.getElementById('mob-sprint');
                 if (mobSprint) mobSprint.classList.remove('toggled');
             }
             if (code === 'Space') setKeyActive('space', false);
