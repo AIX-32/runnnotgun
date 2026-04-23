@@ -3494,13 +3494,13 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             if (locked) {
                 overlay.classList.add('hidden');
                 overlay.style.display = 'none';
-            } else if (!dead && gameStarted && countdown <= 0 && !isPaused && !isPuzzleActive) {
+            } else if (!dead && gameStarted && countdown <= 0 && !isPaused && !isPuzzleActive && !isMobile) {
                 togglePause();
             }
         });
 
         document.addEventListener('visibilitychange', () => {
-            if (document.hidden && gameStarted && !dead && countdown <= 0 && !isPaused && !isPuzzleActive) {
+            if (document.hidden && gameStarted && !dead && countdown <= 0 && !isPaused && !isPuzzleActive && !isMobile) {
                 togglePause();
             }
         });
@@ -3643,6 +3643,43 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
                 pitch = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, pitch));
             }
         });
+
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let isTouchLooking = false;
+        let touchMoved = false;
+
+        document.addEventListener('touchstart', e => {
+            if (dead || !gameStarted || isPaused || !isMobile) return;
+            const touch = e.touches[0];
+            const mobileControls = document.getElementById('mobileControls');
+            const ctrlRect = mobileControls ? mobileControls.getBoundingClientRect() : null;
+            if (ctrlRect && touch.clientX >= ctrlRect.left && touch.clientX <= ctrlRect.right && touch.clientY >= ctrlRect.top - 60) return;
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            isTouchLooking = true;
+            touchMoved = false;
+        }, { passive: true });
+
+        document.addEventListener('touchmove', e => {
+            if (dead || !gameStarted || isPaused || !isTouchLooking || !isMobile) return;
+            const touch = e.touches[0];
+            const deltaX = touch.clientX - touchStartX;
+            const deltaY = touch.clientY - touchStartY;
+            if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) touchMoved = true;
+            if (touchMoved) {
+                yaw -= deltaX * 0.004;
+                pitch -= deltaY * 0.004;
+                pitch = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, pitch));
+            }
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+        }, { passive: true });
+
+        document.addEventListener('touchend', () => {
+            isTouchLooking = false;
+            touchMoved = false;
+        }, { passive: true });
 
         const keys = {
             w: document.getElementById('key-w'),
