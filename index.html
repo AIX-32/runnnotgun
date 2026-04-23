@@ -2996,7 +2996,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             }
         }
 
-        if (isMobile && !localStorage.getItem('rngMobileWelcomeDone')) {
+        if (isMobile && !sessionStorage.getItem('rngMobileWelcomeDone')) {
             const welcomePopup = document.getElementById('mobileWelcomePopup');
             if (welcomePopup) {
                 welcomePopup.classList.remove('hidden');
@@ -3005,7 +3005,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             const skipWelcomeBtn = document.getElementById('skipWelcomeBtn');
             const hideWelcome = () => {
                 if (welcomePopup) welcomePopup.classList.add('hidden');
-                localStorage.setItem('rngMobileWelcomeDone', 'true');
+                sessionStorage.setItem('rngMobileWelcomeDone', 'true');
             };
             if (fullscreenBtn) {
                 fullscreenBtn.addEventListener('click', () => {
@@ -3020,11 +3020,6 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             if (skipWelcomeBtn) {
                 skipWelcomeBtn.addEventListener('click', hideWelcome);
             }
-            const mql = window.matchMedia('(orientation: landscape)');
-            if (mql.matches) hideWelcome();
-            mql.addEventListener('change', e => {
-                if (e.matches) hideWelcome();
-            });
         }
 
         function openPuzzle() {
