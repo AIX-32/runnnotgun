@@ -4448,12 +4448,26 @@ document.addEventListener('keydown', function(e) {
         let mp3IsPlaying = false;
 
         function loadMp3Playlist() {
-            const stored = localStorage.getItem('rngMp3Playlist');
-            return stored ? JSON.parse(stored) : [];
+            try {
+                const stored = localStorage.getItem('rngMp3Playlist');
+                return stored ? JSON.parse(stored) : [];
+            } catch (e) {
+                return [];
+            }
         }
 
         function saveMp3Playlist() {
-            localStorage.setItem('rngMp3Playlist', JSON.stringify(mp3Playlist));
+            try {
+                const data = JSON.stringify(mp3Playlist);
+                if (data.length > 4 * 1024 * 1024) {
+                    alert('Playlist too large for localStorage. Try smaller files.');
+                    return;
+                }
+                localStorage.setItem('rngMp3Playlist', data);
+            } catch (e) {
+                console.warn('Could not save MP3 playlist:', e);
+                alert('Could not save playlist. Files may be too large.');
+            }
         }
 
         function formatTime(seconds) {
@@ -4630,12 +4644,22 @@ document.addEventListener('keydown', function(e) {
             e.target.value = '';
         });
 
-        mp3Playlist = loadMp3Playlist();
-        if (mp3Playlist.length > 0) {
-            mp3CurrentIndex = 0;
-            mp3Audio.src = mp3Playlist[0].data;
+        function ensureMp3Loaded() {
+            const el = document.getElementById('mp3Playlist');
+            if (!el) {
+                setTimeout(ensureMp3Loaded, 100);
+                return;
+            }
+            if (mp3Playlist.length === 0) {
+                mp3Playlist = loadMp3Playlist();
+                if (mp3Playlist.length > 0) {
+                    mp3CurrentIndex = 0;
+                    mp3Audio.src = mp3Playlist[0].data;
+                    updateMp3PlaylistUI();
+                }
+            }
         }
-        updateMp3PlaylistUI();
+        ensureMp3Loaded();
 
         document.getElementById('customizeBtn').addEventListener('click', () => {
             document.getElementById('customizePopup').classList.remove('hidden');
