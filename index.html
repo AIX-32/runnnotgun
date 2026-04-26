@@ -4446,28 +4446,62 @@ document.addEventListener('keydown', function(e) {
         let mp3Playlist = [];
         let mp3CurrentIndex = -1;
         let mp3IsPlaying = false;
+        let mp3Db = null;
 
-        function loadMp3Playlist() {
+        function openMp3Db() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('rngMp3Player', 1);
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    mp3Db = request.result;
+                    resolve(mp3Db);
+                };
+                request.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains('tracks')) {
+                        db.createObjectStore('tracks', { keyPath: 'id', autoIncrement: true });
+                    }
+                };
+            });
+        }
+
+        async function loadMp3Playlist() {
             try {
-                const stored = localStorage.getItem('rngMp3Playlist');
-                return stored ? JSON.parse(stored) : [];
+                await openMp3Db();
+                const transaction = mp3Db.transaction(['tracks'], 'readonly');
+                const store = transaction.objectStore('tracks');
+                const request = store.getAll();
+                return new Promise((resolve) => {
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = () => resolve([]);
+                });
             } catch (e) {
+                console.warn('Could not load MP3 playlist:', e);
                 return [];
             }
         }
 
-        function saveMp3Playlist() {
+        async function saveMp3Playlist() {
             try {
-                const data = JSON.stringify(mp3Playlist);
-                if (data.length > 4 * 1024 * 1024) {
-                    alert('Playlist too large for localStorage. Try smaller files.');
-                    return;
-                }
-                localStorage.setItem('rngMp3Playlist', data);
+                await openMp3Db();
+                const transaction = mp3Db.transaction(['tracks'], 'readwrite');
+                const store = transaction.objectStore('tracks');
+                store.clear();
+                mp3Playlist.forEach(track => {
+                    store.add({ name: track.name, blob: track.blob });
+                });
             } catch (e) {
                 console.warn('Could not save MP3 playlist:', e);
-                alert('Could not save playlist. Files may be too large.');
             }
+        }
+
+        async function loadMp3TracksFromDb() {
+            const tracks = await loadMp3Playlist();
+            return tracks.map(t => ({
+                name: t.name,
+                blob: t.blob,
+                url: URL.createObjectURL(t.blob)
+            }));
         }
 
         function formatTime(seconds) {
@@ -4509,7 +4543,7 @@ document.addEventListener('keydown', function(e) {
                         saveMp3Playlist();
                         updateMp3PlaylistUI();
                         if (mp3CurrentIndex >= 0) {
-                            mp3Audio.src = mp3Playlist[mp3CurrentIndex].data;
+                            mp3Audio.src = mp3Playlist[mp3CurrentIndex].url;
                             updateMp3Display();
                         } else {
                             mp3Audio.src = '';
@@ -4518,7 +4552,7 @@ document.addEventListener('keydown', function(e) {
                         }
                     } else {
                         mp3CurrentIndex = i;
-                        mp3Audio.src = track.data;
+                        mp3Audio.src = track.url;
                         mp3Audio.play();
                         mp3IsPlaying = true;
                         mp3PlayerWindow.classList.add('playing');
@@ -4534,7 +4568,7 @@ document.addEventListener('keydown', function(e) {
         mp3Audio.addEventListener('ended', () => {
             if (mp3CurrentIndex < mp3Playlist.length - 1) {
                 mp3CurrentIndex++;
-                mp3Audio.src = mp3Playlist[mp3CurrentIndex].data;
+                mp3Audio.src = mp3Playlist[mp3CurrentIndex].url;
                 mp3Audio.play();
                 mp3IsPlaying = true;
                 mp3PlayerWindow.classList.add('playing');
@@ -4601,10 +4635,10 @@ document.addEventListener('keydown', function(e) {
             }
         });
 
-        document.getElementById('mp3PrevBtn').addEventListener('click', () => {
+document.getElementById('mp3PrevBtn').addEventListener('click', () => {
             if (mp3CurrentIndex > 0) {
                 mp3CurrentIndex--;
-                mp3Audio.src = mp3Playlist[mp3CurrentIndex].data;
+                mp3Audio.src = mp3Playlist[mp3CurrentIndex].url;
                 if (mp3IsPlaying) mp3Audio.play();
                 updateMp3PlaylistUI();
                 updateMp3Display();
@@ -4614,7 +4648,7 @@ document.addEventListener('keydown', function(e) {
         document.getElementById('mp3NextBtn').addEventListener('click', () => {
             if (mp3CurrentIndex < mp3Playlist.length - 1) {
                 mp3CurrentIndex++;
-                mp3Audio.src = mp3Playlist[mp3CurrentIndex].data;
+                mp3Audio.src = mp3Playlist[mp3CurrentIndex].url;
                 if (mp3IsPlaying) mp3Audio.play();
                 updateMp3PlaylistUI();
                 updateMp3Display();
@@ -4625,36 +4659,36 @@ document.addEventListener('keydown', function(e) {
             const files = Array.from(e.target.files);
             let loaded = 0;
             files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    mp3Playlist.push({ name: file.name, data: ev.target.result });
-                    loaded++;
-                    if (loaded === files.length) {
-                        saveMp3Playlist();
-                        updateMp3PlaylistUI();
-                        if (mp3CurrentIndex === -1 && mp3Playlist.length > 0) {
-                            mp3CurrentIndex = 0;
-                            mp3Audio.src = mp3Playlist[0].data;
-                            updateMp3Display();
-                        }
+                mp3Playlist.push({
+                    name: file.name,
+                    blob: file,
+                    url: URL.createObjectURL(file)
+                });
+                loaded++;
+                if (loaded === files.length) {
+                    saveMp3Playlist();
+                    updateMp3PlaylistUI();
+                    if (mp3CurrentIndex === -1 && mp3Playlist.length > 0) {
+                        mp3CurrentIndex = 0;
+                        mp3Audio.src = mp3Playlist[0].url;
+                        updateMp3Display();
                     }
-                };
-                reader.readAsDataURL(file);
+                }
             });
             e.target.value = '';
         });
 
-        function ensureMp3Loaded() {
+        async function ensureMp3Loaded() {
             const el = document.getElementById('mp3Playlist');
             if (!el) {
                 setTimeout(ensureMp3Loaded, 100);
                 return;
             }
             if (mp3Playlist.length === 0) {
-                mp3Playlist = loadMp3Playlist();
+                mp3Playlist = await loadMp3TracksFromDb();
                 if (mp3Playlist.length > 0) {
                     mp3CurrentIndex = 0;
-                    mp3Audio.src = mp3Playlist[0].data;
+                    mp3Audio.src = mp3Playlist[0].url;
                     updateMp3PlaylistUI();
                 }
             }
