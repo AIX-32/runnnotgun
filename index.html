@@ -664,8 +664,8 @@
 
         #homescreen .custom-figure-item img,
         .popup-content .custom-figure-item img {
-            width: 24px;
             height: 24px;
+            width: auto;
             image-rendering: pixelated;
         }
 
@@ -752,6 +752,12 @@
             justify-content: space-between;
             user-select: none;
             flex-shrink: 0;
+        }
+
+        .popup-titlebar .title-icon {
+            width: 14px;
+            height: 14px;
+            image-rendering: pixelated;
         }
 
         .popup-body {
@@ -1021,6 +1027,24 @@
             margin-bottom: 8px;
         }
 
+        .settings-section {
+            border-top: 2px solid #808080;
+            border-left: 2px solid #808080;
+            border-right: 2px solid #dfdfdf;
+            border-bottom: 2px solid #dfdfdf;
+            background: #ffffff;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .settings-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .settings-section .section-label {
+            margin-top: 0;
+        }
+
         .settings-label {
             font-family: 'Arial', sans-serif;
             font-size: 11px;
@@ -1043,9 +1067,114 @@
             cursor: pointer;
         }
 
+        .settings-toggle input[type="checkbox"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 13px;
+            height: 13px;
+            background: #ffffff;
+            border-top: 2px solid #808080;
+            border-left: 2px solid #808080;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
+            position: relative;
+            display: inline-block;
+        }
+
+        .settings-toggle input[type="checkbox"]:active {
+            border-top: 2px solid #404040;
+            border-left: 2px solid #404040;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
+        }
+
+        .settings-toggle input[type="checkbox"]:focus {
+            outline: 1px dotted #000;
+            outline-offset: 2px;
+        }
+
+        .settings-toggle input[type="checkbox"]:checked::after {
+            content: "";
+            position: absolute;
+            left: 2px;
+            top: 2px;
+            width: 7px;
+            height: 4px;
+            border-left: 2px solid #000;
+            border-bottom: 2px solid #000;
+            transform: rotate(-45deg);
+        }
+
         .time-slider {
             width: 100px;
             cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 18px;
+            background: transparent;
+        }
+
+        .time-slider:focus {
+            outline: none;
+        }
+
+        .time-slider::-webkit-slider-runnable-track {
+            height: 6px;
+            background: #ffffff;
+            border-top: 2px solid #808080;
+            border-left: 2px solid #808080;
+            border-right: 2px solid #dfdfdf;
+            border-bottom: 2px solid #dfdfdf;
+        }
+
+        .time-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            margin-top: -6px;
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            box-shadow: inset 1px 1px 0 #dfdfdf;
+        }
+
+        .time-slider::-webkit-slider-thumb:active {
+            border-top: 2px solid #404040;
+            border-left: 2px solid #404040;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
+            box-shadow: none;
+        }
+
+        .time-slider::-moz-range-track {
+            height: 6px;
+            background: #ffffff;
+            border-top: 2px solid #808080;
+            border-left: 2px solid #808080;
+            border-right: 2px solid #dfdfdf;
+            border-bottom: 2px solid #dfdfdf;
+        }
+
+        .time-slider::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            box-shadow: inset 1px 1px 0 #dfdfdf;
+            border-radius: 0;
+        }
+
+        .time-slider::-moz-range-thumb:active {
+            border-top: 2px solid #404040;
+            border-left: 2px solid #404040;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
+            box-shadow: none;
         }
 
         .time-icon {
@@ -2208,13 +2337,21 @@
 
             <div id="customizePopup" class="popup hidden">
                 <div class="popup-content">
-                    <span class="popup-close">&times;</span>
-                    <h2>Customize Figures</h2>
-                    <div class="section-label">Create Custom Figure (30 coins)</div>
-                    <input type="text" id="customFigureName" placeholder="Figure Name" maxlength="20">
-                    <input type="file" id="customFigureUpload" accept="image/*">
-                    <button id="createFigureBtn">Create (30 coins)</button>
-                    <div id="customFiguresList"></div>
+                    <div class="popup-titlebar">
+                        <div class="title-text">
+                            <img class="title-icon" src="assets/images/figureface.png">
+                            <span>New Figure</span>
+                        </div>
+                        <span class="popup-close">&times;</span>
+                    </div>
+                    <div class="popup-body">
+                        <div class="section-label">Figure Name</div>
+                        <input type="text" id="customFigureName" placeholder="Enter name..." maxlength="20">
+                        <div class="section-label">Figure Image (30 coins)</div>
+                        <input type="file" id="customFigureUpload" accept="image/*">
+                        <button id="createFigureBtn" class="win-button" style="width:100%; margin-top:8px;">Create Figure</button>
+                        <div id="customFiguresList" style="margin-top:10px;"></div>
+                    </div>
                 </div>
             </div>
 
@@ -2225,14 +2362,32 @@
                         <span class="popup-close">&times;</span>
                     </div>
                     <div class="popup-body">
-                        <div class="settings-row">
-                            <img src="assets/images/moon.png" class="time-icon">
-                            <input type="range" id="customTimeInput" min="0" max="1439" value="720" class="time-slider">
-                            <img src="assets/images/sun.png" class="time-icon">
-                            <label class="settings-toggle">
-                                <input type="checkbox" id="useLocalTimeToggle">
-                                <span>Use Local Time</span>
-                            </label>
+                        <div class="settings-section">
+                            <div class="section-label">Time</div>
+                            <div class="settings-row">
+                                <img src="assets/images/moon.png" class="time-icon">
+                                <input type="range" id="customTimeInput" min="0" max="1439" value="720" class="time-slider">
+                                <img src="assets/images/sun.png" class="time-icon">
+                                <label class="settings-toggle">
+                                    <input type="checkbox" id="useLocalTimeToggle">
+                                    <span>Use Local Time</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="settings-section">
+                            <div class="section-label">Audio</div>
+                            <div class="settings-row">
+                                <label class="settings-toggle" style="margin-left: 0;">
+                                    <input type="checkbox" id="muteFigureSoundToggle">
+                                    <span>Mute figure proximity sound</span>
+                                </label>
+                            </div>
+                            <div class="settings-row">
+                                <label class="settings-toggle" style="margin-left: 0;">
+                                    <input type="checkbox" id="mp3OldSpeakerFilterToggle">
+                                    <span>MP3 “old speaker” filter</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2804,8 +2959,8 @@ let wallMat;
                             'tree3.png': tree3Aspect
                         };
 
-                        const FOREST_TREE_COUNT = 800;
-                        const PLAINS_TREE_COUNT = 20;
+                        const FOREST_TREE_COUNT = 1600;
+                        const PLAINS_TREE_COUNT = 40;
 
                         function trySpawnTree() {
                             const x = (Math.random() - 0.5) * MAP_SIZE * 0.9;
@@ -2989,13 +3144,13 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             });
         }
 
-        for (let i = 0; i < 60; i++) {
+        for (let i = 0; i < 240; i++) {
             const x = (Math.random() - 0.5) * MAP_SIZE * 0.8;
             const z = (Math.random() - 0.5) * MAP_SIZE * 0.8;
             if (Math.abs(x) < 25 && Math.abs(z) < 50) continue;
             let type;
-            if (i < 30) type = i % 2 === 0 ? 'bear' : 'gem';
-            else if (i < 45) type = 'flaregun';
+            if (i < 120) type = i % 2 === 0 ? 'bear' : 'gem';
+            else if (i < 180) type = 'flaregun';
             else type = 'firework';
             spawnItem(type, x, z);
         }
@@ -3055,7 +3210,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             const cellTowerMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
 
             const CELL_TOWER_MIN_DIST = 300;
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 10; i++) {
                 let attempts = 0;
                 let placed = false;
                 while (!placed && attempts < 50) {
@@ -3133,6 +3288,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
 
         customFigures.forEach((fig, i) => {
             loadCustomFigureTexture(i);
+            if (fig.aspect) figureAspects['custom_' + i] = fig.aspect;
         });
 
         function createFigureMesh() {
@@ -4254,6 +4410,8 @@ document.addEventListener('keydown', function(e) {
             training: null
         };
 
+        let muteFigureProximitySound = localStorage.getItem('rngMuteFigureSound') === 'true';
+
         function getFigureAudioConfig(value) {
             if (value.startsWith('custom_')) {
                 return null;
@@ -4262,6 +4420,7 @@ document.addEventListener('keydown', function(e) {
         }
 
         function playFigureSound(distance) {
+            if (muteFigureProximitySound) return;
             const audioConfig = getFigureAudioConfig(figureSelect.value);
             if (audioConfig) {
                 if (!audioConfig.audio) {
@@ -4425,15 +4584,20 @@ document.addEventListener('keydown', function(e) {
             }
             const reader = new FileReader();
             reader.onload = (e) => {
-                coins -= 30;
-                saveCoins(coins);
-                document.getElementById('homeCoins').textContent = 'COINS: ' + coins;
-                customFigures.push({ name: name, image: e.target.result });
-                saveCustomFigures(customFigures);
-                updateCustomFiguresList();
-                alert('Figure created! Please refresh the page to use it.');
-                nameInput.value = '';
-                fileInput.value = '';
+                const img = new Image();
+                img.onload = () => {
+                    const aspect = img.width / img.height;
+                    coins -= 30;
+                    saveCoins(coins);
+                    document.getElementById('homeCoins').textContent = 'COINS: ' + coins;
+                    customFigures.push({ name: name, image: e.target.result, aspect: aspect });
+                    saveCustomFigures(customFigures);
+                    updateCustomFiguresList();
+                    alert('Figure created! Please refresh the page to use it.');
+                    nameInput.value = '';
+                    fileInput.value = '';
+                };
+                img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         });
@@ -4447,6 +4611,46 @@ document.addEventListener('keydown', function(e) {
         let mp3CurrentIndex = -1;
         let mp3IsPlaying = false;
         let mp3Db = null;
+        let mp3OldSpeakerFilterEnabled = localStorage.getItem('rngMp3OldSpeakerFilter') === 'true';
+
+        let mp3TrackNode = null;
+        let mp3Highpass = null;
+        let mp3Lowpass = null;
+
+        function initMp3AudioGraph() {
+            if (mp3TrackNode) return;
+            try {
+                mp3TrackNode = audioCtx.createMediaElementSource(mp3Audio);
+                mp3Highpass = audioCtx.createBiquadFilter();
+                mp3Lowpass = audioCtx.createBiquadFilter();
+
+                mp3Highpass.type = 'highpass';
+                mp3Highpass.frequency.value = 300;
+                mp3Lowpass.type = 'lowpass';
+                mp3Lowpass.frequency.value = 1500;
+
+                applyMp3FilterRouting();
+            } catch (e) {
+                console.warn('Could not initialize MP3 audio graph:', e);
+            }
+        }
+
+        function applyMp3FilterRouting() {
+            if (!mp3TrackNode) return;
+            try {
+                mp3TrackNode.disconnect();
+                mp3Highpass.disconnect();
+                mp3Lowpass.disconnect();
+            } catch { }
+
+            if (mp3OldSpeakerFilterEnabled) {
+                mp3TrackNode.connect(mp3Highpass);
+                mp3Highpass.connect(mp3Lowpass);
+                mp3Lowpass.connect(audioCtx.destination);
+            } else {
+                mp3TrackNode.connect(audioCtx.destination);
+            }
+        }
 
         function openMp3Db() {
             return new Promise((resolve, reject) => {
@@ -4565,6 +4769,10 @@ document.addEventListener('keydown', function(e) {
         }
 
         mp3Audio.addEventListener('timeupdate', updateMp3Display);
+        mp3Audio.addEventListener('play', () => {
+            initMp3AudioGraph();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        });
         mp3Audio.addEventListener('ended', () => {
             if (mp3CurrentIndex < mp3Playlist.length - 1) {
                 mp3CurrentIndex++;
@@ -4717,11 +4925,15 @@ document.getElementById('mp3PrevBtn').addEventListener('click', () => {
 
         const customTimeInput = document.getElementById('customTimeInput');
         const useLocalTimeToggle = document.getElementById('useLocalTimeToggle');
+        const muteFigureSoundToggle = document.getElementById('muteFigureSoundToggle');
+        const mp3OldSpeakerFilterToggle = document.getElementById('mp3OldSpeakerFilterToggle');
         const settingsPopup = document.getElementById('settingsPopup');
 
         customTimeInput.value = storedMinutes;
         useLocalTimeToggle.checked = !useCustomTime;
         customTimeInput.disabled = !useCustomTime;
+        muteFigureSoundToggle.checked = muteFigureProximitySound;
+        mp3OldSpeakerFilterToggle.checked = mp3OldSpeakerFilterEnabled;
 
         useLocalTimeToggle.addEventListener('change', () => {
             useCustomTime = !useLocalTimeToggle.checked;
@@ -4738,6 +4950,19 @@ document.getElementById('mp3PrevBtn').addEventListener('click', () => {
             localStorage.setItem('rngCustomTime', customTimeValue);
             updateDayNight();
             updateCelestialBodies();
+        });
+
+        muteFigureSoundToggle.addEventListener('change', () => {
+            muteFigureProximitySound = muteFigureSoundToggle.checked;
+            localStorage.setItem('rngMuteFigureSound', muteFigureProximitySound);
+            if (muteFigureProximitySound) stopFigureSound();
+        });
+
+        mp3OldSpeakerFilterToggle.addEventListener('change', () => {
+            mp3OldSpeakerFilterEnabled = mp3OldSpeakerFilterToggle.checked;
+            localStorage.setItem('rngMp3OldSpeakerFilter', mp3OldSpeakerFilterEnabled);
+            initMp3AudioGraph();
+            applyMp3FilterRouting();
         });
 
         document.getElementById('settingsBtn').addEventListener('click', () => {
