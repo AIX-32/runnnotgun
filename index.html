@@ -33,6 +33,10 @@
             box-sizing: border-box;
         }
 
+        .hidden {
+            display: none !important;
+        }
+
         body {
             overflow: hidden;
             background: #000;
@@ -457,6 +461,57 @@
             letter-spacing: 0;
             border: none;
             text-transform: none;
+        }
+
+        #dailyChallenges .challenge-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 6px;
+            background: #ffffff;
+            border-top: 2px solid #808080;
+            border-left: 2px solid #808080;
+            border-right: 2px solid #dfdfdf;
+            border-bottom: 2px solid #dfdfdf;
+            margin-bottom: 6px;
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            color: #000;
+        }
+
+        #dailyChallenges .challenge-row:last-child {
+            margin-bottom: 0;
+        }
+
+        #dailyChallenges .challenge-title {
+            flex: 1;
+            line-height: 1.2;
+        }
+
+        #dailyChallenges .challenge-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        #dailyChallenges .challenge-progress {
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+        }
+
+        #dailyChallenges .challenge-reward {
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            padding: 2px 6px;
+            font-size: 10px;
+        }
+
+        #dailyChallenges .challenge-done {
+            opacity: 0.65;
         }
 
         .panel-body {
@@ -1248,6 +1303,24 @@
             color: #000;
         }
 
+        #noticeWindow {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 94px;
+            z-index: 25;
+            min-width: 190px;
+            max-width: 260px;
+        }
+
+        #noticeWindow .notice-body {
+            padding: 8px 10px;
+            background: #c0c0c0;
+            font-family: 'Arial', sans-serif;
+            font-size: 11px;
+            color: #000;
+        }
+
         #timer {
             position: fixed;
             top: 4px;
@@ -1288,8 +1361,8 @@
             top: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 180px;
-            height: 180px;
+            width: 220px;
+            height: 220px;
             z-index: 15;
             opacity: 0.9;
             pointer-events: none;
@@ -1301,6 +1374,28 @@
         }
 
         #lootIndicator.visible {
+            display: block;
+        }
+
+        #portalIndicator {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140px;
+            height: 140px;
+            z-index: 15;
+            opacity: 0.9;
+            pointer-events: none;
+            display: none;
+            image-rendering: pixelated;
+            background-image: url('assets/images/handpoint.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            filter: hue-rotate(250deg) saturate(1.8) brightness(1.1);
+        }
+
+        #portalIndicator.visible {
             display: block;
         }
 
@@ -1699,6 +1794,10 @@
             display: flex;
         }
 
+        #puzzle .puzzle-window {
+            width: 260px;
+        }
+
         #sandboxWindow {
             position: fixed;
             top: 10px;
@@ -1745,6 +1844,28 @@
             padding: 6px 2px;
             cursor: pointer;
             font-family: 'Arial', sans-serif;
+            background: #c0c0c0;
+            border-top: 2px solid #ffffff;
+            border-left: 2px solid #ffffff;
+            border-right: 2px solid #404040;
+            border-bottom: 2px solid #404040;
+            box-shadow: inset 1px 1px 0 #dfdfdf;
+            color: #000;
+        }
+
+        #sandboxWindow .spawn-grid button:active {
+            border-top: 2px solid #404040;
+            border-left: 2px solid #404040;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
+            box-shadow: none;
+            padding-top: 7px;
+            padding-left: 3px;
+        }
+
+        #sandboxWindow .spawn-grid button:focus {
+            outline: 1px dotted #000;
+            outline-offset: -4px;
         }
 
         #sandboxWindow .spawn-toggle {
@@ -1825,6 +1946,9 @@
             border-left: 2px solid #808080;
             border-right: 2px solid #ffffff;
             border-bottom: 2px solid #ffffff;
+            user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
         }
 
         .puzzle-slot {
@@ -1839,6 +1963,9 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
         }
 
         .puzzle-slot:hover {
@@ -1857,6 +1984,10 @@
             width: 36px;
             height: 36px;
             image-rendering: pixelated;
+            user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            -webkit-user-drag: none;
         }
 
         #puzzleItems {
@@ -2210,6 +2341,10 @@
                     <h3>Shop</h3>
                     <div id="shopItems" class="panel-content"></div>
                 </div>
+                <div class="info-panel" id="dailyChallengesPanel">
+                    <h3>Daily Challenges</h3>
+                    <div id="dailyChallenges" class="panel-content"></div>
+                </div>
             </div>
 
             <div class="center-column">
@@ -2224,6 +2359,7 @@
                         <div class="main-section">
                             <div class="section-label">Play</div>
                             <button id="playBtn" class="full-width">START GAME</button>
+                            <button id="trainingBtn" class="full-width">TRAINING MODE</button>
                             <button id="sandboxBtn" class="full-width">SANDBOX MODE</button>
 
                             <div class="section-label">Figure</div>
@@ -2232,7 +2368,6 @@
                                 <option value="kanye">KANYE</option>
                                 <option value="scaryguy">SCARY GUY</option>
                                 <option value="stalin">STALIN</option>
-                                <option value="training">TRAINING</option>
                             </select>
                             <select id="aiTypeSelect" class="full-width">
                                 <option value="chaser">Aggressive</option>
@@ -2452,10 +2587,19 @@
         <div id="speedo">0 mph</div>
         <div id="hudText">RUN...</div>
     </div>
+    <div id="noticeWindow" class="win-window hidden">
+        <div class="win-titlebar">
+            <div class="title-text">
+                <span>NOTICE</span>
+            </div>
+        </div>
+        <div class="notice-body" id="noticeText">Press F</div>
+    </div>
     <div id="timer" class="game-ui hidden">0:00</div>
     <div id="recordingIndicator" style="position:fixed;top:4px;left:8px;font-family:Arial,sans-serif;font-size:11px;color:red;font-weight:bold;background:#c0c0c0;border:2px solid #fff;padding:3px 8px;z-index:15;display:none">● REC</div>
     <div id="coins" class="game-ui hidden">0</div>
     <div id="lootIndicator" class="game-ui"></div>
+    <div id="portalIndicator" class="game-ui"></div>
     <div id="workTimer" class="game-ui">
         <svg viewBox="0 0 100 100">
             <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.2)" stroke-width="8" fill="none" />
@@ -2552,20 +2696,32 @@
     </div>
 
     <div id="puzzle">
-        <h2>Match the pairs</h2>
-        <div class="puzzle-hint">Drag and drop to swap items</div>
-        <div id="puzzleDistance" class="puzzle-distance">FIGURES: ---m</div>
-        <div id="puzzleGrid">
-            <div class="puzzle-slot" data-index="0"></div>
-            <div class="puzzle-slot" data-index="1"></div>
-            <div class="puzzle-slot" data-index="2"></div>
-            <div class="puzzle-slot" data-index="3"></div>
-            <div class="puzzle-slot" data-index="4"></div>
-            <div class="puzzle-slot" data-index="5"></div>
-        </div>
-        <div class="puzzle-buttons">
-            <button id="puzzleCheck">Check</button>
-            <button id="puzzleClose">Close</button>
+        <div class="win-window puzzle-window">
+            <div class="win-titlebar">
+                <div class="title-text">
+                    <img class="title-icon" src="assets/images/puzzle.png">
+                    <span>Match the pairs</span>
+                </div>
+                <div class="win-titlebar-buttons">
+                    <button id="puzzleCloseX" class="win-btn">&times;</button>
+                </div>
+            </div>
+            <div class="puzzle-window-body">
+                <div class="puzzle-hint">Drag and drop to swap items</div>
+                <div id="puzzleDistance" class="puzzle-distance">FIGURES: ---m</div>
+                <div id="puzzleGrid">
+                    <div class="puzzle-slot" data-index="0"></div>
+                    <div class="puzzle-slot" data-index="1"></div>
+                    <div class="puzzle-slot" data-index="2"></div>
+                    <div class="puzzle-slot" data-index="3"></div>
+                    <div class="puzzle-slot" data-index="4"></div>
+                    <div class="puzzle-slot" data-index="5"></div>
+                </div>
+                <div class="puzzle-buttons">
+                    <button id="puzzleCheck">Check</button>
+                    <button id="puzzleClose">Close</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -2580,6 +2736,16 @@
                 <button id="spawnBush">Bush</button>
                 <button id="spawnFigure">Figure</button>
                 <button id="spawnCellTower">Cell Tower</button>
+            </div>
+            <div class="settings-row" style="margin-top: 8px;">
+                <span class="settings-label" style="min-width: 62px;">Spawn item</span>
+                <select id="sandboxItemSelect" class="win-select" style="flex: 1; min-width: 140px;">
+                    <option value="bear">Bear Trap</option>
+                    <option value="gem">Gem</option>
+                    <option value="flaregun">Flare Gun</option>
+                    <option value="firework">Firework</option>
+                </select>
+                <button id="spawnAnyItem" class="win-button" style="min-width: 90px;">Spawn</button>
             </div>
             <label class="spawn-toggle">
                 <input type="checkbox" id="sandboxBillboardToggle">
@@ -3162,7 +3328,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             const machineGeo = new THREE.PlaneGeometry(MACHINE_H * aspect, MACHINE_H);
             const machineMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
 
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 30; i++) {
                 const x = (Math.random() - 0.5) * MAP_SIZE * 0.7;
                 const z = (Math.random() - 0.5) * MAP_SIZE * 0.7;
                 if (Math.abs(x) < 30 && Math.abs(z) < 60) continue;
@@ -3185,7 +3351,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             const puzzleGeo = new THREE.PlaneGeometry(PUZZLE_H * aspect, PUZZLE_H);
             const puzzleMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
 
-            for (let i = 0; i < 6; i++) {
+            for (let i = 0; i < 18; i++) {
                 const x = (Math.random() - 0.5) * MAP_SIZE * 0.7;
                 const z = (Math.random() - 0.5) * MAP_SIZE * 0.7;
                 if (Math.abs(x) < 30 && Math.abs(z) < 60) continue;
@@ -3242,8 +3408,92 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             }
         });
 
+        // Portals (spawn as a linked pair, vanish after 2 total uses)
+        let portalMat = null;
+        let portalGeo = null;
+        let portalMeshes = [];
+        let portalPoints = [];
+        let portalUsesRemaining = 0;
+        let portalCooldown = 0;
+        let portalSpawnPending = false;
+
+        function clearPortals() {
+            for (const m of portalMeshes) {
+                try { scene.remove(m); } catch { }
+                const bbIndex = billboards.indexOf(m);
+                if (bbIndex !== -1) billboards.splice(bbIndex, 1);
+            }
+            portalMeshes = [];
+            portalPoints = [];
+            portalUsesRemaining = 0;
+            portalCooldown = 0;
+            portalSpawnPending = false;
+        }
+
+        function spawnPortalPair() {
+            clearPortals();
+            if (!portalMat || !portalGeo) {
+                portalSpawnPending = true;
+                return;
+            }
+            portalSpawnPending = false;
+
+            const triesMax = 200;
+            const minSpawnDist = 220;
+            const minFromCenter = 80;
+
+            function randomPoint() {
+                return {
+                    x: (Math.random() - 0.5) * MAP_SIZE * 0.75,
+                    z: (Math.random() - 0.5) * MAP_SIZE * 0.75
+                };
+            }
+
+            let a = null, b = null;
+            let tries = 0;
+            while ((!a || !b) && tries < triesMax) {
+                tries++;
+                const p1 = randomPoint();
+                if (Math.abs(p1.x) < minFromCenter && Math.abs(p1.z) < minFromCenter) continue;
+                const p2 = randomPoint();
+                if (Math.abs(p2.x) < minFromCenter && Math.abs(p2.z) < minFromCenter) continue;
+                const dx = p1.x - p2.x;
+                const dz = p1.z - p2.z;
+                if (Math.sqrt(dx * dx + dz * dz) < minSpawnDist) continue;
+                a = p1; b = p2;
+            }
+            if (!a || !b) return;
+
+            portalPoints = [a, b];
+            portalUsesRemaining = 2;
+
+            for (const p of portalPoints) {
+                const y = getTerrainHeight(p.x, p.z);
+                const mesh = new THREE.Mesh(portalGeo, portalMat);
+                mesh.position.set(p.x, y + 2.5, p.z);
+                mesh.userData.isPortal = true;
+                mesh.userData.spinOffset = Math.random() * Math.PI * 2;
+                scene.add(mesh);
+                portalMeshes.push(mesh);
+                billboards.push(mesh);
+            }
+        }
+
+        loader.load('assets/images/portal.png', tex => {
+            tex.minFilter = tex.magFilter = THREE.NearestFilter;
+            const aspect = tex.image.width / tex.image.height;
+            const H = 22;
+            portalGeo = new THREE.PlaneGeometry(H * aspect, H);
+            portalMat = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.1, side: THREE.FrontSide });
+            if (portalSpawnPending && gameStarted && !dead && !isPaused && !isTraining && !sandboxMode) {
+                spawnPortalPair();
+            }
+        });
+
         const lootIndicator = document.getElementById('lootIndicator');
         window.lootIndicator = lootIndicator;
+        const portalIndicator = document.getElementById('portalIndicator');
+        window.portalIndicator = portalIndicator;
 
         const figureTex = {};
 
@@ -3335,6 +3585,8 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
         const overlay = document.getElementById('overlay');
         const playBtn = document.getElementById('playBtn');
         const hudText = document.getElementById('hudText');
+        const noticeWindow = document.getElementById('noticeWindow');
+        const noticeText = document.getElementById('noticeText');
         const countdownEl = document.getElementById('countdown');
         const countdownText = countdownEl.querySelector('span');
         const deathEl = document.getElementById('death');
@@ -3351,6 +3603,19 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
         let isPaused = false;
         let currentPuzzle = null;
         let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768;
+
+        function showNotice(text) {
+            if (!noticeWindow || !noticeText) return;
+            noticeText.textContent = text;
+            noticeWindow.classList.remove('hidden');
+        }
+
+        function hideNotice() {
+            if (!noticeWindow) return;
+            noticeWindow.classList.add('hidden');
+        }
+
+        hideNotice();
 
         function useItem() {
             if (!locked && !isMobile) return;
@@ -3392,6 +3657,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
                         velZ = -Math.cos(yaw) * boostAmount;
                         isJumping = true;
                         velY = 15;
+                        addDailyChallengeProgress('use_firework', 1);
                     } else if (activeItem === 'flaregun') {
                         if (!flareActive && flareMesh) {
                             flareActive = true;
@@ -3521,6 +3787,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
         function renderPuzzleGrid() {
             const slots = document.querySelectorAll('.puzzle-slot');
             let draggedItem = null;
+            let isPuzzleDragging = false;
 
             slots.forEach((slot, i) => {
                 slot.innerHTML = '';
@@ -3535,8 +3802,29 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
                     img.src = 'assets/images/' + puzzleGrid[i] + '.png';
                     img.draggable = true;
                     img.ondragstart = (e) => {
+                        isPuzzleDragging = true;
                         e.dataTransfer.setData('text/plain', i);
+                        e.dataTransfer.effectAllowed = 'move';
+                        try {
+                            const previewSize = 24;
+                            const canvas = document.createElement('canvas');
+                            canvas.width = previewSize;
+                            canvas.height = previewSize;
+                            const ctx = canvas.getContext('2d');
+                            if (ctx) {
+                                ctx.imageSmoothingEnabled = false;
+                                ctx.clearRect(0, 0, previewSize, previewSize);
+                                ctx.drawImage(img, 0, 0, previewSize, previewSize);
+                                e.dataTransfer.setDragImage(canvas, Math.floor(previewSize / 2), Math.floor(previewSize / 2));
+                            } else {
+                                e.dataTransfer.setDragImage(img, 12, 12);
+                            }
+                        } catch { }
                         draggedItem = i;
+                    };
+                    img.ondragend = () => {
+                        isPuzzleDragging = false;
+                        draggedItem = null;
                     };
                     img.style.cursor = 'grab';
                     slot.appendChild(img);
@@ -3545,6 +3833,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
                     slot.classList.add('selected');
                 }
                 slot.onclick = () => {
+                    if (isPuzzleDragging) return;
                     puzzleSelectedSlot = i;
                     renderPuzzleGrid();
                 };
@@ -3553,6 +3842,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
                 };
                 slot.ondrop = (e) => {
                     e.preventDefault();
+                    isPuzzleDragging = false;
                     const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
                     if (fromIndex !== i) {
                         [puzzleGrid[fromIndex], puzzleGrid[i]] = [puzzleGrid[i], puzzleGrid[fromIndex]];
@@ -3594,6 +3884,7 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
                     document.getElementById('coins').textContent = coins;
                     hudText.textContent = '+60 COINS!';
                     setTimeout(() => hudText.textContent = isTraining ? 'TRAINING MODE' : 'RUN...', 2000);
+                    addDailyChallengeProgress('solve_puzzle', 1);
                 }, 100);
             }
         }
@@ -3606,6 +3897,8 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
         }
 
         puzzleCloseBtn.addEventListener('click', closePuzzle);
+        const puzzleCloseXBtn = document.getElementById('puzzleCloseX');
+        if (puzzleCloseXBtn) puzzleCloseXBtn.addEventListener('click', closePuzzle);
 
         document.getElementById('puzzleCheck').addEventListener('click', () => {
             checkPuzzleWin();
@@ -3687,12 +3980,17 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             }
         }
 
+        let trainingMode = false;
+
         playBtn.addEventListener('click', (e) => {
             e.stopPropagation();
+            sandboxMode = false;
+            trainingMode = false;
             overlay.setAttribute('data-visible', 'false');
             overlay.style.display = 'none';
             document.querySelectorAll('.game-ui').forEach(el => el.classList.add('hidden'));
             countdown = 3;
+            startCountdownSpin();
             countdownEl.classList.add('active');
             countdownText.textContent = '3';
             gameStarted = false;
@@ -3723,13 +4021,41 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
         let sandboxBillboard = true;
         let mouseUnlocked = false;
 
-        sandboxBtn.addEventListener('click', (e) => {
+        document.getElementById('trainingBtn').addEventListener('click', (e) => {
             e.stopPropagation();
-            sandboxMode = true;
+            sandboxMode = false;
+            trainingMode = true;
             overlay.setAttribute('data-visible', 'false');
             overlay.style.display = 'none';
             document.querySelectorAll('.game-ui').forEach(el => el.classList.add('hidden'));
             countdown = 3;
+            startCountdownSpin();
+            countdownEl.classList.add('active');
+            countdownText.textContent = '3';
+            gameStarted = false;
+            camera.position.set(0, getTerrainHeight(0, 0) + BASE_Y, 0);
+            moveF = moveB = moveL = moveR = false;
+            moveLeft = moveRight = false;
+            sprint = false;
+            isJumping = false;
+            velX = 0;
+            velY = 0;
+            velZ = 0;
+            isSliding = false;
+            jumpBuffered = false;
+            jumpBufferTimer = 0;
+            if (figureMesh) figureMesh.visible = false;
+        });
+
+        sandboxBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sandboxMode = true;
+            trainingMode = false;
+            overlay.setAttribute('data-visible', 'false');
+            overlay.style.display = 'none';
+            document.querySelectorAll('.game-ui').forEach(el => el.classList.add('hidden'));
+            countdown = 3;
+            startCountdownSpin();
             countdownEl.classList.add('active');
             countdownText.textContent = '3';
             gameStarted = false;
@@ -3755,6 +4081,10 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
         document.getElementById('spawnBush').addEventListener('click', () => spawnSandboxItem('bush'));
         document.getElementById('spawnFigure').addEventListener('click', () => spawnSandboxItem('figure'));
         document.getElementById('spawnCellTower').addEventListener('click', () => spawnSandboxItem('celltower'));
+        document.getElementById('spawnAnyItem').addEventListener('click', () => {
+            const type = document.getElementById('sandboxItemSelect').value;
+            spawnSandboxItem('item:' + type);
+        });
         document.getElementById('sandboxBillboardToggle').addEventListener('change', (e) => {
             sandboxBillboard = e.target.checked;
         });
@@ -3815,13 +4145,18 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
                     scene.add(mesh);
                     sandboxFigures.push(mesh);
                 }
+            } else if (type.startsWith('item:')) {
+                const itemType = type.slice('item:'.length);
+                if (['bear', 'gem', 'flaregun', 'firework'].includes(itemType)) {
+                    spawnItem(itemType, x, z);
+                }
             }
         }
 
         function startGame() {
             gameStarted = true;
             gameTime = 0;
-            isTraining = figureSelect.value === 'training';
+            isTraining = trainingMode;
             figureActive = !isTraining;
             figureSpeedVar = 0;
             playerPosHistory = [];
@@ -3854,6 +4189,12 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
                 m.visible = true;
             }
 
+            if (!isTraining) {
+                spawnPortalPair();
+            } else {
+                clearPortals();
+            }
+
             if (!isTraining && figureMesh && figureTex[figureSelect.value]) {
                 const aspect = figureAspects[figureSelect.value] || 0.5;
                 figureMesh.geometry.dispose();
@@ -3870,39 +4211,53 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
         }
 
         retryBtn.addEventListener('click', () => {
+            hideNotice();
+            stopFigureSound();
+            clearPortals();
             dead = false;
-            gameTime = 0;
+            isPaused = false;
             figureActive = false;
             figureTriggered = false;
             figureGazeTime = 0;
             figureSpeedVar = 0;
             figureStuckTimer = 0;
             gameStarted = false;
+            gameTime = 0;
+            sandboxMode = false;
+            trainingMode = trainingMode || isTraining;
+            isTraining = trainingMode;
+
             inventory = [null, null, null];
+            selectedSlot = 0;
+            updateInventoryUI();
+
             speedBoostTimer = 0;
             gemStacks = 0;
+
             isWorking = false;
             workTimer = 0;
             nearMachine = null;
+
             bearTrapPlaced = false;
             bearTrapPos = null;
+            if (bearTrapMesh) bearTrapMesh.visible = false;
+
             flareActive = false;
             flareTimer = 0;
             flarePos = null;
             figureTargetFlare = false;
-            if (bearTrapMesh) bearTrapMesh.visible = false;
             if (flareMesh) flareMesh.visible = false;
-            updateInventoryUI();
+
+            // Reset world objects
             for (const item of itemMeshes) {
                 item.userData.collected = false;
                 item.visible = true;
             }
-            for (const m of machineMeshes) {
-                m.visible = true;
-            }
-            for (const m of machines) {
-                m.active = true;
-            }
+            for (const m of machines) m.active = true;
+            for (const m of machineMeshes) m.visible = true;
+            for (const p of puzzles) p.solved = false;
+            for (const pm of puzzleMeshes) pm.visible = true;
+
             if (figureMesh && figureTex[figureSelect.value]) {
                 const aspect = figureAspects[figureSelect.value] || 0.5;
                 figureMesh.geometry.dispose();
@@ -3911,8 +4266,11 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
                 figureMesh.material.needsUpdate = true;
                 figureMesh.visible = false;
                 figureMesh.position.set(0, getTerrainHeight(0, -60) + 2.5, -60);
+            } else if (figureMesh) {
+                figureMesh.visible = false;
             }
-            camera.position.set(0, getTerrainHeight(0, camera.position.z) + BASE_Y, camera.position.z);
+
+            camera.position.set(0, getTerrainHeight(0, 0) + BASE_Y, 0);
             moveF = moveB = moveL = moveR = false;
             moveLeft = moveRight = false;
             sprint = false;
@@ -3923,34 +4281,17 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             isSliding = false;
             jumpBuffered = false;
             jumpBufferTimer = 0;
-            speedBoostTimer = 0;
-            gemStacks = 0;
-            bearTrapPlaced = false;
-            bearTrapPos = null;
-            flareActive = false;
-            flareTimer = 0;
-            flarePos = null;
-            figureTargetFlare = false;
-            isWorking = false;
-            workTimer = 0;
-            nearMachine = null;
-            if (bearTrapMesh) bearTrapMesh.visible = false;
-            if (flareMesh) flareMesh.visible = false;
-            updateInventoryUI();
-            if (bearTrapMesh) bearTrapMesh.visible = false;
-            if (flareMesh) flareMesh.visible = false;
-            isWorking = false;
-            workTimer = 0;
-            nearMachine = null;
-            for (const m of machines) {
-                m.active = true;
-            }
-            for (const m of machineMeshes) {
-                m.visible = true;
-            }
-            if (figureMesh) figureMesh.visible = false;
-            overlay.classList.remove('hidden');
-            hudText.textContent = 'RUN...';
+
+            overlay.setAttribute('data-visible', 'false');
+            overlay.style.display = 'none';
+            overlay.classList.add('hidden');
+            deathEl.classList.remove('active');
+
+            countdown = 3;
+            startCountdownSpin();
+            countdownEl.classList.add('active');
+            countdownText.textContent = '3';
+            hudText.textContent = isTraining ? 'TRAINING MODE' : 'RUN...';
         });
 
         const homeBtn = document.getElementById('homeBtn');
@@ -4039,11 +4380,16 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
         });
 
         function goHome() {
+            hideNotice();
+            clearPortals();
             if (isRecording && mediaRecorder && mediaRecorder.state === 'recording') {
                 mediaRecorder.stop();
                 document.getElementById('recordBtn').textContent = 'Record';
                 document.getElementById('recordingIndicator').classList.add('hidden');
                 isRecording = false;
+            }
+            if (!isMobile) {
+                try { document.exitPointerLock(); } catch { }
             }
             dead = false;
             gameTime = 0;
@@ -4104,8 +4450,10 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             deathEl.classList.remove('active');
             overlay.setAttribute('data-visible', 'true');
             overlay.style.display = 'flex';
+            overlay.classList.remove('hidden');
             updateHomeLeaderboard();
-            document.querySelectorAll('.game-ui').forEach(el => el.classList.remove('hidden'));
+            document.querySelectorAll('.game-ui').forEach(el => el.classList.add('hidden'));
+            document.getElementById('sandboxWindow').classList.remove('active');
             document.getElementById('timer').textContent = '0:00';
         }
 
@@ -4266,8 +4614,36 @@ document.addEventListener('keydown', function(e) {
                         isSliding = true;
                         slideTimer = SLIDE_DURATION;
                         const SLIDE_BOOST = 1.8;
-                        slideVelX = velX * SLIDE_BOOST;
-                        slideVelZ = velZ * SLIDE_BOOST;
+                        // Preserve momentum: base slide speed uses current velocity, or (if you're moving) at least your current move-speed.
+                        let dirX = 0, dirZ = 0;
+                        if (moveF) dirZ -= 1;
+                        if (moveB) dirZ += 1;
+                        if (moveL) dirX -= 1;
+                        if (moveR) dirX += 1;
+                        const cos = Math.cos(yaw), sin = Math.sin(yaw);
+                        const wishX = cos * dirX + sin * dirZ;
+                        const wishZ = -sin * dirX + cos * dirZ;
+                        const wishLen = Math.sqrt(wishX * wishX + wishZ * wishZ);
+
+                        const currentSpeed = Math.sqrt(velX * velX + velZ * velZ);
+                        const moveSpeedFloor = wishLen > 0 ? (sprint ? SPRINT_SPEED : WALK_SPEED) * 0.85 : 0;
+                        const baseSpeed = Math.max(currentSpeed, moveSpeedFloor, SLIDE_MIN_SPEED * 1.5);
+
+                        if (wishLen > 0.001) {
+                            const nx = wishX / wishLen;
+                            const nz = wishZ / wishLen;
+                            slideVelX = nx * baseSpeed * SLIDE_BOOST;
+                            slideVelZ = nz * baseSpeed * SLIDE_BOOST;
+                        } else if (currentSpeed > 0.001) {
+                            slideVelX = (velX / currentSpeed) * baseSpeed * SLIDE_BOOST;
+                            slideVelZ = (velZ / currentSpeed) * baseSpeed * SLIDE_BOOST;
+                        } else {
+                            // If standing still, slide forward.
+                            slideVelX = Math.sin(yaw) * baseSpeed * SLIDE_BOOST;
+                            slideVelZ = Math.cos(yaw) * baseSpeed * SLIDE_BOOST;
+                        }
+                        velX = slideVelX;
+                        velZ = slideVelZ;
                         camera.position.y -= 0.9;
                     }
                 }
@@ -4524,6 +4900,146 @@ document.addEventListener('keydown', function(e) {
 
         let jumpCombo = 0;
 
+        // ── Daily Challenges ──
+        const DAILY_CHALLENGE_VERSION = 1;
+        const DAILY_CHALLENGES_KEY = 'rngDailyChallengesV' + DAILY_CHALLENGE_VERSION;
+        const DAILY_CHALLENGES_DATE_KEY = 'rngDailyChallengesDateV' + DAILY_CHALLENGE_VERSION;
+        const DAILY_CHALLENGES_PROGRESS_KEY = 'rngDailyChallengesProgressV' + DAILY_CHALLENGE_VERSION;
+
+        function getLocalDateKey() {
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        }
+
+        function createSeededRng(seedStr) {
+            let h = 2166136261;
+            for (let i = 0; i < seedStr.length; i++) {
+                h ^= seedStr.charCodeAt(i);
+                h = Math.imul(h, 16777619);
+            }
+            let state = h >>> 0;
+            return () => {
+                state = (Math.imul(1664525, state) + 1013904223) >>> 0;
+                return state / 4294967296;
+            };
+        }
+
+        const DAILY_CHALLENGE_POOL = [
+            { id: 'survive_120', title: 'Survive for 2:00', kind: 'survive', target: 120, reward: 40 },
+            { id: 'survive_300', title: 'Survive for 5:00', kind: 'survive', target: 300, reward: 80 },
+            { id: 'collect_gems_5', title: 'Collect 5 gems', kind: 'collect_gem', target: 5, reward: 60 },
+            { id: 'collect_gems_10', title: 'Collect 10 gems', kind: 'collect_gem', target: 10, reward: 120 },
+            { id: 'use_fireworks_3', title: 'Use 3 fireworks', kind: 'use_firework', target: 3, reward: 70 },
+            { id: 'solve_puzzle_1', title: 'Solve 1 puzzle', kind: 'solve_puzzle', target: 1, reward: 80 },
+        ];
+
+        let dailyChallenges = [];
+        let dailyChallengeProgress = {};
+
+        function loadDailyChallenges() {
+            const todayKey = getLocalDateKey();
+            const storedDate = localStorage.getItem(DAILY_CHALLENGES_DATE_KEY);
+            const storedChallenges = localStorage.getItem(DAILY_CHALLENGES_KEY);
+            const storedProgress = localStorage.getItem(DAILY_CHALLENGES_PROGRESS_KEY);
+
+            if (storedDate !== todayKey || !storedChallenges) {
+                const rng = createSeededRng(todayKey + '|rng');
+                const pool = [...DAILY_CHALLENGE_POOL];
+                const chosen = [];
+                while (chosen.length < 3 && pool.length > 0) {
+                    const idx = Math.floor(rng() * pool.length);
+                    chosen.push(pool.splice(idx, 1)[0]);
+                }
+                dailyChallenges = chosen;
+                dailyChallengeProgress = {};
+                for (const ch of dailyChallenges) {
+                    dailyChallengeProgress[ch.id] = { progress: 0, completed: false, claimed: false };
+                }
+                localStorage.setItem(DAILY_CHALLENGES_DATE_KEY, todayKey);
+                localStorage.setItem(DAILY_CHALLENGES_KEY, JSON.stringify(dailyChallenges));
+                localStorage.setItem(DAILY_CHALLENGES_PROGRESS_KEY, JSON.stringify(dailyChallengeProgress));
+            } else {
+                try {
+                    dailyChallenges = JSON.parse(storedChallenges);
+                } catch {
+                    dailyChallenges = [];
+                }
+                try {
+                    dailyChallengeProgress = storedProgress ? JSON.parse(storedProgress) : {};
+                } catch {
+                    dailyChallengeProgress = {};
+                }
+                for (const ch of dailyChallenges) {
+                    if (!dailyChallengeProgress[ch.id]) {
+                        dailyChallengeProgress[ch.id] = { progress: 0, completed: false, claimed: false };
+                    }
+                }
+            }
+        }
+
+        function saveDailyChallengeProgress() {
+            localStorage.setItem(DAILY_CHALLENGES_PROGRESS_KEY, JSON.stringify(dailyChallengeProgress));
+        }
+
+        function renderDailyChallenges() {
+            const container = document.getElementById('dailyChallenges');
+            if (!container) return;
+            if (!dailyChallenges || dailyChallenges.length === 0) {
+                container.innerHTML = '<div style="font-family:Arial,sans-serif;font-size:11px;color:#000;">No challenges today.</div>';
+                return;
+            }
+            container.innerHTML = '';
+            for (const ch of dailyChallenges) {
+                const st = dailyChallengeProgress[ch.id] || { progress: 0, completed: false, claimed: false };
+                const row = document.createElement('div');
+                row.className = 'challenge-row' + (st.completed ? ' challenge-done' : '');
+                const progText = `${Math.min(st.progress, ch.target)}/${ch.target}`;
+                row.innerHTML = `
+                    <div class="challenge-title">${ch.title}</div>
+                    <div class="challenge-meta">
+                        <span class="challenge-progress">${st.completed ? 'DONE' : progText}</span>
+                        <span class="challenge-reward">+${ch.reward}</span>
+                    </div>
+                `;
+                container.appendChild(row);
+            }
+        }
+
+        function tryCompleteDailyChallenge(ch) {
+            const st = dailyChallengeProgress[ch.id];
+            if (!st || st.completed) return;
+            if (st.progress >= ch.target) {
+                st.completed = true;
+                if (!isTraining && !sandboxMode) {
+                    coins += ch.reward;
+                    saveCoins(coins);
+                    const coinsEl = document.getElementById('coins');
+                    if (coinsEl) coinsEl.textContent = coins;
+                    const homeCoinsEl = document.getElementById('homeCoins');
+                    if (homeCoinsEl) homeCoinsEl.textContent = coins;
+                    hudText.textContent = `DAILY +${ch.reward} COINS!`;
+                    setTimeout(() => hudText.textContent = isTraining ? 'TRAINING MODE' : 'RUN...', 2000);
+                }
+                saveDailyChallengeProgress();
+                renderDailyChallenges();
+            }
+        }
+
+        function addDailyChallengeProgress(kind, amount = 1, absoluteValue = null) {
+            if (isTraining || sandboxMode || dead || !gameStarted) return;
+            for (const ch of dailyChallenges) {
+                if (ch.kind !== kind) continue;
+                const st = dailyChallengeProgress[ch.id];
+                if (!st || st.completed) continue;
+                if (absoluteValue !== null) st.progress = Math.max(st.progress, absoluteValue);
+                else st.progress += amount;
+                if (st.progress > ch.target) st.progress = ch.target;
+                tryCompleteDailyChallenge(ch);
+            }
+            saveDailyChallengeProgress();
+            renderDailyChallenges();
+        }
+
         function doJump() {
             isJumping = true;
             velY = JUMP_FORCE;
@@ -4539,6 +5055,9 @@ document.addEventListener('keydown', function(e) {
             jumpBuffered = false;
             jumpBufferTimer = 0;
         }
+
+        loadDailyChallenges();
+        renderDailyChallenges();
 
         function saveCustomFigures(figures) {
             localStorage.setItem('rngCustomFigures', JSON.stringify(figures));
@@ -5203,6 +5722,7 @@ document.getElementById('mp3PrevBtn').addEventListener('click', () => {
             deathEl.classList.remove('active');
 
             countdown = 3;
+            startCountdownSpin();
             countdownEl.classList.add('active');
             countdownText.textContent = '3';
             hudText.textContent = 'RUN...';
@@ -5212,23 +5732,50 @@ document.getElementById('mp3PrevBtn').addEventListener('click', () => {
         let lastStep = 0;
         let bobTime = 0;
         let baseCameraY = BASE_Y;
+        let countdownSpinActive = false;
+        let countdownSpinStartYaw = 0;
+
+        function startCountdownSpin() {
+            countdownSpinActive = true;
+            countdownSpinStartYaw = yaw;
+        }
 
         function loop() {
             requestAnimationFrame(loop);
             const dt = Math.min(clock.getDelta(), 0.05);
             mobileControlsLoop();
+            if (gameStarted && !dead && !isPaused && !isTraining && !sandboxMode) {
+                addDailyChallengeProgress('survive', 0, Math.floor(gameTime));
+            }
 
             if (countdown > 0) {
                 countdown -= dt;
+                if (countdownSpinActive) {
+                    const total = 3;
+                    const progress = Math.max(0, Math.min(1, (total - countdown) / total));
+                    yaw = countdownSpinStartYaw + progress * Math.PI * 2;
+                    pitch = 0;
+                    camera.rotation.set(0, yaw, 0);
+                }
                 if (countdown > 2) countdownText.textContent = '3';
                 else if (countdown > 1) countdownText.textContent = '2';
                 else if (countdown > 0) countdownText.textContent = '1';
                 if (countdown <= 0) {
                     countdownEl.classList.remove('active');
+                    countdownSpinActive = false;
                     if (sandboxMode) {
                         gameStarted = true;
                         document.querySelectorAll('.game-ui').forEach(el => el.classList.remove('hidden'));
                         document.getElementById('sandboxWindow').classList.add('active');
+                        const { equipped } = loadShopData();
+                        if (handsMesh && handsTextures) {
+                            const handImage = equipped.hands && handsTextures[equipped.hands + '.png'] ? equipped.hands + '.png' : 'hands.png';
+                            if (handsTextures[handImage]) {
+                                handsMesh.material.map = handsTextures[handImage];
+                                handsMesh.material.needsUpdate = true;
+                            }
+                            handsMesh.visible = true;
+                        }
                         if (!isMobile) renderer.domElement.requestPointerLock();
                     } else {
                         startGame();
@@ -5241,7 +5788,13 @@ document.getElementById('mp3PrevBtn').addEventListener('click', () => {
                 const dz = camera.position.z - bb.position.z;
                 const angle = Math.atan2(dx, dz);
                 if (sandboxBillboard) {
-                    bb.rotation.set(0, angle, 0);
+                    if (bb.userData && bb.userData.isPortal) {
+                        if (!bb.userData.spinDir) bb.userData.spinDir = Math.random() < 0.5 ? -1 : 1;
+                        bb.rotation.z += dt * 2.2 * bb.userData.spinDir;
+                        bb.rotation.set(0, angle, bb.rotation.z);
+                    } else {
+                        bb.rotation.set(0, angle, 0);
+                    }
                 }
             }
 
@@ -5259,6 +5812,58 @@ document.getElementById('mp3PrevBtn').addEventListener('click', () => {
                         item.visible = false;
                         inventory[emptySlot] = item.userData.itemType;
                         updateInventoryUI();
+                        if (item.userData.itemType === 'gem') {
+                            addDailyChallengeProgress('collect_gem', 1);
+                        }
+                    }
+                }
+            }
+
+            // Proximity prompts (do not depend on pointer lock)
+            if (gameStarted && !dead && !isPaused && !isTraining && !sandboxMode && !isPuzzleActive) {
+                nearMachine = null;
+                for (const m of machines) {
+                    if (!m.active) continue;
+                    const dist = Math.sqrt(Math.pow(camera.position.x - m.x, 2) + Math.pow(camera.position.z - m.z, 2));
+                    if (dist < 4) { nearMachine = m; break; }
+                }
+
+                nearPuzzle = null;
+                for (const p of puzzles) {
+                    if (p.solved) continue;
+                    const dist = Math.sqrt(Math.pow(camera.position.x - p.x, 2) + Math.pow(camera.position.z - p.z, 2));
+                    if (dist < 4) { nearPuzzle = p; break; }
+                }
+
+                if (nearPuzzle && !nearPuzzle.solved) showNotice('Press F to solve puzzle');
+                else if (nearMachine && !isWorking) showNotice('Press F to work');
+                else hideNotice();
+            } else {
+                hideNotice();
+            }
+
+            // Portal teleport (pair vanishes after 2 total uses)
+            if (portalCooldown > 0) portalCooldown -= dt;
+            if (gameStarted && !dead && !isPaused && !isTraining && !sandboxMode && countdown <= 0 && !isPuzzleActive) {
+                if (portalUsesRemaining > 0 && portalMeshes.length === 2 && portalCooldown <= 0) {
+                    const d0 = camera.position.distanceTo(portalMeshes[0].position);
+                    const d1 = camera.position.distanceTo(portalMeshes[1].position);
+                    const triggerDist = 4.2;
+                    let from = -1;
+                    if (d0 < triggerDist) from = 0;
+                    else if (d1 < triggerDist) from = 1;
+                    if (from !== -1) {
+                        const to = from === 0 ? 1 : 0;
+                        const tx = portalPoints[to].x;
+                        const tz = portalPoints[to].z;
+                        camera.position.x = tx;
+                        camera.position.z = tz;
+                        camera.position.y = getTerrainHeight(tx, tz) + BASE_Y;
+                        portalUsesRemaining--;
+                        portalCooldown = 0.75;
+                        if (portalUsesRemaining <= 0) {
+                            clearPortals();
+                        }
                     }
                 }
             }
@@ -5294,6 +5899,7 @@ document.getElementById('mp3PrevBtn').addEventListener('click', () => {
                     workTimer -= dt;
                     const timerEl = document.getElementById('workTimer');
                     timerEl.classList.add('visible');
+                    hideNotice();
                     const circle = document.getElementById('workTimerCircle');
                     const progress = (workTimer / 8) * 251.2;
                     circle.style.strokeDashoffset = 251.2 - progress;
@@ -5310,28 +5916,6 @@ document.getElementById('mp3PrevBtn').addEventListener('click', () => {
                             hudText.textContent = '+10 COINS (NOT SAVED)';
                             setTimeout(() => hudText.textContent = 'TRAINING MODE', 2000);
                         }
-                    }
-                }
-
-                nearMachine = null;
-                for (const m of machines) {
-                    if (!m.active) continue;
-                    const dist = Math.sqrt(Math.pow(camera.position.x - m.x, 2) + Math.pow(camera.position.z - m.z, 2));
-                    if (dist < 4) {
-                        nearMachine = m;
-                        if (!isWorking) hudText.textContent = 'Press F to work';
-                        break;
-                    }
-                }
-
-                nearPuzzle = null;
-                for (const p of puzzles) {
-                    if (p.solved) continue;
-                    const dist = Math.sqrt(Math.pow(camera.position.x - p.x, 2) + Math.pow(camera.position.z - p.z, 2));
-                    if (dist < 4) {
-                        nearPuzzle = p;
-                        hudText.textContent = 'Press F to solve puzzle';
-                        break;
                     }
                 }
 
@@ -5366,8 +5950,27 @@ document.getElementById('mp3PrevBtn').addEventListener('click', () => {
                         window.lootIndicator.style.left = `${50 + screenX * 50}%`;
                         window.lootIndicator.classList.add('visible');
                     }
+
+                    // Also point to nearest portal (purple hand)
+                    if (portalMeshes && portalMeshes.length === 2 && window.portalIndicator) {
+                        let nearestPortalIndex = 0;
+                        const dp0 = camera.position.distanceTo(portalMeshes[0].position);
+                        const dp1 = camera.position.distanceTo(portalMeshes[1].position);
+                        nearestPortalIndex = dp1 < dp0 ? 1 : 0;
+                        const target = portalMeshes[nearestPortalIndex].position;
+                        const dxp = target.x - camera.position.x;
+                        const dzp = target.z - camera.position.z;
+                        const angp = Math.atan2(dxp, dzp);
+                        const relp = angp - yaw;
+                        const screenXp = Math.max(-0.8, Math.min(0.8, Math.sin(relp)));
+                        window.portalIndicator.style.left = `${50 + screenXp * 50}%`;
+                        window.portalIndicator.classList.add('visible');
+                    } else if (window.portalIndicator) {
+                        window.portalIndicator.classList.remove('visible');
+                    }
                 } else {
                     window.lootIndicator.classList.remove('visible');
+                    if (window.portalIndicator) window.portalIndicator.classList.remove('visible');
                 }
 
                 if (isWorking) {
