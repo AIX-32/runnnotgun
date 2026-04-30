@@ -4157,7 +4157,8 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
             gameStarted = true;
             gameTime = 0;
             isTraining = trainingMode;
-            figureActive = !isTraining;
+            figureActive = false;
+            figureHeadStartTimer = 6;
             figureSpeedVar = 0;
             playerPosHistory = [];
             strategistWaitTimer = 0;
@@ -5652,6 +5653,7 @@ document.getElementById('mp3PrevBtn').addEventListener('click', () => {
         let speedBoostTimer = 0;
         let gemStacks = 0;
         let figureStuckTimer = 0;
+        let figureHeadStartTimer = 0;
         let bearTrapPlaced = false;
         let bearTrapPos = null;
         let flareActive = false;
@@ -6209,6 +6211,13 @@ document.getElementById('mp3PrevBtn').addEventListener('click', () => {
                     const figPos = figureMesh.position;
                     const toPlayer = new THREE.Vector3(camera.position.x - figPos.x, 0, camera.position.z - figPos.z);
                     const dist = toPlayer.length();
+
+                    if (figureHeadStartTimer > 0) {
+                        figureHeadStartTimer -= dt;
+                        if (figureHeadStartTimer <= 0) {
+                            figureActive = !isTraining;
+                        }
+                    }
 
                     if (!figureActive) {
                         raycaster.setFromCamera(screenCenter, camera);
