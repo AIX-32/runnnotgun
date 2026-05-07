@@ -230,66 +230,7 @@ import * as THREE from 'three';
         const MAP_SIZE = 3200;
         const TERRAIN_SEGMENTS = 128;
 
-        const mountains = [
-            { x: 250, z: -250, radius: 300, height: 100 },
-            { x: -400, z: 350, radius: 250, height: 80 },
-            { x: 600, z: 200, radius: 200, height: 70 },
-            { x: -200, z: -500, radius: 180, height: 60 },
-            { x: 800, z: -300, radius: 150, height: 50 },
-            { x: -600, z: -100, radius: 200, height: 65 },
-            { x: 100, z: 600, radius: 180, height: 55 },
-            { x: -800, z: 100, radius: 120, height: 45 },
-        ];
-
-        const BIOME_SCALE = 0.004;
-
-        function getBiome(x, z) {
-            const n = Math.sin(x * BIOME_SCALE) * Math.cos(z * BIOME_SCALE * 0.7) +
-                Math.sin(x * BIOME_SCALE * 1.5 + 2.1) * Math.cos(z * BIOME_SCALE * 1.3) * 0.5;
-            return n > 0.3;
-        }
-
-        function baseNoise(x, z) {
-            return Math.sin(x * 0.05) * Math.cos(z * 0.05) * 2 +
-                Math.sin(x * 0.02 + 1.3) * Math.cos(z * 0.03) * 4 +
-                Math.sin(x * 0.08) * Math.cos(z * 0.07) * 1;
-        }
-
-        function getMountainAmount(x, z) {
-            let totalHeight = 0;
-            for (const m of mountains) {
-                const dx = x - m.x;
-                const dz = z - m.z;
-                const dist = Math.sqrt(dx * dx + dz * dz);
-                if (dist < m.radius) {
-                    const t = 1 - dist / m.radius;
-                    const smooth = t * t * (3 - 2 * t);
-                    totalHeight += m.height * smooth * smooth;
-                }
-            }
-            return totalHeight;
-        }
-
-        function getWorldHeight(x, z) {
-            return baseNoise(x, z) + getMountainAmount(x, z);
-        }
-
-        const groundGeo = new THREE.PlaneGeometry(MAP_SIZE, MAP_SIZE, TERRAIN_SEGMENTS, TERRAIN_SEGMENTS);
-        const posAttr = groundGeo.attributes.position;
-        for (let i = 0; i < posAttr.count; i++) {
-            const wx = posAttr.getX(i);
-            const wz = -posAttr.getY(i);
-            const h = getWorldHeight(wx, wz);
-            posAttr.setZ(i, h);
-        }
-        groundGeo.computeVertexNormals();
-
-        const grassTex = makeNoiseTexture(256, 256, 42, 64, 10, 30, 8);
-        grassTex.repeat.set(100, 100);
-        const groundMat = new THREE.MeshLambertMaterial({ map: grassTex });
-        const ground = new THREE.Mesh(groundGeo, groundMat);
-        ground.rotation.x = -Math.PI / 2;
-        scene.add(ground);
+        // Mountains array removed - now using noise-based terrain
 
 let wallMat;
         loader.load('assets/images/otherwall.png', tex => {
@@ -326,6 +267,189 @@ let wallMat;
             wallE.renderOrder = 998;
             scene.add(wallE);
         });
+
+        // ============================================================
+        // IMPROVED TERRAIN GENERATION - NATURAL, VARIED, NON-FAKE
+        // ============================================================
+
+        function mulberry32(seed) {
+            return function() {
+                seed |= 0;
+                seed = (seed + 0x6D2B79F5) | 0;
+                let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+                t = (t + Math.imul(t ^ t >>> 7, 61 | t)) ^ t;
+                return ((t ^ t >>> 14) >>> 0) / 4294967296;
+            };
+        }
+
+        function makePermutationTable(seed = 123456) {
+            const rng = mulberry32(seed);
+            const p = new Array(512);
+            const perm = new Array(256);
+            for (let i = 0; i < 256; i++) perm[i] = i;
+            for (let i = 255; i > 0; i--) {
+                const j = Math.floor(rng() * (i + 1));
+                [perm[i], perm[j]] = [perm[j], perm[i]];
+            }
+            for (let i = 0; i < 512; i++) p[i] = perm[i & 255];
+            return p;
+        }
+
+        const PERM = makePermutationTable(123456);
+
+        function fade(t) {
+            return t * t * t * (t * (t * 6 - 15) + 10);
+        }
+
+        function lerp(a, b, t) {
+            return a + t * (b - a);
+        }
+
+        function grad2D(hash, x, y) {
+            const h = hash & 3;
+            const u = h < 2 ? x : y;
+            const v = h < 2 ? y : x;
+            return ((h & 1) === 0 ? u : -u) + ((h & 2) === 0 ? v : -v);
+        }
+
+        function noise2D(x, y, perm) {
+            const ix = Math.floor(x) & 255;
+            const iy = Math.floor(y) & 255;
+            const fx = x - Math.floor(x);
+            const fy = y - Math.floor(y);
+            const a = perm[ix + perm[iy]];
+            const b = perm[ix + 1 + perm[iy]];
+            const c = perm[ix + perm[iy + 1]];
+            const d = perm[ix + 1 + perm[iy + 1]];
+            const u = fade(fx);
+            const v = fade(fy);
+            const g00 = grad2D(a, fx, fy);
+            const g10 = grad2D(b, fx - 1, fy);
+            const g01 = grad2D(c, fx, fy - 1);
+            const g11 = grad2D(d, fx - 1, fy - 1);
+            const nx0 = lerp(g00, g10, u);
+            const nx1 = lerp(g01, g11, u);
+            return lerp(nx0, nx1, v);
+        }
+
+        function fBm(x, y, octaves, persistence, lacunarity, scale, perm) {
+            let value = 0;
+            let amplitude = 1;
+            let frequency = scale;
+            let maxAmp = 0;
+            for (let i = 0; i < octaves; i++) {
+                value += noise2D(x * frequency, y * frequency, perm) * amplitude;
+                maxAmp += amplitude;
+                amplitude *= persistence;
+                frequency *= lacunarity;
+            }
+            return value / maxAmp;
+        }
+
+        function ridgeNoise(x, y, octaves, perm) {
+            let value = 0;
+            let amplitude = 1;
+            let frequency = 0.012;
+            let maxAmp = 0;
+            for (let i = 0; i < octaves; i++) {
+                let n = noise2D(x * frequency, y * frequency, perm);
+                n = 1 - Math.abs(n);
+                value += n * amplitude;
+                maxAmp += amplitude;
+                amplitude *= 0.5;
+                frequency *= 2.2;
+            }
+            return value / maxAmp;
+        }
+
+        const TERRAIN_CONFIG = {
+            hillsOctaves: 4,
+            hillsPersist: 0.45,
+            hillsLacunarity: 2.1,
+            hillsScale: 0.0035,
+            hillsHeight: 12,
+            mediumOctaves: 3,
+            mediumPersist: 0.5,
+            mediumLacunarity: 2.0,
+            mediumScale: 0.008,
+            mediumHeight: 8,
+            largeOctaves: 2,
+            largePersist: 0.6,
+            largeLacunarity: 2.2,
+            largeScale: 0.0012,
+            largeHeight: 18,
+            ridgeOctaves: 3,
+            ridgeHeight: 14,
+            ridgeInfluence: 0.6,
+            riverWarpScale: 0.002,
+            riverWarpAmp: 6,
+            centralDepression: true,
+            depressionRadius: 600,
+            depressionDepth: 5,
+            baseHeight: 0
+        };
+
+        function getRiverWarp(x, z) {
+            const warpX = fBm(x, z, 2, 0.4, 2.5, TERRAIN_CONFIG.riverWarpScale, PERM) * TERRAIN_CONFIG.riverWarpAmp;
+            const warpZ = fBm(z, x, 2, 0.4, 2.5, TERRAIN_CONFIG.riverWarpScale, PERM) * TERRAIN_CONFIG.riverWarpAmp;
+            return { x: warpX, z: warpZ };
+        }
+
+        function getWorldHeight(x, z) {
+            const warp = getRiverWarp(x, z);
+            const wx = x + warp.x;
+            const wz = z + warp.z;
+            const large = fBm(wx, wz, TERRAIN_CONFIG.largeOctaves, TERRAIN_CONFIG.largePersist, TERRAIN_CONFIG.largeLacunarity, TERRAIN_CONFIG.largeScale, PERM) * TERRAIN_CONFIG.largeHeight;
+            const medium = fBm(wx, wz, TERRAIN_CONFIG.mediumOctaves, TERRAIN_CONFIG.mediumPersist, TERRAIN_CONFIG.mediumLacunarity, TERRAIN_CONFIG.mediumScale, PERM) * TERRAIN_CONFIG.mediumHeight;
+            const hills = fBm(wx, wz, TERRAIN_CONFIG.hillsOctaves, TERRAIN_CONFIG.hillsPersist, TERRAIN_CONFIG.hillsLacunarity, TERRAIN_CONFIG.hillsScale, PERM) * TERRAIN_CONFIG.hillsHeight;
+            const ridges = ridgeNoise(wx, wz, TERRAIN_CONFIG.ridgeOctaves, PERM) * TERRAIN_CONFIG.ridgeHeight;
+            let height = large + medium + hills;
+            const ridgeMix = Math.max(0, Math.min(1, (ridges - 0.3) / 0.7));
+            height += ridges * TERRAIN_CONFIG.ridgeInfluence * ridgeMix;
+            if (TERRAIN_CONFIG.centralDepression) {
+                const rad = Math.sqrt(x * x + z * z);
+                if (rad < TERRAIN_CONFIG.depressionRadius) {
+                    const t = 1 - (rad / TERRAIN_CONFIG.depressionRadius);
+                    const depression = -Math.pow(t, 2) * TERRAIN_CONFIG.depressionDepth;
+                    height += depression;
+                }
+            }
+            const micro = (noise2D(x * 0.05, z * 0.05, PERM) + noise2D(x * 0.12, z * 0.12, PERM) * 0.5) * 1.5;
+            height += micro;
+            height += TERRAIN_CONFIG.baseHeight;
+            const maxCoord = MAP_SIZE / 2 - 50;
+            const edgeFactorX = Math.max(0, Math.min(1, (Math.abs(x) - maxCoord) / 100));
+            const edgeFactorZ = Math.max(0, Math.min(1, (Math.abs(z) - maxCoord) / 100));
+            const edgeTaper = Math.max(edgeFactorX, edgeFactorZ);
+            if (edgeTaper > 0) {
+                height = height * (1 - edgeTaper) + -5 * edgeTaper;
+            }
+            return height;
+        }
+
+        function regenerateGround() {
+            const oldGround = scene.getObjectByName('groundMesh');
+            if (oldGround) scene.remove(oldGround);
+            const groundGeo = new THREE.PlaneGeometry(MAP_SIZE, MAP_SIZE, TERRAIN_SEGMENTS, TERRAIN_SEGMENTS);
+            groundGeo.rotateX(-Math.PI / 2);
+            const posAttr = groundGeo.attributes.position;
+            for (let i = 0; i < posAttr.count; i++) {
+                const wx = posAttr.getX(i);
+                const wz = posAttr.getZ(i);
+                const h = getWorldHeight(wx, wz);
+                posAttr.setY(i, h);
+            }
+            groundGeo.computeVertexNormals();
+            const grassTex = makeNoiseTexture(256, 256, 42, 64, 10, 30, 8);
+            grassTex.repeat.set(100, 100);
+            const groundMat = new THREE.MeshLambertMaterial({ map: grassTex });
+            const ground = new THREE.Mesh(groundGeo, groundMat);
+            ground.name = 'groundMesh';
+            scene.add(ground);
+            return ground;
+        }
+
+        regenerateGround();
 
         function getTerrainHeight(x, z) {
             return getWorldHeight(x, z);
@@ -411,8 +535,8 @@ let wallMat;
                             const z = (Math.random() - 0.5) * MAP_SIZE * 0.9;
                             if (Math.abs(x) < 25 && Math.abs(z) < 45) return false;
 
-                            const isForest = getBiome(x, z);
-                            if (!isForest && Math.random() > 0.15) return false;
+                            const th = getTerrainHeight(x, z);
+                            if (th < -2 && Math.random() > 0.15) return false;
 
                             const r = Math.random();
                             let useTree = 1;
@@ -467,8 +591,8 @@ const FOREST_ROCK_COUNT = 300;
                 rockAttempts++;
                 continue;
             }
-            const isForest = getBiome(x, z);
-            if (!isForest && Math.random() > 0.12) {
+            const rockTh = getTerrainHeight(x, z);
+            if (rockTh < -2 && Math.random() > 0.12) {
                 rockAttempts++;
                 continue;
             }
@@ -505,8 +629,8 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
                 bushAttempts++;
                 continue;
             }
-            const isForest = getBiome(x, z);
-            if (!isForest && Math.random() > 0.1) {
+            const bushTh = getTerrainHeight(x, z);
+            if (bushTh < -2 && Math.random() > 0.1) {
                 bushAttempts++;
                 continue;
             }
