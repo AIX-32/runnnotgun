@@ -47,6 +47,12 @@ import * as THREE from 'three';
 
         const loader = new THREE.TextureLoader();
 
+        let dirtSplashTex;
+        loader.load('assets/images/dirtsplash.png', tex => {
+            tex.minFilter = tex.magFilter = THREE.NearestFilter;
+            dirtSplashTex = tex;
+        });
+
         let sunMesh, moonMesh;
 
         loader.load('assets/images/sun.png', sunTex => {
@@ -807,6 +813,17 @@ const bushGeo = new THREE.PlaneGeometry(BUSH_H * aspect, BUSH_H);
         const JUMP_BUFFER_WINDOW = 0.12;
         let landingMomentumTimer = 0;
         const LANDING_MOMENTUM_TIME = 0.15;
+
+        const dirtSplashes = [];
+        function spawnDirtSplash(x, z) {
+            if (!dirtSplashTex) return;
+            const mat = new THREE.SpriteMaterial({ map: dirtSplashTex, transparent: true, alphaTest: 0.1, depthWrite: false });
+            const sprite = new THREE.Sprite(mat);
+            sprite.scale.setScalar(1.5);
+            sprite.position.set(x, getTerrainHeight(x, z) + BASE_Y + 0.5, z);
+            scene.add(sprite);
+            dirtSplashes.push({ mesh: sprite, time: 0, duration: 0.5 });
+        }
         let dashCooldown = 0;
         let lastSlideTime = 0;
         let isSliding = false;
@@ -1799,7 +1816,20 @@ document.addEventListener('keydown', function(e) {
                 var timestamp = Date.now();
                 var link = document.createElement('a');
                 link.download = 'screenshot_' + timestamp + '.png';
-                renderer.render(scene, camera);
+            for (let i = dirtSplashes.length - 1; i >= 0; i--) {
+                const s = dirtSplashes[i];
+                s.time += dt;
+                const t = s.time / s.duration;
+                s.mesh.material.opacity = 1 - t;
+                s.mesh.scale.setScalar(2.5 + t * 1.25);
+                if (t >= 1) {
+                    scene.remove(s.mesh);
+                    s.mesh.material.dispose();
+                    dirtSplashes.splice(i, 1);
+                }
+            }
+
+            renderer.render(scene, camera);
                 renderer.domElement.toBlob(function(blob) {
                     link.href = URL.createObjectURL(blob);
                     link.click();
@@ -3268,6 +3298,8 @@ document.getElementById('mp3PrevBtn').addEventListener('click', () => {
                         camera.position.y = groundY;
                         isJumping = false;
                         landingMomentumTimer = LANDING_MOMENTUM_TIME;
+                        const landSpeed = Math.sqrt(velX * velX + velZ * velZ);
+                        if (landSpeed > 15) spawnDirtSplash(camera.position.x, camera.position.z);
                         if (jumpBuffered && jumpBufferTimer > 0) {
                             doJump();
                         }
@@ -3652,6 +3684,19 @@ document.getElementById('mp3PrevBtn').addEventListener('click', () => {
                     }
                 } else if (!windNode) {
                     startWind();
+                }
+            }
+
+            for (let i = dirtSplashes.length - 1; i >= 0; i--) {
+                const s = dirtSplashes[i];
+                s.time += dt;
+                const t = s.time / s.duration;
+                s.mesh.material.opacity = 1 - t;
+                s.mesh.scale.setScalar(2.5 + t * 1.25);
+                if (t >= 1) {
+                    scene.remove(s.mesh);
+                    s.mesh.material.dispose();
+                    dirtSplashes.splice(i, 1);
                 }
             }
 
