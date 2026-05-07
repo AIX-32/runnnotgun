@@ -333,6 +333,43 @@ let wallMat;
 
         let treeMat, rockMat;
         const billboards = [];
+
+        const BILLBOARD_QUALITY = {
+            HIGH: { maxDist: 60, updateEvery: 1,    snapThreshold: 0.05 },
+            MED:  { maxDist: 140, updateEvery: 4,   snapThreshold: 0.1 },
+            LOW:  { maxDist: 250, updateEvery: 12,  snapThreshold: 0.3 },
+            MIN:  { maxDist: Infinity, updateEvery: 30, snapThreshold: 0.5 }
+        };
+        let billboardFrame = 0;
+
+        function updateBillboardRotation(bb, dist, frame) {
+            let quality = null;
+            if (dist < BILLBOARD_QUALITY.HIGH.maxDist) quality = BILLBOARD_QUALITY.HIGH;
+            else if (dist < BILLBOARD_QUALITY.MED.maxDist) quality = BILLBOARD_QUALITY.MED;
+            else if (dist < BILLBOARD_QUALITY.LOW.maxDist) quality = BILLBOARD_QUALITY.LOW;
+            else quality = BILLBOARD_QUALITY.MIN;
+
+            if (frame % quality.updateEvery !== 0 && !bb.userData.isPortal) return;
+
+            const dx = camera.position.x - bb.position.x;
+            const dz = camera.position.z - bb.position.z;
+            const angle = Math.atan2(dx, dz);
+
+            if (bb.userData && bb.userData.isPortal) {
+                if (!bb.userData.spinDir) bb.userData.spinDir = Math.random() < 0.5 ? -1 : 1;
+                bb.rotation.z += 0.033 * 2.2 * bb.userData.spinDir;
+                bb.rotation.set(0, angle, bb.rotation.z);
+                return;
+            }
+
+            if (quality.snapThreshold) {
+                const snappedAngle = Math.round(angle / quality.snapThreshold) * quality.snapThreshold;
+                bb.rotation.y = snappedAngle;
+            } else {
+                bb.rotation.y = angle;
+            }
+        }
+
         const trees = [];
         const rocks = [];
 
@@ -3050,19 +3087,10 @@ document.getElementById('mp3PrevBtn').addEventListener('click', () => {
                 }
             }
 
+            billboardFrame++;
             for (const bb of billboards) {
-                const dx = camera.position.x - bb.position.x;
-                const dz = camera.position.z - bb.position.z;
-                const angle = Math.atan2(dx, dz);
-                if (sandboxBillboard) {
-                    if (bb.userData && bb.userData.isPortal) {
-                        if (!bb.userData.spinDir) bb.userData.spinDir = Math.random() < 0.5 ? -1 : 1;
-                        bb.rotation.z += dt * 2.2 * bb.userData.spinDir;
-                        bb.rotation.set(0, angle, bb.rotation.z);
-                    } else {
-                        bb.rotation.set(0, angle, 0);
-                    }
-                }
+                const dist = camera.position.distanceTo(bb.position);
+                updateBillboardRotation(bb, dist, billboardFrame);
             }
 
             if (sandboxMode && sandboxFigures.length > 0) {
